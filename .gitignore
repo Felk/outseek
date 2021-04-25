@@ -7,3 +7,5 @@ bin/
 obj/
 
 *.user
+
+FodyWeavers.xsd
