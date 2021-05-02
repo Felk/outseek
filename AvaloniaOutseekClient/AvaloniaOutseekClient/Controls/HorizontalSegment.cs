@@ -10,22 +10,22 @@ using static AvaloniaOutseekClient.Utils.MathUtils;
 namespace AvaloniaOutseekClient.Controls
 {
     /// <summary>
-    /// A content control that vertically positions its content according to a "From" and "To" property,
-    /// allowing for those endpoints to be adjusted if IsEditable is true.
+    /// A content control that horizontally positions its content according to a "From" and "To" property,
+    /// allowing for the start and endpoint to be adjusted if IsEditable is true.
     /// </summary>
-    public class TimelineSegment : ContentControl
+    public class HorizontalSegment : ContentControl
     {
         public static readonly StyledProperty<double> FromProperty =
-            AvaloniaProperty.Register<TimelineSegment, double>(nameof(From), defaultBindingMode: BindingMode.TwoWay);
+            AvaloniaProperty.Register<HorizontalSegment, double>(nameof(From), defaultBindingMode: BindingMode.TwoWay);
 
         public static readonly StyledProperty<double> ToProperty =
-            AvaloniaProperty.Register<TimelineSegment, double>(nameof(To), defaultBindingMode: BindingMode.TwoWay);
+            AvaloniaProperty.Register<HorizontalSegment, double>(nameof(To), defaultBindingMode: BindingMode.TwoWay);
 
         public static readonly StyledProperty<double> StepProperty =
-            AvaloniaProperty.Register<TimelineSegment, double>(nameof(Step), defaultValue: 1);
+            AvaloniaProperty.Register<HorizontalSegment, double>(nameof(Step), defaultValue: 1);
 
         public static readonly StyledProperty<bool> IsEditableProperty =
-            AvaloniaProperty.Register<TimelineSegment, bool>(nameof(IsEditable), defaultValue: true);
+            AvaloniaProperty.Register<HorizontalSegment, bool>(nameof(IsEditable), defaultValue: true);
 
         public double From
         {
