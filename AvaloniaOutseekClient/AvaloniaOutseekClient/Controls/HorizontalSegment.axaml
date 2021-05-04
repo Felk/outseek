@@ -25,6 +25,7 @@
                     <!-- column definition for this represents "To" (derived from the duration) -->
                     <ContentPresenter Grid.Column="2"
                                       Content="{TemplateBinding Content}"
+                                      ClipToBounds="True"
                                       ContentTemplate="{TemplateBinding ContentTemplate}" />
 
                     <GridSplitter Grid.Column="3"
