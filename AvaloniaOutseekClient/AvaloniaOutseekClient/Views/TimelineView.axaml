@@ -1,0 +1,50 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:AvaloniaOutseekClient.ViewModels"
+             xmlns:views="clr-namespace:AvaloniaOutseekClient.Views"
+             xmlns:converters="clr-namespace:AvaloniaOutseekClient.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaOutseekClient.Views.TimelineView">
+    <Design.DataContext>
+        <viewModels:TimelineViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <converters:ZoomPowConverter x:Key="ZoomPowConverter" />
+    </UserControl.Resources>
+
+    <StackPanel>
+        <StackPanel>
+
+            <Grid ColumnDefinitions="200,*">
+                <StackPanel Grid.Column="0">
+                    <Slider
+                        Minimum="{Binding MinSliderValue}" Maximum="3"
+                        Value="{Binding TimelineState.DevicePixelsPerSecond, Converter={StaticResource ZoomPowConverter}}" />
+                    <Label Content="{Binding TimelineState.DevicePixelsPerSecond}" />
+                </StackPanel>
+                <Slider Grid.Column="1"
+                        Maximum="{Binding TimelineState.End}"
+                        Value="{Binding TimelineState.Position}" />
+            </Grid>
+            <ItemsControl Items="{Binding Segments}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="200,*">
+                            <Label Grid.Column="0" Content="{Binding Text}" />
+                            <Panel Grid.Column="1">
+                                <views:TimelineSegmentView />
+                                <StackPanel Orientation="Horizontal">
+                                    <Panel Width="{Binding TimelineState.PositionScaled}" />
+                                    <Rectangle Width="0" Stroke="Red" StrokeThickness="1" />
+                                </StackPanel>
+                            </Panel>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
