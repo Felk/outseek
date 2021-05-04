@@ -8,6 +8,7 @@
 
     <Application.Styles>
         <FluentTheme Mode="Dark"/>
+        <StyleInclude Source="/Styles/Timeline.axaml"/>
         <StyleInclude Source="/Controls/HorizontalSegment.axaml"/>
     </Application.Styles>
 </Application>
