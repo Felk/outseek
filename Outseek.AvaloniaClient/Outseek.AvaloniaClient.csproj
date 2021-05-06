@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+    </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="Models\" />
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="0.10.0" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.0" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0" />
+        <PackageReference Include="ReactiveUI.Fody" Version="13.2.18" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="LibVLCSharp" Version="3.5.0" />
+        <PackageReference Include="LibVLCSharp.Avalonia" Version="3.5.0" />
+        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.12" />
+    </ItemGroup>
+</Project>

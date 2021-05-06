@@ -1,0 +1,14 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avaloniaClient="clr-namespace:Outseek.AvaloniaClient"
+             x:Class="Outseek.AvaloniaClient.App">
+    <Application.DataTemplates>
+        <avaloniaClient:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme Mode="Dark"/>
+        <StyleInclude Source="/Styles/Timeline.axaml"/>
+        <StyleInclude Source="/Controls/HorizontalSegment.axaml"/>
+    </Application.Styles>
+</Application>

@@ -1,0 +1,24 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views">
+    <Design.PreviewWith>
+        <Border Padding="20" Width="600">
+            <StackPanel>
+                <views:VideoplayerView/>
+                <views:TimelineView />
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="views|TimelineView">
+        <Setter Property="Background" Value="#0c0f16" />
+    </Style>
+
+    <Style Selector="views|TimelineView Border.PART_Border">
+        <Setter Property="Background" Value="#3355cc" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="BorderBrush" Value="Black" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+</Styles>
