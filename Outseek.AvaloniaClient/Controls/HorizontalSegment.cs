@@ -69,12 +69,19 @@ namespace Outseek.AvaloniaClient.Controls
             // Only write values back to property once the drag is complete.
             // This has advantages, e.g. the drag can be aborted by pressing escape,
             // or potential viewmodel writes are rare enough to be usable for redo/undo functionality.
-            void LeftSplitterDragCompleted(object? sender, VectorEventArgs ev) =>
-                From = colDefFrom.Width.Value;
-            void RightSplitterDragCompleted(object? sender, VectorEventArgs ev) =>
-                To = colDefFrom.Width.Value + colDefDuration.Width.Value;
-            leftSplitter.DragCompleted += LeftSplitterDragCompleted;
-            rightSplitter.DragCompleted += RightSplitterDragCompleted;
+            void LeftSplitterAdjusted() => From = colDefFrom.Width.Value;
+            void RightSplitterAdjusted() => To = colDefFrom.Width.Value + colDefDuration.Width.Value;
+            leftSplitter.DragCompleted += (_, _) => LeftSplitterAdjusted();
+            rightSplitter.DragCompleted += (_, _) => RightSplitterAdjusted();
+            // TODO workaround for adjustments using arrow keys not being captured by DragCompleted, and there being no "adjustment complete" event
+            leftSplitter.KeyUp += (_, ev) =>
+            {
+                if (ev.Key is Key.Left or Key.Right) LeftSplitterAdjusted();
+            };
+            rightSplitter.KeyUp += (_, ev) =>
+            {
+                if (ev.Key is Key.Left or Key.Right) RightSplitterAdjusted();
+            };
 
             from.Subscribe(val =>
             {
