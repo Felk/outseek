@@ -13,6 +13,7 @@
     <controls:HorizontalSegment From="{Binding FromScaled}"
                                 To="{Binding ToScaled}"
                                 Step="{Binding StepScaled}"
+                                MinLength="{Binding StepScaled}"
                                 IsEditable="True">
         <Border CornerRadius="2" Classes="PART_Border">
             <StackPanel Orientation="Horizontal">
