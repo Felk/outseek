@@ -60,9 +60,9 @@ namespace Outseek.AvaloniaClient.ViewModels
             {
                 expectTimeChange = true;
                 double positionSeconds = args.Time / 1000d;
-                TimelineState.Position = positionSeconds;
+                TimelineState.PlaybackPosition = positionSeconds;
             };
-            TimelineState.WhenAnyValue(t => t.Position)
+            TimelineState.WhenAnyValue(t => t.PlaybackPosition)
                 .Subscribe(position =>
                 {
                     double ms = position * 1000;

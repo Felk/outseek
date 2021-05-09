@@ -4,7 +4,7 @@
     <Design.PreviewWith>
         <Border Padding="20" Width="600">
             <StackPanel>
-                <views:VideoplayerView/>
+                <views:VideoplayerView />
                 <views:TimelineView />
             </StackPanel>
         </Border>
@@ -16,9 +16,22 @@
 
     <Style Selector="views|TimelineView Border.PART_Border">
         <Setter Property="Background" Value="#3355cc" />
-        <Setter Property="Margin" Value="2" />
+        <Setter Property="Margin" Value="-1,2,-1,2" />
         <Setter Property="BorderBrush" Value="Black" />
         <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track">
+        <!-- make the slider go from edge to edge-->
+        <Setter Property="Margin" Value="-10,0,-10,0" />
+    </Style>
+    <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track Thumb.SliderThumbStyle">
+        <!-- replace round thumb with timeline-draggy-thing looking thumb -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Polygon Points="0,0 20,0 20,10 10,20 0,10" Fill="#33aa33" />
+            </ControlTemplate>
+        </Setter>
     </Style>
 
 </Styles>

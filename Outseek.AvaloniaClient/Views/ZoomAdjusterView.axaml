@@ -1,0 +1,29 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
+             xmlns:controls="clr-namespace:Outseek.AvaloniaClient.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="50"
+             x:Class="Outseek.AvaloniaClient.Views.ZoomAdjusterView">
+    <Design.DataContext>
+        <viewModels:ZoomAdjusterViewModel />
+    </Design.DataContext>
+
+    <Panel Background="#18181D">
+        <Label Content="miniature timeline goes here..." />
+        <controls:ResizableThumbTrack
+            Bounds="{Binding Bounds, Mode=OneWayToSource}"
+            MinScale="0.01"
+            Offset="{Binding TimelineState.ScrollOffset}"
+            Scale="{Binding TimelineState.ZoomScale}">
+            <controls:ResizableThumbTrack.ResizeStartThumb>
+                <Thumb Name="PART_ResizeStartThumb" />
+            </controls:ResizableThumbTrack.ResizeStartThumb>
+            <controls:ResizableThumbTrack.ResizeEndThumb>
+                <Thumb Name="PART_ResizeEndThumb" />
+            </controls:ResizableThumbTrack.ResizeEndThumb>
+            <Thumb Name="PART_DragThumb" />
+        </controls:ResizableThumbTrack>
+    </Panel>
+</UserControl>

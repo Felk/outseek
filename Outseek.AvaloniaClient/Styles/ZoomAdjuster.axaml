@@ -1,0 +1,28 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views">
+    <Design.PreviewWith>
+        <views:ZoomAdjusterView Height="40" Width="400" />
+    </Design.PreviewWith>
+
+    <Style Selector="views|ZoomAdjusterView Thumb#PART_ResizeStartThumb, views|ZoomAdjusterView Thumb#PART_ResizeEndThumb">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Rectangle Fill="#1A1A1D" StrokeThickness="20"
+                           Stroke="transparent" Width="23" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="views|ZoomAdjusterView Thumb#PART_DragThumb">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Margin="2"
+                        BoxShadow="0 -1 #55ffffff"
+                        CornerRadius="7"
+                        Background="#6E3B3B46" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

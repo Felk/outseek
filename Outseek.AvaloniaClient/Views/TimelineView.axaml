@@ -3,48 +3,70 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
-             xmlns:converters="clr-namespace:Outseek.AvaloniaClient.Converters"
              xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
              x:Class="Outseek.AvaloniaClient.Views.TimelineView">
     <Design.DataContext>
         <viewModels:TimelineViewModel />
     </Design.DataContext>
 
-    <UserControl.Resources>
-        <converters:ZoomPowConverter x:Key="ZoomPowConverter" />
-    </UserControl.Resources>
-
-    <StackPanel>
-        <StackPanel>
-
-            <Grid ColumnDefinitions="200,*">
-                <StackPanel Grid.Column="0">
-                    <Slider
-                        Minimum="{Binding MinSliderValue}" Maximum="3"
-                        Value="{Binding TimelineState.DevicePixelsPerSecond, Converter={StaticResource ZoomPowConverter}}" />
-                    <Label Content="{Binding TimelineState.DevicePixelsPerSecond}" />
-                </StackPanel>
-                <Slider Grid.Column="1"
+    <Grid RowDefinitions="50,*,40">
+        <Grid Grid.Row="0" ColumnDefinitions="200,*">
+            <Label Grid.Column="0" />
+            <ScrollViewer Grid.Column="1"
+                          HorizontalAlignment="Left"
+                          Width="{Binding TimelineState.ViewportWidth}"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Hidden"
+                          Offset="{Binding TimelineState.ScrollPositionScaled}">
+                <Slider Name="TimelineSlider"
+                        HorizontalAlignment="Left"
+                        TickFrequency="{Binding TimelineState.Step}"
+                        IsSnapToTickEnabled="True"
+                        TickPlacement="None"
                         Maximum="{Binding TimelineState.End}"
-                        Value="{Binding TimelineState.Position}" />
-            </Grid>
-            <ItemsControl Items="{Binding Segments}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid ColumnDefinitions="200,*">
-                            <Label Grid.Column="0" Content="{Binding Text}" />
-                            <Panel Grid.Column="1">
-                                <views:TimelineSegmentView />
-                                <StackPanel Orientation="Horizontal">
-                                    <Panel Width="{Binding TimelineState.PositionScaled}" />
-                                    <Rectangle Width="0" Stroke="Red" StrokeThickness="1" />
-                                </StackPanel>
-                            </Panel>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-    </StackPanel>
+                        Width="{Binding TimelineState.EndScaled}"
+                        Value="{Binding TimelineState.PlaybackPosition}" />
+            </ScrollViewer>
+        </Grid>
+
+        <Panel Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Visible"
+                          HorizontalScrollBarVisibility="Hidden">
+                <ItemsControl Items="{Binding Segments}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="200,*">
+                                <Label Grid.Column="0" Content="{Binding Text}" />
+                                <ScrollViewer Grid.Column="1"
+                                              HorizontalAlignment="Left"
+                                              Width="{Binding TimelineState.ViewportWidth}"
+                                              HorizontalScrollBarVisibility="Hidden"
+                                              VerticalScrollBarVisibility="Hidden"
+                                              Offset="{Binding TimelineState.ScrollPositionScaled}">
+                                    <views:TimelineSegmentView
+                                        Width="{Binding TimelineState.ViewportWidthScaled}" />
+                                </ScrollViewer>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <StackPanel Orientation="Horizontal">
+                <Panel Width="200" />
+                <Panel Width="{Binding TimelineState.PlaybackPositionScaled, Mode=OneWay}" />
+                <Rectangle
+                    Width="0"
+                    Height="9999"
+                    StrokeThickness="1"
+                    Stroke="#33aa33" />
+            </StackPanel>
+        </Panel>
+
+        <Grid Grid.Row="2" ColumnDefinitions="200,*">
+            <Panel Grid.Column="0" />
+            <views:ZoomAdjusterView Grid.Column="1" />
+        </Grid>
+    </Grid>
+
 </UserControl>

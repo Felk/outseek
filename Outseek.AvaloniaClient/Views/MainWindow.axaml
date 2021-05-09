@@ -14,11 +14,11 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="*,*" ColumnDefinitions="1*,2*">
-        <Panel Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
-            <Label Content="Panel" />
+        <Panel Grid.Row="0" Grid.Column="0">
+            <Label Content="" />
         </Panel>
         <views:VideoplayerView Grid.Row="0" Grid.Column="1"/>
-        <views:TimelineView Grid.Row="1" Grid.Column="1" />
+        <views:TimelineView Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="0" />
     </Grid>
 
 </Window>

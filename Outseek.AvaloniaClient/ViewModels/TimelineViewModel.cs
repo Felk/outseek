@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using Outseek.AvaloniaClient.Converters;
+﻿using System.Collections.ObjectModel;
 using Outseek.AvaloniaClient.SharedViewModels;
-using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Outseek.AvaloniaClient.ViewModels
@@ -12,7 +9,6 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineState TimelineState { get; }
 
         [Reactive] public ObservableCollection<TimelineSegmentViewModel> Segments { get; set; } = new();
-        [Reactive] public double MinSliderValue { get; set; }
 
         public TimelineViewModel() : this(new TimelineState())
         {
@@ -28,16 +24,6 @@ namespace Outseek.AvaloniaClient.ViewModels
                 {Text = "Second Lane", From = 150, To = 230});
             Segments.Add(new TimelineSegmentViewModel(TimelineState)
                 {Text = "Third Lane", From = 30, To = 120});
-
-            TimelineState
-                .WhenAnyValue(t => t.Start, t => t.End)
-                .Subscribe(((double start, double end) tuple) =>
-                {
-                    double duration = tuple.end - tuple.start;
-                    const double targetDevicePixels = 100;
-                    double targetDevicePixelsPerSecond = targetDevicePixels / duration;
-                    MinSliderValue = Math.Pow(targetDevicePixelsPerSecond, 1d / ZoomPowConverter.Exponent);
-                });
         }
     }
 }
