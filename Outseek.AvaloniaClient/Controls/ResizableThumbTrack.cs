@@ -6,6 +6,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Metadata;
+using Outseek.AvaloniaClient.Utils;
 
 namespace Outseek.AvaloniaClient.Controls
 {
@@ -32,16 +33,27 @@ namespace Outseek.AvaloniaClient.Controls
         public static readonly StyledProperty<Thumb> ResizeEndThumbProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, Thumb>(nameof(ResizeEndThumb));
 
-        public static readonly StyledProperty<double> ScaleProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Scale),
+        public static readonly StyledProperty<double> MinimumProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Minimum),
+                defaultBindingMode: BindingMode.TwoWay);
+        
+        public static readonly StyledProperty<double> MaximumProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Maximum),
                 defaultBindingMode: BindingMode.TwoWay);
 
-        public static readonly StyledProperty<double> OffsetProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Offset),
+        public static readonly StyledProperty<double> FromProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(From),
+                defaultBindingMode: BindingMode.TwoWay);
+        
+        public static readonly StyledProperty<double> ToProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(To),
                 defaultBindingMode: BindingMode.TwoWay);
 
-        public static readonly StyledProperty<double> MinScaleProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(MinScale), defaultValue: 0);
+        public static readonly StyledProperty<double> IncrementProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Increment), defaultValue: 0);
+
+        public static readonly StyledProperty<double> MinimumDistanceProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(MinimumDistance), defaultValue: 0);
 
         public static readonly StyledProperty<ResizeThumbPlacement> ResizeThumbPlacementProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, ResizeThumbPlacement>(nameof(ResizeThumbPlacement),
@@ -66,22 +78,40 @@ namespace Outseek.AvaloniaClient.Controls
             set { SetValue(ResizeEndThumbProperty, value); }
         }
 
-        public double Scale
+        public double Minimum
         {
-            get { return GetValue(ScaleProperty); }
-            set { SetValue(ScaleProperty, value); }
+            get { return GetValue(MinimumProperty); }
+            set { SetValue(MinimumProperty, value); }
+        }
+        
+        public double Maximum
+        {
+            get { return GetValue(MaximumProperty); }
+            set { SetValue(MaximumProperty, value); }
         }
 
-        public double Offset
+        public double From
         {
-            get { return GetValue(OffsetProperty); }
-            set { SetValue(OffsetProperty, value); }
+            get { return GetValue(FromProperty); }
+            set { SetValue(FromProperty, value); }
+        }
+        
+        public double To
+        {
+            get { return GetValue(ToProperty); }
+            set { SetValue(ToProperty, value); }
         }
 
-        public double MinScale
+        public double Increment
         {
-            get { return GetValue(MinScaleProperty); }
-            set { SetValue(MinScaleProperty, value); }
+            get { return GetValue(IncrementProperty); }
+            set { SetValue(IncrementProperty, value); }
+        }
+
+        public double MinimumDistance
+        {
+            get { return GetValue(MinimumDistanceProperty); }
+            set { SetValue(MinimumDistanceProperty, value); }
         }
 
         public ResizeThumbPlacement ResizeThumbPlacement
@@ -97,7 +127,8 @@ namespace Outseek.AvaloniaClient.Controls
             ResizeEndThumbProperty.Changed.AddClassHandler<ResizableThumbTrack>((x, e) => x.ResizeEndThumbChanged(e));
             DragThumbProperty.Changed.AddClassHandler<ResizableThumbTrack>((x, e) => x.DragThumbChanged(e));
 
-            AffectsArrange<ResizableThumbTrack>(ScaleProperty, OffsetProperty, ResizeThumbPlacementProperty);
+            AffectsArrange<ResizableThumbTrack>(
+                FromProperty, ToProperty, MinimumProperty, MaximumProperty, ResizeThumbPlacementProperty);
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -111,8 +142,11 @@ namespace Outseek.AvaloniaClient.Controls
 
         protected override Size ArrangeOverride(Size arrangeSize)
         {
-            double segmentWidth = arrangeSize.Width * Scale;
-            double segmentOffset = (arrangeSize.Width - segmentWidth) * Offset;
+            double availableSize = Maximum - Minimum;
+            double targetSize = To - From;
+
+            double segmentWidth = arrangeSize.Width * (targetSize / availableSize);
+            double segmentOffset = arrangeSize.Width * (From / availableSize);
             if (segmentOffset is double.NaN) segmentOffset = 0;
 
             Point segmentStart = new Point(segmentOffset, 0);
@@ -138,7 +172,7 @@ namespace Outseek.AvaloniaClient.Controls
             {
                 ResizeStartThumb.ZIndex = 1;
                 ResizeEndThumb.ZIndex = 1;
-                if (segmentSize.Width > 0)
+                if (segmentSize.Width >= 0)
                     DragThumb.Arrange(new Rect(segmentStart, segmentSize));
             }
             ResizeEndThumb.Arrange(new Rect(
@@ -179,38 +213,30 @@ namespace Outseek.AvaloniaClient.Controls
 
         private void DragThumbDragged(object? sender, VectorEventArgs e)
         {
-            double delta = e.Vector.X / Bounds.Width;
-            Offset = Math.Clamp(Offset + delta, 0, 1);
+            double deltaPercent = e.Vector.X / Bounds.Width;
+            double range = Maximum - Minimum;
+            double delta = Math.Clamp(deltaPercent * range, Minimum - From, Maximum - To);
+            
+            From = MathUtils.RoundToIncrement(From + delta, Increment);
+            To = MathUtils.RoundToIncrement(To + delta, Increment);
         }
 
         private void ResizeStartThumbDragged(object? sender, VectorEventArgs e)
         {
-            double delta = e.Vector.X / Bounds.Width;
-            double oldScale = Scale;
-            double newScale = oldScale - delta;
-            double newOffset = (Bounds.Width * (1 - oldScale) * Offset + e.Vector.X) /
-                               (Bounds.Width * (1 - newScale));
-
-            // TODO instead of aborting the whole drag, set the values to their maximum
-            if (newOffset < 0 || newOffset > 1) return;
-            if (newScale < MinScale || newScale > 1) return;
-
-            Scale = newScale;
-            Offset = newOffset;
+            double deltaPercent = e.Vector.X / Bounds.Width;
+            double range = Maximum - Minimum;
+            double delta = Math.Clamp(deltaPercent * range, Minimum - From, To - From - MinimumDistance);
+            
+            From = MathUtils.RoundToIncrement(From + delta, Increment);
         }
 
         private void ResizeEndThumbDragged(object? sender, VectorEventArgs e)
         {
-            double delta = e.Vector.X / Bounds.Width;
-            double newOffset = Offset * (1 - Scale) / (1 - Scale - delta);
-            double newScale = Scale + delta;
-
-            // TODO instead of aborting the whole drag, set the values to their maximum
-            if (newOffset < 0 || newOffset > 1) return;
-            if (newScale < MinScale || newScale > 1) return;
-
-            Scale = newScale;
-            Offset = newOffset;
+            double deltaPercent = e.Vector.X / Bounds.Width;
+            double range = Maximum - Minimum;
+            double delta = Math.Clamp(deltaPercent * range, From - To + MinimumDistance, Maximum - To);
+            
+            To = MathUtils.RoundToIncrement(To + delta, Increment);
         }
     }
 }

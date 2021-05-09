@@ -14,9 +14,12 @@
         <Label Content="miniature timeline goes here..." />
         <controls:ResizableThumbTrack
             Bounds="{Binding Bounds, Mode=OneWayToSource}"
-            MinScale="0.01"
-            Offset="{Binding TimelineState.ScrollOffset}"
-            Scale="{Binding TimelineState.ZoomScale}">
+            Minimum="{Binding TimelineState.Start}"
+            Maximum="{Binding TimelineState.End}"
+            Increment="{Binding TimelineState.Step}"
+            MinimumDistance="{Binding MinimumDistance}"
+            From="{Binding From}"
+            To="{Binding To}">
             <controls:ResizableThumbTrack.ResizeStartThumb>
                 <Thumb Name="PART_ResizeStartThumb" />
             </controls:ResizableThumbTrack.ResizeStartThumb>
