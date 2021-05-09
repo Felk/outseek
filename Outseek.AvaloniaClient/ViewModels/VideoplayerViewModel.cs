@@ -40,7 +40,7 @@ namespace Outseek.AvaloniaClient.ViewModels
                 }
                 else
                 {
-                    Uri mediaUri = new("/path/to/file");
+                    Uri mediaUri = new("C:/test.mp4");
                     Media media = new(_libVlc, mediaUri);
                     _mediaPlayer.Play(media);
                 }
