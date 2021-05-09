@@ -3,7 +3,11 @@
         xmlns:controls="clr-namespace:Outseek.AvaloniaClient.Controls">
     <Design.PreviewWith>
         <Border Padding="2">
-            <controls:HorizontalSegment From="20" To="50" IsEditable="True" Step="5" Width="200">
+            <controls:HorizontalSegment
+                From="20" To="50" IsEditable="True" Step="5"
+                MinLength="10"
+                IsContinuousUpdate="False"
+                Width="200">
                 <Rectangle Stroke="Red" StrokeThickness="1" Height="30" />
             </controls:HorizontalSegment>
         </Border>

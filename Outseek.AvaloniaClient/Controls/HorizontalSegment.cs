@@ -116,23 +116,24 @@ namespace Outseek.AvaloniaClient.Controls
             from.Subscribe(val =>
             {
                 // enforce step and min length
-                // also fix duration, so extending to the left doesn't cause the segment to just be moved.
                 double stepSnappedVal = RoundToIncrement(val.Value, Step);
                 if (To - stepSnappedVal < MinLength) stepSnappedVal = To - MinLength;
                 colDefFrom.Width = new GridLength(stepSnappedVal);
+                // also fix duration, so extending to the left doesn't cause the segment to just be moved.
                 colDefDuration.Width = new GridLength(To - stepSnappedVal);
             });
             duration.Subscribe(val =>
             {
                 // enforce step and min length
-                colDefDuration.Width = new GridLength(Math.Max(RoundToIncrement(val.Value, Step), MinLength));
+                double stepSnappedVal = RoundToIncrement(val.Value, Step);
+                colDefDuration.Width = new GridLength(Math.Max(stepSnappedVal, MinLength));
             });
 
             // push property changes back into the view
             this.GetObservable(FromProperty).Subscribe(fromValue =>
             {
                 colDefFrom.Width = new GridLength(fromValue);
-                colDefDuration.Width = new GridLength(To - fromValue);
+                colDefDuration.Width = new GridLength(Math.Max(0, To - fromValue));
             });
             this.GetObservable(ToProperty).Subscribe(toValue =>
             {
