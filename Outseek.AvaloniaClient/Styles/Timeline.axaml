@@ -14,11 +14,19 @@
         <Setter Property="Background" Value="#0c0f16" />
     </Style>
 
-    <Style Selector="views|TimelineView Border.PART_Border">
+    <Style Selector="views|TimelineView Border#PART_Border">
         <Setter Property="Background" Value="#3355cc" />
         <Setter Property="Margin" Value="-1,2,-1,2" />
         <Setter Property="BorderBrush" Value="Black" />
         <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    
+    <Style Selector="views|TimelineView Thumb#PART_ResizeStartThumb, views|TimelineView Thumb#PART_ResizeEndThumb">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Rectangle Width="6" Fill="transparent" />
+            </ControlTemplate>
+        </Setter>
     </Style>
 
     <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track">

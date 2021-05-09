@@ -12,7 +12,8 @@ namespace Outseek.AvaloniaClient.Controls
 {
     public enum ResizeThumbPlacement
     {
-        Outside, Inside
+        Outside,
+        Inside
     }
 
     /// <summary>
@@ -24,19 +25,19 @@ namespace Outseek.AvaloniaClient.Controls
     [PseudoClasses(":vertical", ":horizontal")] // TODO currently only horizontal works
     public class ResizableThumbTrack : Control
     {
-        public static readonly StyledProperty<Thumb> DragThumbProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, Thumb>(nameof(DragThumb));
+        public static readonly StyledProperty<Thumb?> DragThumbProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, Thumb?>(nameof(DragThumb));
 
-        public static readonly StyledProperty<Thumb> ResizeStartThumbProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, Thumb>(nameof(ResizeStartThumb));
+        public static readonly StyledProperty<Thumb?> ResizeStartThumbProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, Thumb?>(nameof(ResizeStartThumb));
 
-        public static readonly StyledProperty<Thumb> ResizeEndThumbProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, Thumb>(nameof(ResizeEndThumb));
+        public static readonly StyledProperty<Thumb?> ResizeEndThumbProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, Thumb?>(nameof(ResizeEndThumb));
 
         public static readonly StyledProperty<double> MinimumProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Minimum),
                 defaultBindingMode: BindingMode.TwoWay);
-        
+
         public static readonly StyledProperty<double> MaximumProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Maximum),
                 defaultBindingMode: BindingMode.TwoWay);
@@ -44,7 +45,7 @@ namespace Outseek.AvaloniaClient.Controls
         public static readonly StyledProperty<double> FromProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(From),
                 defaultBindingMode: BindingMode.TwoWay);
-        
+
         public static readonly StyledProperty<double> ToProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(To),
                 defaultBindingMode: BindingMode.TwoWay);
@@ -60,19 +61,19 @@ namespace Outseek.AvaloniaClient.Controls
                 defaultValue: ResizeThumbPlacement.Inside);
 
         [Content]
-        public Thumb DragThumb
+        public Thumb? DragThumb
         {
             get { return GetValue(DragThumbProperty); }
             set { SetValue(DragThumbProperty, value); }
         }
 
-        public Thumb ResizeStartThumb
+        public Thumb? ResizeStartThumb
         {
             get { return GetValue(ResizeStartThumbProperty); }
             set { SetValue(ResizeStartThumbProperty, value); }
         }
 
-        public Thumb ResizeEndThumb
+        public Thumb? ResizeEndThumb
         {
             get { return GetValue(ResizeEndThumbProperty); }
             set { SetValue(ResizeEndThumbProperty, value); }
@@ -83,7 +84,7 @@ namespace Outseek.AvaloniaClient.Controls
             get { return GetValue(MinimumProperty); }
             set { SetValue(MinimumProperty, value); }
         }
-        
+
         public double Maximum
         {
             get { return GetValue(MaximumProperty); }
@@ -95,7 +96,7 @@ namespace Outseek.AvaloniaClient.Controls
             get { return GetValue(FromProperty); }
             set { SetValue(FromProperty, value); }
         }
-        
+
         public double To
         {
             get { return GetValue(ToProperty); }
@@ -133,16 +134,20 @@ namespace Outseek.AvaloniaClient.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            // TODO make the components' usages null-safe
-            DragThumb.Measure(availableSize);
-            ResizeStartThumb.Measure(availableSize);
-            ResizeEndThumb.Measure(availableSize);
-            return availableSize;
+            ResizeStartThumb?.Measure(availableSize);
+            ResizeEndThumb?.Measure(availableSize);
+            if (DragThumb != null)
+            {
+                DragThumb.Measure(availableSize);
+                return DragThumb.DesiredSize;
+            }
+            return new Size();
         }
 
         protected override Size ArrangeOverride(Size arrangeSize)
         {
             double availableSize = Maximum - Minimum;
+            if (availableSize <= 0) return new Size();
             double targetSize = To - From;
 
             double segmentWidth = arrangeSize.Width * (targetSize / availableSize);
@@ -153,29 +158,37 @@ namespace Outseek.AvaloniaClient.Controls
             Size segmentSize = new Size(segmentWidth, arrangeSize.Height);
 
             // TODO this doesn't really belong here?
-            ResizeStartThumb.Cursor = new Cursor(StandardCursorType.LeftSide);
-            ResizeEndThumb.Cursor = new Cursor(StandardCursorType.RightSide);
+            if (ResizeStartThumb != null)
+                ResizeStartThumb.Cursor = new Cursor(StandardCursorType.LeftSide);
+            if (ResizeEndThumb != null)
+                ResizeEndThumb.Cursor = new Cursor(StandardCursorType.RightSide);
 
-            ResizeStartThumb.Arrange(new Rect(
+            ResizeStartThumb?.Arrange(new Rect(
                 segmentStart,
                 segmentSize.WithWidth(ResizeStartThumb.DesiredSize.Width)));
             if (ResizeThumbPlacement == ResizeThumbPlacement.Outside)
             {
+                double startThumbWidth = ResizeStartThumb?.DesiredSize.Width ?? 0;
+                double endThumbWidth = ResizeEndThumb?.DesiredSize.Width ?? 0;
                 Size dragThumbWidth = segmentSize
-                    .WithWidth(segmentSize.Width - ResizeStartThumb.DesiredSize.Width - ResizeEndThumb.DesiredSize.Width);
+                    .WithWidth(
+                        segmentSize.Width - startThumbWidth - endThumbWidth);
                 if (dragThumbWidth.Width > 0)
-                    DragThumb.Arrange(new Rect(
-                        segmentStart.WithX(segmentOffset + ResizeStartThumb.DesiredSize.Width),
+                    DragThumb?.Arrange(new Rect(
+                        segmentStart.WithX(segmentOffset + startThumbWidth),
                         dragThumbWidth));
             }
             else
             {
-                ResizeStartThumb.ZIndex = 1;
-                ResizeEndThumb.ZIndex = 1;
+                if (ResizeStartThumb != null)
+                    ResizeStartThumb.ZIndex = 1;
+                if (ResizeEndThumb != null)
+                    ResizeEndThumb.ZIndex = 1;
                 if (segmentSize.Width >= 0)
-                    DragThumb.Arrange(new Rect(segmentStart, segmentSize));
+                    DragThumb?.Arrange(new Rect(segmentStart, segmentSize));
             }
-            ResizeEndThumb.Arrange(new Rect(
+
+            ResizeEndThumb?.Arrange(new Rect(
                 segmentStart.WithX(segmentOffset + segmentWidth - ResizeEndThumb.DesiredSize.Width),
                 segmentSize.WithWidth(ResizeEndThumb.DesiredSize.Width)));
 
@@ -215,8 +228,11 @@ namespace Outseek.AvaloniaClient.Controls
         {
             double deltaPercent = e.Vector.X / Bounds.Width;
             double range = Maximum - Minimum;
-            double delta = Math.Clamp(deltaPercent * range, Minimum - From, Maximum - To);
-            
+            // double delta = Math.Clamp(deltaPercent * range, Minimum - From, Maximum - To);
+            double delta = deltaPercent * range;
+            if (delta < Minimum - From) delta = Minimum - From;
+            if (delta > Maximum - To) delta = Maximum - To;
+
             From = MathUtils.RoundToIncrement(From + delta, Increment);
             To = MathUtils.RoundToIncrement(To + delta, Increment);
         }
@@ -226,7 +242,7 @@ namespace Outseek.AvaloniaClient.Controls
             double deltaPercent = e.Vector.X / Bounds.Width;
             double range = Maximum - Minimum;
             double delta = Math.Clamp(deltaPercent * range, Minimum - From, To - From - MinimumDistance);
-            
+
             From = MathUtils.RoundToIncrement(From + delta, Increment);
         }
 
@@ -235,7 +251,7 @@ namespace Outseek.AvaloniaClient.Controls
             double deltaPercent = e.Vector.X / Bounds.Width;
             double range = Maximum - Minimum;
             double delta = Math.Clamp(deltaPercent * range, From - To + MinimumDistance, Maximum - To);
-            
+
             To = MathUtils.RoundToIncrement(To + delta, Increment);
         }
     }

@@ -10,6 +10,5 @@
         <FluentTheme Mode="Dark"/>
         <StyleInclude Source="/Styles/Timeline.axaml"/>
         <StyleInclude Source="/Styles/ZoomAdjuster.axaml"/>
-        <StyleInclude Source="/Controls/HorizontalSegment.axaml"/>
     </Application.Styles>
 </Application>

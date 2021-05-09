@@ -10,18 +10,32 @@
         <viewModels:TimelineSegmentViewModel />
     </Design.DataContext>
 
-    <controls:HorizontalSegment From="{Binding FromScaled}"
-                                To="{Binding ToScaled}"
-                                Step="{Binding StepScaled}"
-                                MinLength="{Binding StepScaled}"
-                                IsEditable="True">
-        <Border CornerRadius="2" Classes="PART_Border">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding From, StringFormat=\{0:00.00\}}" />
-                <Label Content="-" />
-                <Label Content="{Binding To, StringFormat=\{0:00.00\}}" />
-            </StackPanel>
-        </Border>
-    </controls:HorizontalSegment>
+    <controls:ResizableThumbTrack
+        From="{Binding FromScaled}"
+        To="{Binding ToScaled}"
+        Minimum="0"
+        Maximum="{Binding TimelineState.EndScaled}"
+        Increment="{Binding StepScaled}"
+        MinimumDistance="{Binding StepScaled}">
+        <controls:ResizableThumbTrack.ResizeStartThumb>
+            <Thumb Name="PART_ResizeStartThumb"/>
+        </controls:ResizableThumbTrack.ResizeStartThumb>
+        <controls:ResizableThumbTrack.ResizeEndThumb>
+            <Thumb Name="PART_ResizeEndThumb"/>
+        </controls:ResizableThumbTrack.ResizeEndThumb>
+        <Thumb>
+            <Thumb.Template>
+                <ControlTemplate>
+                    <Border CornerRadius="2" Name="PART_Border">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding From, StringFormat=\{0:00.00\}}" />
+                            <Label Content="-" />
+                            <Label Content="{Binding To, StringFormat=\{0:00.00\}}" />
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Thumb.Template>
+        </Thumb>
+    </controls:ResizableThumbTrack>
 
 </UserControl>
