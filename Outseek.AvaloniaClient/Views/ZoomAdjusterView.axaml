@@ -10,7 +10,7 @@
         <viewModels:ZoomAdjusterViewModel />
     </Design.DataContext>
 
-    <Panel Background="#18181D">
+    <Panel Background="#202030">
         <Label Content="miniature timeline goes here..." />
         <controls:ResizableThumbTrack
             Bounds="{Binding Bounds, Mode=OneWayToSource}"

@@ -31,6 +31,8 @@
         </Grid>
 
         <Panel Grid.Row="1">
+            <Border Name="SegmentsBackdrop" Margin="200 0 0 0" Height="8001" 
+                    Width="{Binding TimelineState.ViewportWidth}" VerticalAlignment="Top" />
             <ScrollViewer VerticalScrollBarVisibility="Visible"
                           HorizontalScrollBarVisibility="Hidden">
                 <ItemsControl Items="{Binding Segments}">
