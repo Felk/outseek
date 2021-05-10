@@ -17,6 +17,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch" />
         <Button
+            HotKey="Space"
             Grid.Row="1"
             Command="{Binding PlayOrPause}"
             Content="Play or Pause!" />

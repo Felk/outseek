@@ -13,7 +13,8 @@
         <viewModels:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,*" ColumnDefinitions="1*,2*">
+    <Grid RowDefinitions="*,*" ColumnDefinitions="1*,2*" 
+          DragDrop.AllowDrop="True">
         <Panel Grid.Row="0" Grid.Column="0">
             <Label Content="" />
         </Panel>

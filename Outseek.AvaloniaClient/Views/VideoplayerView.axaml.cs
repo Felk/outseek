@@ -16,7 +16,7 @@ namespace Outseek.AvaloniaClient.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-            VideoplayerViewModel vm = new(TimelineState.Instance);
+            VideoplayerViewModel vm = new(TimelineState.Instance, MediaState.Instance);
             DataContext = vm;
             
             // TODO properly figure out the video view lifetime requirements.
