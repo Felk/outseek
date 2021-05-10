@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views">
     <Design.PreviewWith>
-        <Border Padding="20" Width="600">
+        <Border Padding="20" Width="600" Height="300">
             <StackPanel>
                 <views:VideoplayerView />
                 <views:TimelineView />
@@ -25,7 +25,7 @@
         <Setter Property="BorderBrush" Value="Black" />
         <Setter Property="BorderThickness" Value="1" />
     </Style>
-    
+
     <Style Selector="views|TimelineView Thumb#PART_ResizeStartThumb, views|TimelineView Thumb#PART_ResizeEndThumb">
         <Setter Property="Template">
             <ControlTemplate>
@@ -38,11 +38,51 @@
         <!-- make the slider go from edge to edge-->
         <Setter Property="Margin" Value="-10,0,-10,0" />
     </Style>
+
+    <Style Selector="views|TimelineView ScrollViewer#TimelineSliderArea">
+        <Setter Property="Background" Value="#101010" />
+    </Style>
+
     <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track Thumb.SliderThumbStyle">
         <!-- replace round thumb with timeline-draggy-thing looking thumb -->
         <Setter Property="Template">
             <ControlTemplate>
                 <Polygon Points="0,0 20,0 20,10 10,20 0,10" Fill="#33aa33" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track RepeatButton#PART_DecreaseButton, views|TimelineView Slider#TimelineSlider Track#PART_Track RepeatButton#PART_IncreaseButton">
+        <!-- make decrease and increase buttons invisible -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="FocusTarget" Background="Transparent" Margin="0,-10" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="views|TimelineView Slider#TimelineSlider:horizontal">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Track Name="PART_Track"
+                       IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                       Orientation="Horizontal">
+                    <Track.DecreaseButton>
+                        <RepeatButton Name="PART_DecreaseButton"
+                                      Focusable="False"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"/>
+                    </Track.DecreaseButton>
+                    <Track.IncreaseButton>
+                        <RepeatButton Name="PART_IncreaseButton"
+                                      Focusable="False"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"/>
+                    </Track.IncreaseButton>
+                    <Thumb Classes="SliderThumbStyle" 
+                           Name="thumb" Margin="0" Padding="0"
+                           DataContext="{TemplateBinding Value}" />
+                </Track>
             </ControlTemplate>
         </Setter>
     </Style>
