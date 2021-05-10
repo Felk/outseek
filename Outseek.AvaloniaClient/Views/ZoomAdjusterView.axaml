@@ -11,7 +11,9 @@
     </Design.DataContext>
 
     <Panel Background="#202030">
-        <Label Content="miniature timeline goes here..." />
+        <Panel>
+            <!-- miniature timeline goes here... -->
+        </Panel>
         <controls:ResizableThumbTrack
             Bounds="{Binding Bounds, Mode=OneWayToSource}"
             Minimum="{Binding TimelineState.Start}"

@@ -15,7 +15,7 @@ namespace Outseek.AvaloniaClient.SharedViewModels
         // logical values, in seconds:
         //
         [Reactive] public double Start { get; set; } = 0;
-        [Reactive] public double End { get; set; } = TimeSpan.FromHours(3).TotalSeconds;
+        [Reactive] public double End { get; set; } = TimeSpan.FromMinutes(10).TotalSeconds;
         [Reactive] public double PlaybackPosition { get; set; } = 0;
         [Reactive] public double Step { get; set; } = 1 / 30d; // assuming 30fps
         
