@@ -29,7 +29,8 @@ namespace Outseek.AvaloniaClient.ViewModels
             
             double scaledRange = to - from;
             double scale = scaledRange / range;
-            double offset = from / (range - scaledRange);
+            double rangeOffset = range - scaledRange;
+            double offset = rangeOffset == 0 ? 0 : from / rangeOffset;
 
             TimelineState.ScrollOffset = offset;
             TimelineState.ZoomScale = scale;
