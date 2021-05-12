@@ -37,7 +37,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         
         public VideoplayerViewModel(TimelineState timelineState, MediaState mediaState)
         {
-            Core.Initialize();
+            Core.Initialize("C:/Program Files/VideoLAN/VLC");
             _libVlc = new LibVLC();
             TimelineState = timelineState;
             MediaState = mediaState;
