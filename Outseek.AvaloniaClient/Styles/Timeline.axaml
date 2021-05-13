@@ -34,20 +34,20 @@
         </Setter>
     </Style>
 
-    <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track">
-        <!-- make the slider go from edge to edge-->
-        <Setter Property="Margin" Value="-10,0,-10,0" />
-    </Style>
-
     <Style Selector="views|TimelineView ScrollViewer#TimelineSliderArea">
         <Setter Property="Background" Value="#101010" />
     </Style>
 
     <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track Thumb.SliderThumbStyle">
-        <!-- replace round thumb with timeline-draggy-thing looking thumb -->
+        <!-- replace round thumb with timeline-draggy-thing looking thumb,
+             and also make the slider go from edge to edge by setting the thumb width to 0
+             and have its template draw outside the bounds -->
+        <Setter Property="ClipToBounds" Value="False"/>
+        <Setter Property="Width" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Template">
             <ControlTemplate>
-                <Polygon Points="0,0 20,0 20,10 10,20 0,10" Fill="#33aa33" />
+                <Polygon Points="-10,0 10,0 10,10 0,20 -10,10" Fill="#33aa33" />
             </ControlTemplate>
         </Setter>
     </Style>
