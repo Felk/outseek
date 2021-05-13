@@ -1,0 +1,14 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="Button">
+        <!-- no button should be focusable, because 'space' is globally bound
+             to play/pause and because buttons should get dedicated hotkeys instead. -->
+        <Setter Property="Focusable" Value="False" />
+    </Style>
+</Styles>
