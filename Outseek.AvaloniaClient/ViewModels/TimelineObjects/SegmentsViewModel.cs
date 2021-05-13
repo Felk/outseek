@@ -21,7 +21,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         }
 
         public SegmentsViewModel()
-            : this(TimelineState.Instance, new TimelineObject.Segments(ImmutableList<Segment>.Empty))
+            : this(new TimelineState(), new TimelineObject.Segments(ImmutableList<Segment>.Empty))
         {
             // the default constructor is only used by the designer
         }
