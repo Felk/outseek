@@ -21,6 +21,7 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <controls:ResizableThumbTrack
+                    IsResizable="False" IsDraggable="False"
                     From="{Binding FromScaled}"
                     To="{Binding ToScaled}"
                     Minimum="0"

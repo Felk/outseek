@@ -60,6 +60,12 @@ namespace Outseek.AvaloniaClient.Controls
             AvaloniaProperty.Register<ResizableThumbTrack, ResizeThumbPlacement>(nameof(ResizeThumbPlacement),
                 defaultValue: ResizeThumbPlacement.Inside);
 
+        public static readonly StyledProperty<bool> IsResizableProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, bool>(nameof(IsResizable), defaultValue: true);
+
+        public static readonly StyledProperty<bool> IsDraggableProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, bool>(nameof(IsDraggable), defaultValue: true);
+
         [Content]
         public Thumb? DragThumb
         {
@@ -121,6 +127,18 @@ namespace Outseek.AvaloniaClient.Controls
             set { SetValue(ResizeThumbPlacementProperty, value); }
         }
 
+        public bool IsResizable
+        {
+            get { return GetValue(IsResizableProperty); }
+            set { SetValue(IsResizableProperty, value); }
+        }
+
+        public bool IsDraggable
+        {
+            get { return GetValue(IsDraggableProperty); }
+            set { SetValue(IsDraggableProperty, value); }
+        }
+
         static ResizableThumbTrack()
         {
             ResizeStartThumbProperty.Changed.AddClassHandler<ResizableThumbTrack>(
@@ -159,9 +177,19 @@ namespace Outseek.AvaloniaClient.Controls
 
             // TODO this doesn't really belong here?
             if (ResizeStartThumb != null)
+            {
                 ResizeStartThumb.Cursor = new Cursor(StandardCursorType.LeftSide);
+                ResizeStartThumb.IsEnabled = IsResizable;
+            }
             if (ResizeEndThumb != null)
+            {
                 ResizeEndThumb.Cursor = new Cursor(StandardCursorType.RightSide);
+                ResizeEndThumb.IsEnabled = IsResizable;
+            }
+            if (DragThumb != null)
+            {
+                DragThumb.IsEnabled = IsDraggable;
+            }
 
             ResizeStartThumb?.Arrange(new Rect(
                 segmentStart,
