@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reactive;
 using System.Threading;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using LibVLCSharp.Avalonia;
 using LibVLCSharp.Shared;
+using MessageBox.Avalonia;
+using MessageBox.Avalonia.Enums;
 using Outseek.AvaloniaClient.SharedViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -20,6 +26,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         private Media? _currentMedia;
 
         [Reactive] public ReactiveCommand<Unit, Unit> PlayOrPause { get; set; }
+        [Reactive] public ReactiveCommand<Unit, Unit> OpenFileDialog { get; set; }
 
         public VideoplayerViewModel() : this(new TimelineState(), new MediaState())
         {
@@ -34,7 +41,7 @@ namespace Outseek.AvaloniaClient.ViewModels
             _currentMedia = new Media(_libVlc, mediaUri);
             _mediaPlayer?.Play(_currentMedia);
         }
-        
+
         public VideoplayerViewModel(TimelineState timelineState, MediaState mediaState)
         {
             Core.Initialize("C:/Program Files/VideoLAN/VLC");
@@ -57,6 +64,31 @@ namespace Outseek.AvaloniaClient.ViewModels
                     Play(MediaState.Filename);
                     _mediaPlayer.Time = (long) (TimelineState.PlaybackPosition * 1000);
                 }
+            });
+            OpenFileDialog = ReactiveCommand.Create(() =>
+            {
+                Debug.Assert(Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime);
+                Window mainWindow = ((IClassicDesktopStyleApplicationLifetime) Application.Current.ApplicationLifetime)
+                    .MainWindow;
+                var fileDialog = new OpenFileDialog
+                {
+                    AllowMultiple = false,
+                    Title = "Choose video file",
+                };
+                fileDialog.ShowAsync(mainWindow).ContinueWith(task =>
+                {
+                    if (task.Exception != null)
+                    {
+                        var messagebox = MessageBoxManager.GetMessageBoxStandardWindow(
+                            "Could not open file", task.Exception.ToString(), ButtonEnum.Ok, Icon.Error);
+                        messagebox.Show();
+                    }
+                    else
+                    {
+                        var filename = task.Result[0];
+                        MediaState.Filename = filename;
+                    }
+                });
             });
             MediaState.WhenAnyValue(m => m.Filename).Subscribe(Play);
         }

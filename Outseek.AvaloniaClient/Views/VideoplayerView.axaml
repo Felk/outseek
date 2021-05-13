@@ -10,16 +10,29 @@
         <viewModels:VideoplayerViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,Auto">
-        <vlc:VideoView
-            Name="VideoView"
-            Grid.Row="0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch" />
-        <Button
-            HotKey="Space"
-            Grid.Row="1"
-            Command="{Binding PlayOrPause}"
-            Content="Play or Pause!" />
+    <Grid>
+        <Grid RowDefinitions="*,Auto">
+            <Panel Grid.Row="0" Background="#111111">
+                <vlc:VideoView
+                    IsVisible="{Binding MediaState.Filename, Converter={x:Static ObjectConverters.IsNotNull}}"
+                    Name="VideoView"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" />
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                    IsVisible="{Binding MediaState.Filename, Converter={x:Static ObjectConverters.IsNull}}">
+                    <Label Content="No video file selected." HorizontalAlignment="Center" />
+                    <Label Content="You can Drag&amp;Drop a video file here." HorizontalAlignment="Center" />
+                </StackPanel>
+            </Panel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Button
+                    HotKey="Space"
+                    Command="{Binding PlayOrPause}"
+                    Content="Play or Pause!" />
+                <Button
+                    Command="{Binding OpenFileDialog}"
+                    Content="Open Video File" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>
