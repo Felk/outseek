@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Outseek.API.Processors;
 using Outseek.AvaloniaClient.SharedViewModels;
 using ReactiveUI.Fody.Helpers;
 
@@ -18,12 +19,9 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineViewModel(TimelineState timelineState)
         {
             TimelineState = timelineState;
-            Segments.Add(new TimelineSegmentViewModel(TimelineState)
-                {Text = "First Lane", From = 50, To = 200});
-            Segments.Add(new TimelineSegmentViewModel(TimelineState)
-                {Text = "Second Lane", From = 150, To = 230});
-            Segments.Add(new TimelineSegmentViewModel(TimelineState)
-                {Text = "Third Lane", From = 30, To = 120});
+            Segments.Add(new TimelineSegmentViewModel(TimelineState, new RandomSegmentsProcessor()));
+            Segments.Add(new TimelineSegmentViewModel(TimelineState, new RandomSegmentsProcessor()));
+            Segments.Add(new TimelineSegmentViewModel(TimelineState, new RandomSegmentsProcessor()));
         }
     }
 }

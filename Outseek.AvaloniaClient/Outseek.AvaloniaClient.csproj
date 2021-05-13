@@ -19,4 +19,7 @@
         <PackageReference Include="LibVLCSharp" Version="3.5.0" />
         <PackageReference Include="LibVLCSharp.Avalonia" Version="3.5.0" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Outseek.API\Outseek.API.csproj" />
+    </ItemGroup>
 </Project>
