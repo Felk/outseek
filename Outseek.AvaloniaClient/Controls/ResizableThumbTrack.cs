@@ -35,12 +35,10 @@ namespace Outseek.AvaloniaClient.Controls
             AvaloniaProperty.Register<ResizableThumbTrack, Thumb?>(nameof(ResizeEndThumb));
 
         public static readonly StyledProperty<double> MinimumProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Minimum),
-                defaultBindingMode: BindingMode.TwoWay);
+            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Minimum));
 
         public static readonly StyledProperty<double> MaximumProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Maximum),
-                defaultBindingMode: BindingMode.TwoWay);
+            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Maximum));
 
         public static readonly StyledProperty<double> FromProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(From),
@@ -159,6 +157,7 @@ namespace Outseek.AvaloniaClient.Controls
                 DragThumb.Measure(availableSize);
                 return DragThumb.DesiredSize;
             }
+
             return new Size();
         }
 
@@ -181,11 +180,13 @@ namespace Outseek.AvaloniaClient.Controls
                 ResizeStartThumb.Cursor = new Cursor(StandardCursorType.LeftSide);
                 ResizeStartThumb.IsEnabled = IsResizable;
             }
+
             if (ResizeEndThumb != null)
             {
                 ResizeEndThumb.Cursor = new Cursor(StandardCursorType.RightSide);
                 ResizeEndThumb.IsEnabled = IsResizable;
             }
+
             if (DragThumb != null)
             {
                 DragThumb.IsEnabled = IsDraggable;
