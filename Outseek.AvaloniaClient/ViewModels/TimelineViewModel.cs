@@ -9,7 +9,7 @@ namespace Outseek.AvaloniaClient.ViewModels
     {
         public TimelineState TimelineState { get; }
 
-        [Reactive] public ObservableCollection<TimelineSegmentViewModel> Segments { get; set; } = new();
+        [Reactive] public ObservableCollection<TimelineObjectViewModel> TimelineObjects { get; set; } = new();
 
         public TimelineViewModel() : this(new TimelineState())
         {
@@ -19,9 +19,9 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineViewModel(TimelineState timelineState)
         {
             TimelineState = timelineState;
-            Segments.Add(new TimelineSegmentViewModel(TimelineState, new RandomSegmentsProcessor()));
-            Segments.Add(new TimelineSegmentViewModel(TimelineState, new RandomSegmentsProcessor()));
-            Segments.Add(new TimelineSegmentViewModel(TimelineState, new RandomSegmentsProcessor()));
+            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegmentsProcessor()));
+            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegmentsProcessor()));
+            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegmentsProcessor()));
         }
     }
 }

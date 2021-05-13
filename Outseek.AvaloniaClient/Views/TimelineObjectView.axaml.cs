@@ -3,9 +3,9 @@ using Avalonia.Markup.Xaml;
 
 namespace Outseek.AvaloniaClient.Views
 {
-    public class TimelineSegmentView : UserControl
+    public class TimelineObjectView : UserControl
     {
-        public TimelineSegmentView()
+        public TimelineObjectView()
         {
             InitializeComponent();
         }

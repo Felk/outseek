@@ -8,7 +8,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Outseek.AvaloniaClient.ViewModels
 {
-    public class TimelineSegmentViewModel : ViewModelBase
+    public class TimelineObjectViewModel : ViewModelBase
     {
         private readonly ITimelineProcessor _timelineProcessor;
 
@@ -17,7 +17,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         [Reactive] public string? Text { get; set; }
         [Reactive] private ViewModelBase? TimelineObject { get; set; }
 
-        public TimelineSegmentViewModel() : this(new TimelineState(), new RandomSegmentsProcessor())
+        public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegmentsProcessor())
         {
             // the default constructor is only used by the designer
         }
@@ -33,7 +33,7 @@ namespace Outseek.AvaloniaClient.ViewModels
             };
         }
 
-        public TimelineSegmentViewModel(
+        public TimelineObjectViewModel(
             TimelineState timelineState, ITimelineProcessor processor)
         {
             TimelineState = timelineState;

@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Outseek.AvaloniaClient.Views.TimelineSegmentView">
+             x:Class="Outseek.AvaloniaClient.Views.TimelineObjectView">
     <Design.DataContext>
-        <viewModels:TimelineSegmentViewModel />
+        <viewModels:TimelineObjectViewModel />
     </Design.DataContext>
 
+    <!-- chooses view dynamically using the ViewLocator -->
     <ContentControl Content="{Binding TimelineObject}" />
 </UserControl>

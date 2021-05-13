@@ -33,7 +33,7 @@
                     Width="{Binding TimelineState.ViewportWidth}" VerticalAlignment="Top" />
             <ScrollViewer VerticalScrollBarVisibility="Visible"
                           HorizontalScrollBarVisibility="Hidden">
-                <ItemsControl Items="{Binding Segments}">
+                <ItemsControl Items="{Binding TimelineObjects}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid ColumnDefinitions="200,*">
@@ -44,7 +44,7 @@
                                               HorizontalScrollBarVisibility="Hidden"
                                               VerticalScrollBarVisibility="Hidden"
                                               Offset="{Binding TimelineState.ScrollPositionScaled}">
-                                    <views:TimelineSegmentView
+                                    <views:TimelineObjectView
                                         Width="{Binding TimelineState.ViewportWidthScaled}" />
                                 </ScrollViewer>
                             </Grid>
