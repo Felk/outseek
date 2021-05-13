@@ -21,15 +21,26 @@
 
     <Style Selector="views|TimelineView Border#PART_Border">
         <Setter Property="Background" Value="#3355cc" />
-        <Setter Property="Margin" Value="-1,2,-1,2" />
-        <Setter Property="BorderBrush" Value="Black" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="2" />
     </Style>
 
-    <Style Selector="views|TimelineView Thumb#PART_ResizeStartThumb, views|TimelineView Thumb#PART_ResizeEndThumb">
+    <Style Selector="views|TimelineView Thumb#PART_ResizeStartThumb">
         <Setter Property="Template">
             <ControlTemplate>
-                <Rectangle Width="6" Fill="transparent" />
+                <Border BorderThickness="3 3 0 3" 
+                        Background="transparent"
+                        BorderBrush="#606060"
+                        Width="10" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="views|TimelineView Thumb#PART_ResizeEndThumb">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border BorderThickness="0 3 3 3" 
+                        Background="transparent"
+                        BorderBrush="#606060"
+                        Width="10" />
             </ControlTemplate>
         </Setter>
     </Style>

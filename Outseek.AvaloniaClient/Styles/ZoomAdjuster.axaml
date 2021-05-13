@@ -5,11 +5,23 @@
         <views:ZoomAdjusterView Height="40" Width="400" />
     </Design.PreviewWith>
 
-    <Style Selector="views|ZoomAdjusterView Thumb#PART_ResizeStartThumb, views|ZoomAdjusterView Thumb#PART_ResizeEndThumb">
+    <Style Selector="views|ZoomAdjusterView Thumb#PART_ResizeStartThumb">
         <Setter Property="Template">
             <ControlTemplate>
-                <Rectangle Fill="#1A1A1D" StrokeThickness="20"
-                           Stroke="transparent" Width="23" />
+                <Border BorderThickness="4 4 0 4" 
+                        Background="transparent"
+                        BorderBrush="#606060"
+                        Width="15" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="views|ZoomAdjusterView Thumb#PART_ResizeEndThumb">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border BorderThickness="0 4 4 4"
+                        Background="transparent"
+                        BorderBrush="#606060"
+                        Width="15" />
             </ControlTemplate>
         </Setter>
     </Style>
@@ -17,10 +29,7 @@
     <Style Selector="views|ZoomAdjusterView Thumb#PART_DragThumb">
         <Setter Property="Template">
             <ControlTemplate>
-                <Border Margin="2"
-                        BoxShadow="0 -1 #55ffffff"
-                        CornerRadius="7"
-                        Background="#6E3B3B46" />
+                <Border Margin="2" Background="#6E3B3B46" />
             </ControlTemplate>
         </Setter>
     </Style>

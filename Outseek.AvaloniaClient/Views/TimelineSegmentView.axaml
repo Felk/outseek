@@ -26,7 +26,7 @@
         <Thumb>
             <Thumb.Template>
                 <ControlTemplate>
-                    <Border CornerRadius="2" Name="PART_Border">
+                    <Border Name="PART_Border">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="{Binding From, StringFormat=\{0:00.00\}}" />
                             <Label Content="-" />
