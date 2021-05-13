@@ -103,12 +103,17 @@ namespace Outseek.AvaloniaClient.ViewModels
                 double durationSeconds = args.Length / 1000d;
                 TimelineState.End = durationSeconds;
             };
-            bool expectTimeChange = false;
-            _mediaPlayer.TimeChanged += (sender, args) =>
+            // There doesn't seem to be easy control over the sender object for reactive properties,
+            // so this bool is used to avoid time change events originating from libvlc to cause a feedback loop. 
+            bool isNextTimeChangeFromVlc = false;
+            _mediaPlayer.TimeChanged += (_, args) =>
             {
-                expectTimeChange = true;
                 double positionSeconds = args.Time / 1000d;
-                TimelineState.PlaybackPosition = positionSeconds;
+                if (!Equals(TimelineState.PlaybackPosition, positionSeconds))
+                {
+                    isNextTimeChangeFromVlc = true;
+                    TimelineState.PlaybackPosition = positionSeconds;
+                }
             };
             _mediaPlayer.EndReached += (_, _) =>
             {
@@ -125,8 +130,8 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineState.WhenAnyValue(t => t.PlaybackPosition)
                 .Where(_ =>
                 {
-                    if (!expectTimeChange) return true;
-                    expectTimeChange = false;
+                    if (!isNextTimeChangeFromVlc) return true;
+                    isNextTimeChangeFromVlc = false;
                     return false;
                 })
                 // This throttles user input when scrubbing through the timeline
