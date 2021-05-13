@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
@@ -121,15 +123,21 @@ namespace Outseek.AvaloniaClient.ViewModels
             _mediaPlayer.Stopped += (_, _) => MediaState.IsPlaying = false;
             _mediaPlayer.Playing += (_, _) => MediaState.IsPlaying = true;
             TimelineState.WhenAnyValue(t => t.PlaybackPosition)
-                .Subscribe(position =>
+                .Where(_ =>
                 {
-                    double ms = position * 1000;
-                    if (expectTimeChange)
-                    {
-                        expectTimeChange = false;
-                        return;
-                    }
-
+                    if (!expectTimeChange) return true;
+                    expectTimeChange = false;
+                    return false;
+                })
+                // This throttles user input when scrubbing through the timeline
+                // (The ReactiveUI Throttle method is actually a de-bouncer, which is not useful here),
+                // but actually results in a smoother scrubbing experience because changing the playback position too
+                // frequently makes libvlc freeze for short periods of time.
+                .Buffer(TimeSpan.FromMilliseconds(200))
+                .Subscribe(bufferedPositions =>
+                {
+                    if (!bufferedPositions.Any()) return;
+                    double ms = bufferedPositions.Last() * 1000;
                     _mediaPlayer.Time = (int) ms;
                 });
 
