@@ -110,12 +110,16 @@ namespace Outseek.AvaloniaClient.ViewModels
             };
             _mediaPlayer.EndReached += (_, _) =>
             {
+                MediaState.IsPlaying = false;
                 ThreadPool.QueueUserWorkItem(_ =>
                 {
                     _mediaPlayer.Media = _currentMedia;
                     TimelineState.PlaybackPosition = 0;
                 });
             };
+            _mediaPlayer.Paused += (_, _) => MediaState.IsPlaying = false;
+            _mediaPlayer.Stopped += (_, _) => MediaState.IsPlaying = false;
+            _mediaPlayer.Playing += (_, _) => MediaState.IsPlaying = true;
             TimelineState.WhenAnyValue(t => t.PlaybackPosition)
                 .Subscribe(position =>
                 {
@@ -125,6 +129,7 @@ namespace Outseek.AvaloniaClient.ViewModels
                         expectTimeChange = false;
                         return;
                     }
+
                     _mediaPlayer.Time = (int) ms;
                 });
 

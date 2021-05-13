@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
              xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="300"
              x:Class="Outseek.AvaloniaClient.Views.VideoplayerView">
     <Design.DataContext>
         <viewModels:VideoplayerViewModel />
@@ -16,22 +16,29 @@
                 <vlc:VideoView
                     IsVisible="{Binding MediaState.Filename, Converter={x:Static ObjectConverters.IsNotNull}}"
                     Name="VideoView"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch" />
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
-                    IsVisible="{Binding MediaState.Filename, Converter={x:Static ObjectConverters.IsNull}}">
+                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                <StackPanel
+                    IsVisible="{Binding MediaState.Filename, Converter={x:Static ObjectConverters.IsNull}}"
+                    VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Label Content="No video file selected." HorizontalAlignment="Center" />
                     <Label Content="You can Drag&amp;Drop a video file here." HorizontalAlignment="Center" />
                 </StackPanel>
             </Panel>
-            <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <Button
-                    HotKey="Space"
-                    Command="{Binding PlayOrPause}"
-                    Content="Play or Pause!" />
-                <Button
-                    Command="{Binding OpenFileDialog}"
-                    Content="Open Video File" />
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <Button HotKey="Space"
+                        Command="{Binding PlayOrPause}">
+                    <StackPanel>
+                        <PathIcon Data="{StaticResource play_regular}"
+                                  IsVisible="{Binding !MediaState.IsPlaying}" />
+                        <PathIcon Data="{StaticResource pause_regular}"
+                                  IsVisible="{Binding MediaState.IsPlaying}" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding OpenFileDialog}">
+                    <PathIcon Data="{StaticResource folder_open_regular}" />
+                </Button>
             </StackPanel>
         </Grid>
     </Grid>
