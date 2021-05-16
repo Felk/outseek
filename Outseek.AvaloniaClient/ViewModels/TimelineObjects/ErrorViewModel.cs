@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using ReactiveUI.Fody.Helpers;
 
 namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
@@ -7,6 +8,6 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
     {
         [Reactive] public string? Error { get; set; }
 
-        public override Task Refresh() => Task.CompletedTask;
+        public override Task Refresh(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

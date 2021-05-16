@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using Outseek.API;
@@ -28,10 +29,10 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
             // the default constructor is only used by the designer
         }
 
-        public override async Task Refresh()
+        public override async Task Refresh(CancellationToken cancellationToken)
         {
             Segments.Clear();
-            await foreach (Segment segment in _segments.SegmentList)
+            await foreach (Segment segment in _segments.SegmentList.WithCancellation(cancellationToken))
             {
                 SegmentViewModel svm = new(TimelineState, segment.FromSeconds, segment.ToSeconds);
                 Dispatcher.UIThread.Post(() => Segments.Add(svm));
