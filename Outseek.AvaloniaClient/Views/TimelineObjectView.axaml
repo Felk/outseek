@@ -3,12 +3,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="250"
              x:Class="Outseek.AvaloniaClient.Views.TimelineObjectView">
     <Design.DataContext>
         <viewModels:TimelineObjectViewModel />
     </Design.DataContext>
 
     <!-- chooses view dynamically using the ViewLocator -->
-    <ContentControl Content="{Binding TimelineObject}" />
+    <Panel>
+        <ContentControl Content="{Binding TimelineObject}" />
+        <Border IsVisible="{Binding TimelineObject.Error, Converter={x:Static ObjectConverters.IsNotNull}}"
+                Background="#99ff0000">
+            <Label Content="{Binding TimelineObject.Error}" />
+        </Border>
+    </Panel>
 </UserControl>

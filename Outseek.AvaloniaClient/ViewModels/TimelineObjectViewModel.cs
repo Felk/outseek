@@ -26,15 +26,22 @@ namespace Outseek.AvaloniaClient.ViewModels
         private async Task RerunProcessor()
         {
             var context = new TimelineProcessContext(TimelineState.Start, TimelineState.End);
-            TimelineObject timelineObject = _timelineProcessor.Process(context, new TimelineObject.Nothing());
-            TimelineObjectViewModelBase timelineObjectViewModelBase = timelineObject switch
+            try
             {
-                TimelineObject.Nothing nothing => new NothingViewModel(),
-                TimelineObject.Segments segments =>  new SegmentsViewModel(TimelineState, segments),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            TimelineObject = timelineObjectViewModelBase;
-            await timelineObjectViewModelBase.Refresh();
+                TimelineObject timelineObject = _timelineProcessor.Process(context, new TimelineObject.Nothing());
+                TimelineObjectViewModelBase timelineObjectViewModelBase = timelineObject switch
+                {
+                    TimelineObject.Nothing nothing => new NothingViewModel(),
+                    TimelineObject.Segments segments => new SegmentsViewModel(TimelineState, segments),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                TimelineObject = timelineObjectViewModelBase;
+                await timelineObjectViewModelBase.Refresh();
+            }
+            catch (Exception ex)
+            {
+                TimelineObject = new NothingViewModel {Error = ex.Message};
+            }
         }
 
         public TimelineObjectViewModel(

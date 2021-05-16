@@ -31,10 +31,18 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         public override async Task Refresh()
         {
             Segments.Clear();
-            await foreach (Segment segment in _segments.SegmentList)
+            try
             {
-                SegmentViewModel svm = new(TimelineState, segment.FromSeconds, segment.ToSeconds);
-                Dispatcher.UIThread.Post(() => Segments.Add(svm));
+                await foreach (Segment segment in _segments.SegmentList)
+                {
+                    SegmentViewModel svm = new(TimelineState, segment.FromSeconds, segment.ToSeconds);
+                    Dispatcher.UIThread.Post(() => Segments.Add(svm));
+                }
+                Error = null;
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
             }
         }
     }
