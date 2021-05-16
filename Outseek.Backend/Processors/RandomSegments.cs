@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Outseek.API;
 
-namespace Outseek.API.Processors
+namespace Outseek.Backend.Processors
 {
-    public class RandomSegmentsProcessor : ITimelineProcessor<TimelineObject.Nothing, TimelineObject.Segments>
+    public class RandomSegments : ITimelineProcessor<TimelineObject.Nothing, TimelineObject.Segments>
     {
         public string Name => "random segments (testing)";
 

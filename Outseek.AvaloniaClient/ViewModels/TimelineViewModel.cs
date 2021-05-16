@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using Outseek.API.Processors;
 using Outseek.AvaloniaClient.SharedViewModels;
+using Outseek.Backend.Processors;
 using ReactiveUI.Fody.Helpers;
 
 namespace Outseek.AvaloniaClient.ViewModels
@@ -19,9 +19,9 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineViewModel(TimelineState timelineState)
         {
             TimelineState = timelineState;
-            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegmentsProcessor()));
-            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegmentsProcessor()));
-            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegmentsProcessor()));
+            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
+            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
+            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
         }
     }
 }

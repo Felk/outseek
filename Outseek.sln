@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Outseek.AvaloniaClient", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Outseek.API", "Outseek.API\Outseek.API.csproj", "{9E57B8CD-2DB0-4D45-8BBB-4E6FDECC1720}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Outseek.Backend", "Outseek.Backend\Outseek.Backend.csproj", "{84D051EB-81DA-4E1B-B417-540D7DB7372F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{9E57B8CD-2DB0-4D45-8BBB-4E6FDECC1720}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E57B8CD-2DB0-4D45-8BBB-4E6FDECC1720}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E57B8CD-2DB0-4D45-8BBB-4E6FDECC1720}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84D051EB-81DA-4E1B-B417-540D7DB7372F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D051EB-81DA-4E1B-B417-540D7DB7372F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D051EB-81DA-4E1B-B417-540D7DB7372F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D051EB-81DA-4E1B-B417-540D7DB7372F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

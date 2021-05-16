@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Outseek.API;
-using Outseek.API.Processors;
 using Outseek.AvaloniaClient.SharedViewModels;
 using Outseek.AvaloniaClient.ViewModels.TimelineObjects;
+using Outseek.Backend.Processors;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -18,7 +18,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         [Reactive] public string? Text { get; set; }
         [Reactive] private TimelineObjectViewModelBase? TimelineObject { get; set; }
 
-        public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegmentsProcessor())
+        public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegments())
         {
             // the default constructor is only used by the designer
         }

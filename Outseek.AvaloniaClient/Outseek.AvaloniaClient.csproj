@@ -22,5 +22,6 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Outseek.API\Outseek.API.csproj" />
+      <ProjectReference Include="..\Outseek.Backend\Outseek.Backend.csproj" />
     </ItemGroup>
 </Project>
