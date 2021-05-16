@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Outseek.API;
 using Outseek.API.Processors;
 using Outseek.AvaloniaClient.SharedViewModels;
@@ -15,22 +16,25 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineState TimelineState { get; }
 
         [Reactive] public string? Text { get; set; }
-        [Reactive] private ViewModelBase? TimelineObject { get; set; }
+        [Reactive] private TimelineObjectViewModelBase? TimelineObject { get; set; }
 
         public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegmentsProcessor())
         {
             // the default constructor is only used by the designer
         }
 
-        private void RerunProcessor()
+        private async Task RerunProcessor()
         {
             var context = new TimelineProcessContext(TimelineState.Start, TimelineState.End);
-            TimelineObject = _timelineProcessor.Process(context, new TimelineObject.Nothing()) switch
+            TimelineObject timelineObject = _timelineProcessor.Process(context, new TimelineObject.Nothing());
+            TimelineObjectViewModelBase timelineObjectViewModelBase = timelineObject switch
             {
                 TimelineObject.Nothing nothing => new NothingViewModel(),
-                TimelineObject.Segments segments => new SegmentsViewModel(TimelineState, segments),
+                TimelineObject.Segments segments =>  new SegmentsViewModel(TimelineState, segments),
                 _ => throw new ArgumentOutOfRangeException()
             };
+            TimelineObject = timelineObjectViewModelBase;
+            await timelineObjectViewModelBase.Refresh();
         }
 
         public TimelineObjectViewModel(
@@ -39,10 +43,10 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineState = timelineState;
             _timelineProcessor = processor;
             Text = _timelineProcessor.Name;
-            RerunProcessor();
+            var _ = RerunProcessor();
             timelineState
                 .WhenAnyValue(t => t.Start, t => t.End)
-                .Subscribe(_ => { RerunProcessor(); });
+                .Subscribe(async _ => { await RerunProcessor(); });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 
 namespace Outseek.API
 {
@@ -12,6 +12,6 @@ namespace Outseek.API
 
         // public sealed record Multiple(IImmutableDictionary<string, TimelineObject> Objects) : TimelineObject;
         public sealed record Nothing : TimelineObject;
-        public sealed record Segments(IImmutableList<Segment> SegmentList) : TimelineObject;
+        public sealed record Segments(IAsyncEnumerable<Segment> SegmentList) : TimelineObject;
     }
 }

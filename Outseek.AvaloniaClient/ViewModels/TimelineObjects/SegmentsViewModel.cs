@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Avalonia.Threading;
 using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
 using ReactiveUI;
 
 namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
 {
-    public class SegmentsViewModel : ViewModelBase
+    public class SegmentsViewModel : TimelineObjectViewModelBase
     {
+        private readonly TimelineObject.Segments _segments;
         public TimelineState TimelineState { get; }
 
         public ObservableCollection<SegmentViewModel> Segments { get; } = new();
@@ -16,14 +19,23 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         public SegmentsViewModel(TimelineState timelineState, TimelineObject.Segments segments)
         {
             TimelineState = timelineState;
-            foreach (Segment segment in segments.SegmentList)
-                Segments.Add(new SegmentViewModel(timelineState, segment.FromSeconds, segment.ToSeconds));
+            _segments = segments;
         }
 
-        public SegmentsViewModel()
-            : this(new TimelineState(), new TimelineObject.Segments(ImmutableList<Segment>.Empty))
+        public SegmentsViewModel() : this(
+            new TimelineState(), new TimelineObject.Segments(AsyncEnumerable.Empty<Segment>()))
         {
             // the default constructor is only used by the designer
+        }
+
+        public override async Task Refresh()
+        {
+            Segments.Clear();
+            await foreach (Segment segment in _segments.SegmentList)
+            {
+                SegmentViewModel svm = new(TimelineState, segment.FromSeconds, segment.ToSeconds);
+                Dispatcher.UIThread.Post(() => Segments.Add(svm));
+            }
         }
     }
 

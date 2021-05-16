@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Outseek.API.Processors
 {
@@ -14,22 +14,27 @@ namespace Outseek.API.Processors
             Random random = new();
 
             List<Segment> segments = new();
-            const int numSegments = 3;
+            const int numSegments = 20;
 
             List<int> cuts = Enumerable
                 .Range(0, numSegments * 2)
                 .Select(_ => random.Next((int) context.Minimum, (int) context.Maximum))
                 .OrderBy(i => i)
+                .Distinct()
                 .ToList();
 
-            for (int i = 0; i < cuts.Count; i += 2)
+            async IAsyncEnumerable<Segment> GetSegments()
             {
-                int from = cuts[i];
-                int to = cuts[i + 1];
-                segments.Add(new Segment(from, to));
+                for (int i = 0; i + 1 < cuts.Count; i += 2)
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(20));
+                    int from = cuts[i];
+                    int to = cuts[i + 1];
+                    yield return new Segment(from, to);
+                }
             }
 
-            return new TimelineObject.Segments(segments.ToImmutableList());
+            return new TimelineObject.Segments(GetSegments());
         }
     }
 }
