@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using Outseek.AvaloniaClient.SharedViewModels;
-using Outseek.Backend.Processors;
 using ReactiveUI.Fody.Helpers;
 
 namespace Outseek.AvaloniaClient.ViewModels
@@ -21,9 +20,6 @@ namespace Outseek.AvaloniaClient.ViewModels
         {
             TimelineState = timelineState;
             ZoomAdjusterViewModel = new ZoomAdjusterViewModel(timelineState);
-            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
-            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
-            TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
         }
     }
 }

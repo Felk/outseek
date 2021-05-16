@@ -35,7 +35,8 @@ namespace Outseek.AvaloniaClient.ViewModels
                 {
                     TimelineObject.Nothing nothing => new NothingViewModel(),
                     TimelineObject.Segments segments => new SegmentsViewModel(TimelineState, segments),
-                    _ => throw new ArgumentOutOfRangeException()
+                    TimelineObject.TimedText timedText => new TimedTextViewModel(TimelineState, timedText),
+                    _ => throw new Exception($"unknown timeline object '{timelineObject}'")
                 };
                 TimelineObject = timelineObjectViewModelBase;
                 await timelineObjectViewModelBase.Refresh(cancellationToken);

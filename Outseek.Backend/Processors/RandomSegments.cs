@@ -14,7 +14,6 @@ namespace Outseek.Backend.Processors
         {
             Random random = new();
 
-            List<Segment> segments = new();
             const int numSegments = 20;
 
             List<int> cuts = Enumerable

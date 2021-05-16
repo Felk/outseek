@@ -5,6 +5,7 @@
              xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
              xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             Initialized="OnInitialized"
              x:Class="Outseek.AvaloniaClient.Views.TimelineView">
     <Design.DataContext>
         <viewModels:TimelineViewModel />
