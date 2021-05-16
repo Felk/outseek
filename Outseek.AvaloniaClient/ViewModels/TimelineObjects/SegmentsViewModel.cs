@@ -31,18 +31,10 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         public override async Task Refresh()
         {
             Segments.Clear();
-            try
+            await foreach (Segment segment in _segments.SegmentList)
             {
-                await foreach (Segment segment in _segments.SegmentList)
-                {
-                    SegmentViewModel svm = new(TimelineState, segment.FromSeconds, segment.ToSeconds);
-                    Dispatcher.UIThread.Post(() => Segments.Add(svm));
-                }
-                Error = null;
-            }
-            catch (Exception ex)
-            {
-                Error = ex.Message;
+                SegmentViewModel svm = new(TimelineState, segment.FromSeconds, segment.ToSeconds);
+                Dispatcher.UIThread.Post(() => Segments.Add(svm));
             }
         }
     }
@@ -70,7 +62,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
                 .WhenAnyValue(vm => vm.Step)
                 .Subscribe(_ => { this.RaisePropertyChanged(nameof(StepScaled)); });
         }
-        
+
         public double From
         {
             get => _from;

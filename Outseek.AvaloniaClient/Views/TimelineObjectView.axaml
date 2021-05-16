@@ -10,11 +10,5 @@
     </Design.DataContext>
 
     <!-- chooses view dynamically using the ViewLocator -->
-    <Panel>
-        <ContentControl Content="{Binding TimelineObject}" />
-        <Border IsVisible="{Binding TimelineObject.Error, Converter={x:Static ObjectConverters.IsNotNull}}"
-                Background="#99ff0000">
-            <Label Content="{Binding TimelineObject.Error}" />
-        </Border>
-    </Panel>
+    <ContentControl Content="{Binding TimelineObject}" />
 </UserControl>
