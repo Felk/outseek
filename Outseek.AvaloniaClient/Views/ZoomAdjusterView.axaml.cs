@@ -10,7 +10,6 @@ namespace Outseek.AvaloniaClient.Views
         public ZoomAdjusterView()
         {
             InitializeComponent();
-            DataContext = new ZoomAdjusterViewModel(TimelineState.Instance);
         }
 
         private void InitializeComponent()

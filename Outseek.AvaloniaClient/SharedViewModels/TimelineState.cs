@@ -8,9 +8,6 @@ namespace Outseek.AvaloniaClient.SharedViewModels
 {
     public class TimelineState : ViewModelBase
     {
-        // TODO don't use singleton
-        public static readonly TimelineState Instance = new();
-
         //
         // logical values, in seconds:
         //

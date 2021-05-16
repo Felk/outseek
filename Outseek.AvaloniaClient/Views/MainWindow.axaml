@@ -3,7 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
-        xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views"
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
         x:Class="Outseek.AvaloniaClient.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -13,13 +12,17 @@
         <viewModels:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,*" ColumnDefinitions="1*,2*" 
+    <Grid RowDefinitions="*,*" ColumnDefinitions="1*,2*"
           DragDrop.AllowDrop="True">
         <Panel Grid.Row="0" Grid.Column="0">
             <Label Content="" />
         </Panel>
-        <views:VideoplayerView Grid.Row="0" Grid.Column="1"/>
-        <views:TimelineView Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="0" />
+        <ContentControl
+            Grid.Row="0" Grid.Column="1"
+            Content="{Binding VideoplayerViewModel}" />
+        <ContentControl
+            Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="0"
+            Content="{Binding TimelineViewModel}" />
     </Grid>
 
 </Window>

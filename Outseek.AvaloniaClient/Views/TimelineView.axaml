@@ -29,7 +29,7 @@
         </Grid>
 
         <Panel Grid.Row="1">
-            <Border Name="SegmentsBackdrop" Margin="200 0 0 0" Height="8001" 
+            <Border Name="SegmentsBackdrop" Margin="200 0 0 0" Height="8001"
                     Width="{Binding TimelineState.ViewportWidth}" VerticalAlignment="Top" />
             <ScrollViewer VerticalScrollBarVisibility="Visible"
                           HorizontalScrollBarVisibility="Hidden">
@@ -66,7 +66,9 @@
 
         <Grid Grid.Row="2" ColumnDefinitions="200,*">
             <Panel Grid.Column="0" />
-            <views:ZoomAdjusterView Grid.Column="1" />
+            <ContentControl
+                Grid.Column="1"
+                Content="{Binding ZoomAdjusterViewModel}" />
         </Grid>
     </Grid>
 

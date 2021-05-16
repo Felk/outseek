@@ -3,22 +3,18 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using Outseek.AvaloniaClient.SharedViewModels;
+using Outseek.AvaloniaClient.ViewModels;
 
 namespace Outseek.AvaloniaClient.Views
 {
     public class MainWindow : Window
     {
-        private readonly MediaState _mediaState;
-        
         public MainWindow()
         {
             InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
 #endif
-
-            _mediaState = MediaState.Instance;
 
             AddHandler(DragDrop.DropEvent, Drop);
             AddHandler(DragDrop.DragOverEvent, DragOver);
@@ -37,7 +33,7 @@ namespace Outseek.AvaloniaClient.Views
         {
             string? filename = e.Data.GetFileNames()?.FirstOrDefault();
             if (filename == null) return;
-            _mediaState.Filename = filename;
+            ((MainWindowViewModel) DataContext!).MediaState.Filename = filename;
         }
 
         private void InitializeComponent()

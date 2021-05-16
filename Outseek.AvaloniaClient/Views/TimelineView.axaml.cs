@@ -1,7 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Outseek.AvaloniaClient.SharedViewModels;
-using Outseek.AvaloniaClient.ViewModels;
 
 namespace Outseek.AvaloniaClient.Views
 {
@@ -10,7 +8,6 @@ namespace Outseek.AvaloniaClient.Views
         public TimelineView()
         {
             InitializeComponent();
-            DataContext = new TimelineViewModel(TimelineState.Instance);
         }
 
         private void InitializeComponent()
@@ -19,4 +16,3 @@ namespace Outseek.AvaloniaClient.Views
         }
     }
 }
-
