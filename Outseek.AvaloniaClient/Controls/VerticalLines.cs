@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia;
@@ -67,6 +68,18 @@ namespace Outseek.AvaloniaClient.Controls
             AffectsRender<VerticalLines>(PositionsProperty, ColorProperty, RenderFromProperty, RenderToProperty);
         }
 
+        private static readonly Dictionary<uint, Pen> PensForColors = new();
+
+        /// Since <see cref="Pen"/> is a class and not a struct, caching them avoids excessive allocations.
+        private static Pen GetPenForColor(uint color)
+        {
+            if (PensForColors.TryGetValue(color, out var cachedPen))
+                return cachedPen;
+            Pen newPen = new(color);
+            PensForColors[color] = newPen;
+            return newPen;
+        }
+
         public override void Render(DrawingContext context)
         {
             if (Positions == null) return;
@@ -88,7 +101,7 @@ namespace Outseek.AvaloniaClient.Controls
                 prevIdx = idx;
                 double alpha = Math.Min(0.1 * count + 0.4, 1.0);
                 uint color = ((uint) (0xff * alpha) << 24) + ((uint) Color.R << 16) + ((uint) Color.G << 8) + Color.B;
-                context.DrawLine(new Pen(color), new Point(pixel, 0), new Point(pixel, DesiredSize.Height));
+                context.DrawLine(GetPenForColor(color), new Point(pixel, 0), new Point(pixel, DesiredSize.Height));
             }
         }
     }
