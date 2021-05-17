@@ -46,7 +46,16 @@ namespace Outseek.AvaloniaClient.ViewModels
 
         public VideoplayerViewModel(TimelineState timelineState, MediaState mediaState)
         {
-            Core.Initialize("C:/Program Files/VideoLAN/VLC");
+            try
+            {
+                // Linux: Requires libvlc to be available, e.g. by installing the 'vlc' and 'libvlc-dev' packages
+                Core.Initialize();
+            }
+            catch (VLCException)
+            {
+                // Windows: Assume a 64-bit VLC player is installed in the default location
+                Core.Initialize("C:/Program Files/VideoLAN/VLC");
+            }
             _libVlc = new LibVLC();
             TimelineState = timelineState;
             MediaState = mediaState;
