@@ -16,7 +16,9 @@ namespace Outseek.AvaloniaClient
         [STAThread] // required for drag&drop of external files, see https://github.com/AvaloniaUI/Avalonia/issues/2635
         public static int Main(string[] args)
         {
-            AttachConsole(-1);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                // makes output be printed to the console on windows
+                AttachConsole(-1);
             return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
