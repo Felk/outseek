@@ -15,4 +15,18 @@
     <Style Selector="Window">
         <Setter Property="Background" Value="#ff111111" />
     </Style>
+
+    <Style Selector="Rectangle#PlaybackIndicator, Rectangle#HoverIndicator">
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Width" Value="0" />
+        <Setter Property="Height" Value="9999" />
+        <Setter Property="StrokeThickness" Value="1" />
+    </Style>
+    <Style Selector="Rectangle#PlaybackIndicator">
+        <Setter Property="Stroke" Value="#33aa33" />
+    </Style>
+    <Style Selector="Rectangle#HoverIndicator">
+        <Setter Property="Stroke" Value="#aa33aa" />
+    </Style>
+
 </Styles>

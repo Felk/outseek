@@ -29,23 +29,11 @@
         </controls:ResizableThumbTrack>
         <StackPanel Orientation="Horizontal">
             <Panel Width="{Binding PlaybackIndicatorPosition, Mode=OneWay}" />
-            <Rectangle
-                Name="PlaybackIndicator"
-                IsHitTestVisible="False"
-                Width="0"
-                Height="9999"
-                StrokeThickness="1"
-                Stroke="#33aa33" />
+            <Rectangle Name="PlaybackIndicator" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Panel Width="{Binding HoverIndicatorPosition, Mode=OneWay}" />
-            <Rectangle
-                Name="HoverIndicator"
-                IsHitTestVisible="False"
-                Width="0"
-                Height="9999"
-                StrokeThickness="1"
-                Stroke="#aa33aa" />
+            <Rectangle Name="HoverIndicator" />
         </StackPanel>
     </Panel>
 </UserControl>
