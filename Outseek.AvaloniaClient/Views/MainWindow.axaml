@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
+        xmlns:behaviors="clr-namespace:Outseek.AvaloniaClient.Behaviors"
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
         x:Class="Outseek.AvaloniaClient.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -12,6 +13,14 @@
         <viewModels:MainWindowViewModel />
     </Design.DataContext>
 
+    <Interaction.Behaviors>
+        <behaviors:MouseWheelBehavior
+            Modifier="None"
+            Command="{Binding TimelineState.Scroll}" />
+        <behaviors:MouseWheelBehavior
+            Modifier="Control"
+            Command="{Binding TimelineState.Zoom}" />
+    </Interaction.Behaviors>
     <Grid RowDefinitions="*,*" ColumnDefinitions="1*,2*"
           DragDrop.AllowDrop="True">
         <Panel Grid.Row="0" Grid.Column="0">

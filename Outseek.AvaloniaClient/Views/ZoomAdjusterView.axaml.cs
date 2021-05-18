@@ -1,7 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Outseek.AvaloniaClient.SharedViewModels;
-using Outseek.AvaloniaClient.ViewModels;
 
 namespace Outseek.AvaloniaClient.Views
 {
