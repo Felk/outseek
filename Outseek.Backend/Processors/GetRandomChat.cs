@@ -6,11 +6,12 @@ using Outseek.API;
 
 namespace Outseek.Backend.Processors
 {
-    public class GetRandomChat : ITimelineProcessor<TimelineObject.Nothing, TimelineObject.TimedText>
+    public class GetRandomChat : ITimelineProcessor<TimelineObject.Nothing, TimelineObject.TimedText, object>
     {
         public string Name => "random chat (testing)";
 
-        public TimelineObject.TimedText Process(TimelineProcessContext context, TimelineObject.Nothing input)
+        public TimelineObject.TimedText Process(
+            TimelineProcessContext context, TimelineObject.Nothing input, object parameters)
         {
             double duration = context.Maximum - context.Minimum;
             const int messagesPerSecond = 2;

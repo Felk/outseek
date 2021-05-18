@@ -18,6 +18,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineState TimelineState { get; }
 
         [Reactive] public string? Text { get; set; }
+        [Reactive] public object ParameterObject { get; set; }
         [Reactive] private TimelineObjectViewModelBase? TimelineObject { get; set; }
 
         public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegments())
@@ -30,7 +31,8 @@ namespace Outseek.AvaloniaClient.ViewModels
             var context = new TimelineProcessContext(TimelineState.Start, TimelineState.End);
             try
             {
-                TimelineObject timelineObject = _timelineProcessor.Process(context, new TimelineObject.Nothing());
+                TimelineObject timelineObject = _timelineProcessor.Process(
+                    context, new TimelineObject.Nothing(), ParameterObject);
                 TimelineObjectViewModelBase timelineObjectViewModelBase = timelineObject switch
                 {
                     TimelineObject.Nothing nothing => new NothingViewModel(),
@@ -55,6 +57,7 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineState = timelineState;
             _timelineProcessor = processor;
             Text = _timelineProcessor.Name;
+            ParameterObject = _timelineProcessor.GetDefaultParameters();
             var _ = RerunProcessor(_cancellationTokenSource.Token);
             timelineState
                 .WhenAnyValue(t => t.Start, t => t.End)
