@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Outseek.AvaloniaClient.ViewModels;
 using Outseek.Backend.Processors;
+using Dispatcher = Avalonia.Threading.Dispatcher;
 
 namespace Outseek.AvaloniaClient.Views
 {
