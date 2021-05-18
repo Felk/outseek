@@ -11,4 +11,8 @@
              to play/pause and because buttons should get dedicated hotkeys instead. -->
         <Setter Property="Focusable" Value="False" />
     </Style>
+
+    <Style Selector="Window">
+        <Setter Property="Background" Value="#ff111111" />
+    </Style>
 </Styles>

@@ -21,16 +21,18 @@
             Modifier="Control"
             Command="{Binding TimelineState.Zoom}" />
     </Interaction.Behaviors>
-    <Grid RowDefinitions="*,*" ColumnDefinitions="1*,2*"
+    <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="1*,Auto,2*"
           DragDrop.AllowDrop="True">
         <Panel Grid.Row="0" Grid.Column="0">
             <Label Content="" />
         </Panel>
+        <GridSplitter Grid.Row="0" Grid.Column="1" />
         <ContentControl
-            Grid.Row="0" Grid.Column="1"
+            Grid.Row="0" Grid.Column="2"
             Content="{Binding VideoplayerViewModel}" />
+        <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" Grid.Column="0" />
         <ContentControl
-            Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="0"
+            Grid.ColumnSpan="3" Grid.Row="2" Grid.Column="0"
             Content="{Binding TimelineViewModel}" />
     </Grid>
 
