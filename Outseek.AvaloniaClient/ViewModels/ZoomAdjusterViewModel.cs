@@ -26,7 +26,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         private void FromToToOffsetScale(double from, double to)
         {
             double range = TimelineState.End - TimelineState.Start;
-            
+
             double scaledRange = to - from;
             double scale = scaledRange / range;
             double rangeOffset = range - scaledRange;
@@ -48,6 +48,13 @@ namespace Outseek.AvaloniaClient.ViewModels
             set => FromToToOffsetScale(From, value);
         }
 
+        public double PlaybackIndicatorPosition =>
+            TimelineState.PlaybackPosition / (TimelineState.End - TimelineState.Start) * TimelineState.ViewportWidth;
+
+        public double HoverIndicatorPosition =>
+            (TimelineState.ViewportHoverPosition + TimelineState.ScrollOffset * TimelineState.ScrollableWidth) /
+            TimelineState.ViewportWidthScaled * TimelineState.ViewportWidth;
+
         public double MinimumDistance => TimelineState.Step * 100;
 
         public ZoomAdjusterViewModel(TimelineState timelineState)
@@ -63,6 +70,12 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineState
                 .WhenAnyValue(t => t.Step)
                 .Subscribe(_ => this.RaisePropertyChanged(nameof(MinimumDistance)));
+            TimelineState
+                .WhenAnyValue(t => t.PlaybackPosition, t => t.End, t => t.Start, t => t.ViewportWidth)
+                .Subscribe(_ => this.RaisePropertyChanged(nameof(PlaybackIndicatorPosition)));
+            TimelineState
+                .WhenAnyValue(t => t.ViewportHoverPosition, t => t.ScrollOffset, t => t.ZoomScale, t => t.ViewportWidth)
+                .Subscribe(_ => this.RaisePropertyChanged(nameof(HoverIndicatorPosition)));
         }
 
         public ZoomAdjusterViewModel() : this(new TimelineState())

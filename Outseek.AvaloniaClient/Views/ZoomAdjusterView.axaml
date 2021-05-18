@@ -11,9 +11,6 @@
     </Design.DataContext>
 
     <Panel Background="#202030">
-        <Panel>
-            <!-- miniature timeline goes here... -->
-        </Panel>
         <controls:ResizableThumbTrack
             Bounds="{Binding Bounds, Mode=OneWayToSource}"
             Minimum="{Binding TimelineState.Start}"
@@ -30,5 +27,25 @@
             </controls:ResizableThumbTrack.ResizeEndThumb>
             <Thumb Name="PART_DragThumb" />
         </controls:ResizableThumbTrack>
+        <StackPanel Orientation="Horizontal">
+            <Panel Width="{Binding PlaybackIndicatorPosition, Mode=OneWay}" />
+            <Rectangle
+                Name="PlaybackIndicator"
+                IsHitTestVisible="False"
+                Width="0"
+                Height="9999"
+                StrokeThickness="1"
+                Stroke="#33aa33" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Panel Width="{Binding HoverIndicatorPosition, Mode=OneWay}" />
+            <Rectangle
+                Name="HoverIndicator"
+                IsHitTestVisible="False"
+                Width="0"
+                Height="9999"
+                StrokeThickness="1"
+                Stroke="#aa33aa" />
+        </StackPanel>
     </Panel>
 </UserControl>
