@@ -35,8 +35,15 @@
                     Width="{Binding TimelineState.ViewportWidth}" VerticalAlignment="Top" />
             <ScrollViewer VerticalScrollBarVisibility="Visible"
                           HorizontalScrollBarVisibility="Hidden">
-                <ItemsControl Items="{Binding TimelineObjects}">
-                    <ItemsControl.ItemTemplate>
+                <ListBox Items="{Binding TimelineObjects}"
+                         SelectionMode="Single"
+                         SelectedItem="{Binding SelectedTimelineObject}">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid ColumnDefinitions="200,*">
                                 <Label Grid.Column="0" Content="{Binding Text}" />
@@ -52,8 +59,8 @@
                                 </ScrollViewer>
                             </Grid>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </ScrollViewer>
             <StackPanel Orientation="Horizontal">
                 <Panel Width="200" />

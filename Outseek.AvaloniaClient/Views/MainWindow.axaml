@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:propertyGrid="clr-namespace:Outseek.AvaloniaClient.Controls.PropertyGrid"
         xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
         xmlns:behaviors="clr-namespace:Outseek.AvaloniaClient.Behaviors"
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
@@ -23,9 +24,10 @@
     </Interaction.Behaviors>
     <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="1*,Auto,2*"
           DragDrop.AllowDrop="True">
-        <Panel Grid.Row="0" Grid.Column="0">
-            <Label Content="" />
-        </Panel>
+        <Border Grid.Row="0" Grid.Column="0" Padding="10">
+            <propertyGrid:PropertyGrid
+                PropertyObject="{Binding TimelineViewModel.SelectedTimelineObject.ParameterObject}" />
+        </Border>
         <GridSplitter Grid.Row="0" Grid.Column="1" />
         <ContentControl
             Grid.Row="0" Grid.Column="2"
