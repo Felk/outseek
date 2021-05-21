@@ -20,6 +20,8 @@ namespace Outseek.AvaloniaClient.Controls.PropertyGrid
             set => SetValue(PropertyObjectProperty, value);
         }
 
+        public event EventHandler<EventArgs>? PropertyObjectChanged;
+
         private readonly Grid _gridMain;
 
         public PropertyGrid()
@@ -44,10 +46,20 @@ namespace Outseek.AvaloniaClient.Controls.PropertyGrid
 
         private Control GetControlForProperty(PropertyInfo propInfo)
         {
-            if (propInfo.PropertyType == typeof(string))
-                return new TextBox {[!TextBox.TextProperty] = new Binding(propInfo.Name, BindingMode.TwoWay)};
+            Control control;
+            AvaloniaProperty property;
 
-            throw new Exception("TODO");
+            if (propInfo.PropertyType == typeof(string))
+                (control, property) = (new TextBox(), TextBox.TextProperty);
+            else
+                throw new ArgumentException($"unsupported property type {propInfo.PropertyType}");
+
+            control[!property] = new Binding(propInfo.Name, BindingMode.TwoWay);
+            control.GetObservable(property).Subscribe(val =>
+            {
+                if (val != null) PropertyObjectChanged?.Invoke(this, new EventArgs());
+            });
+            return control;
         }
 
         private void UpdatePropertyControls()
@@ -70,14 +82,14 @@ namespace Outseek.AvaloniaClient.Controls.PropertyGrid
                 label.SetValue(Grid.RowProperty, row);
                 label.SetValue(Grid.ColumnProperty, 0);
                 _gridMain.Children.Add(label);
-                
+
                 Control propEdit = GetControlForProperty(propInfo);
                 propEdit.Classes.Add("propertygrid-cell-elem");
                 propEdit.SetValue(Grid.RowProperty, row);
                 propEdit.SetValue(Grid.ColumnProperty, 2);
                 propEdit.DataContext = PropertyObject;
                 _gridMain.Children.Add(propEdit);
-                
+
                 _gridMain.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
                 row++;
             }

@@ -6,12 +6,17 @@ using Outseek.API;
 
 namespace Outseek.Backend.Processors
 {
-    public class RandomSegments : ITimelineProcessor<TimelineObject.Nothing, TimelineObject.Segments, object>
+    public struct RandomSegmentsParams
+    {
+    }
+    
+    public class RandomSegments : ITimelineProcessor<TimelineObject.Nothing, TimelineObject.Segments, RandomSegmentsParams>
     {
         public string Name => "random segments (testing)";
+        public RandomSegmentsParams GetDefaultParams() => new();
 
         public TimelineObject.Segments Process(
-            TimelineProcessContext context, TimelineObject.Nothing input, object parameters)
+            TimelineProcessContext context, TimelineObject.Nothing input, RandomSegmentsParams parameters)
         {
             Random random = new();
 

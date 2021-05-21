@@ -18,7 +18,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineState TimelineState { get; }
 
         [Reactive] public string? Text { get; set; }
-        [Reactive] public object ParameterObject { get; set; }
+        [Reactive] public ValueType ParamsObject { get; set; }
         [Reactive] private TimelineObjectViewModelBase? TimelineObject { get; set; }
 
         public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegments())
@@ -26,13 +26,13 @@ namespace Outseek.AvaloniaClient.ViewModels
             // the default constructor is only used by the designer
         }
 
-        private async Task RerunProcessor(CancellationToken cancellationToken)
+        public async Task RerunProcessor(CancellationToken cancellationToken)
         {
             var context = new TimelineProcessContext(TimelineState.Start, TimelineState.End);
             try
             {
                 TimelineObject timelineObject = _timelineProcessor.Process(
-                    context, new TimelineObject.Nothing(), ParameterObject);
+                    context, new TimelineObject.Nothing(), ParamsObject);
                 TimelineObjectViewModelBase timelineObjectViewModelBase = timelineObject switch
                 {
                     TimelineObject.Nothing nothing => new NothingViewModel(),
@@ -57,11 +57,9 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineState = timelineState;
             _timelineProcessor = processor;
             Text = _timelineProcessor.Name;
-            ParameterObject = _timelineProcessor.GetDefaultParameters();
-            var _ = RerunProcessor(_cancellationTokenSource.Token);
-            timelineState
-                .WhenAnyValue(t => t.Start, t => t.End)
-                .Subscribe(async _ => { await RerunProcessor(_cancellationTokenSource.Token); });
+            this.WhenAnyValue(t => t.ParamsObject)
+                .Subscribe(async _ => await RerunProcessor(CancellationToken.None));
+            ParamsObject = _timelineProcessor.GetDefaultParams();
         }
 
         public void Dispose()

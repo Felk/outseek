@@ -41,7 +41,7 @@
                           HorizontalScrollBarVisibility="Hidden">
                 <ListBox Items="{Binding TimelineObjects}"
                          SelectionMode="Single"
-                         SelectedItem="{Binding SelectedTimelineObject}">
+                         SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
                     <ListBox.Styles>
                         <Style Selector="ListBoxItem">
                             <Setter Property="Padding" Value="0"/>
