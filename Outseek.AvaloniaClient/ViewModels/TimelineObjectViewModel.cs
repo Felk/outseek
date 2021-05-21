@@ -19,7 +19,7 @@ namespace Outseek.AvaloniaClient.ViewModels
 
         [Reactive] public string? Text { get; set; }
         [Reactive] public ValueType ParamsObject { get; set; }
-        [Reactive] private TimelineObjectViewModelBase? TimelineObject { get; set; }
+        [Reactive] public TimelineObjectViewModelBase? TimelineObject { get; set; }
 
         public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegments())
         {
@@ -58,7 +58,10 @@ namespace Outseek.AvaloniaClient.ViewModels
             _timelineProcessor = processor;
             Text = _timelineProcessor.Name;
             this.WhenAnyValue(t => t.ParamsObject)
-                .Subscribe(async _ => await RerunProcessor(CancellationToken.None));
+                .Subscribe(async paramsObj =>
+                {
+                    if (paramsObj != null) await RerunProcessor(CancellationToken.None);
+                });
             ParamsObject = _timelineProcessor.GetDefaultParams();
         }
 
