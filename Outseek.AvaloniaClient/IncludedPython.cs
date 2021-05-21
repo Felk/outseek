@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Python.Deployment;
 using Python.Runtime;
 
 namespace Outseek.AvaloniaClient
@@ -15,13 +14,12 @@ namespace Outseek.AvaloniaClient
         }
 
         public static Task<IncludedPython> Create() =>
-            Task.Run(async () =>
+            Task.Run(() =>
             {
                 // TODO figure out how to properly manage this cross-platform
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    await Installer.SetupPython();
-                    Installer.TryInstallPip();
+                    Runtime.PythonDLL = "C:/Program Files/Python38/python38.dll";
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
@@ -46,8 +44,8 @@ namespace Outseek.AvaloniaClient
                         // TODO figure out how to properly manage this cross-platform
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            if (!Installer.IsModuleInstalled(moduleName))
-                                Installer.PipInstallModule(pipInstallName);
+                            // if (!Installer.IsModuleInstalled(moduleName))
+                                // Installer.PipInstallModule(pipInstallName);
                         }
                         return Py.Import(moduleName);
                     }
