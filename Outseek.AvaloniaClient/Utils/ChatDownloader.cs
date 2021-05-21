@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
+using System.IO.Compression;
+using System.Text.Json;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Outseek.Backend.Processors;
@@ -26,12 +29,39 @@ namespace Outseek.AvaloniaClient.Utils
 
             Task _ = Task.Run((Func<Task>) (async () =>
             {
+                string chatIdentifier = url.Split("://", count: 2)[^1] ;
+                foreach (char invalid in Path.GetInvalidFileNameChars())
+                    chatIdentifier = chatIdentifier.Replace(invalid, '_');
+                // TODO have some smarter, centralized management of file storage
+                string basePath = Path.GetTempPath() + "outseek/";
+                Directory.CreateDirectory(basePath);
+
+                // maybe we already downloaded it earlier, check the expected file on disk
+                string filepath = $"{basePath}chat_{chatIdentifier}.jsonl.gz";
+                if (File.Exists(filepath))
+                {
+                    await using FileStream file = File.Open(filepath, FileMode.Open, FileAccess.Read);
+                    await using GZipStream gzipStream = new(file, CompressionMode.Decompress);
+                    StreamReader reader = new(gzipStream);
+                    string? line;
+                    while ((line = await reader.ReadLineAsync()) != null)
+                    {
+                        ChatMessage? message = JsonSerializer.Deserialize<ChatMessage>(line);
+                        if (message != null)
+                            await channel.Writer.WriteAsync(message);                            
+                    }
+
+                    return;
+                }
+                
+                List<ChatMessage> messages = new();
+
                 IntPtr state = PythonEngine.AcquireLock();
 
                 try
                 {
                     dynamic chat = _chatDownloaderModule.ChatDownloader().get_chat(url);
-                
+
                     // this loop is not async, so it needs to be offloaded onto a thread to not block the caller.
                     foreach (var message in chat)
                     {
@@ -55,6 +85,8 @@ namespace Outseek.AvaloniaClient.Utils
                             // author["id"].As<string>(), // see https://github.com/xenova/chat-downloader/pull/90
                             author["name"].As<string>(),
                             badges.ToImmutableList());
+
+                        messages.Add(msg);
                         // awaiting yields to god knows whose code, so release the GIL for its duration  
                         PythonEngine.ReleaseLock(state);
                         try
@@ -67,15 +99,25 @@ namespace Outseek.AvaloniaClient.Utils
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    channel.Writer.Complete(ex);
-                }
                 finally
                 {
                     PythonEngine.ReleaseLock(state);
                 }
-            }));
+
+                // Successfully downloaded the entire chat. Cache it on disk so we don't have to do that again.
+                var options = new JsonSerializerOptions {WriteIndented = false};
+                await using (FileStream file = File.Open(filepath, FileMode.CreateNew, FileAccess.Write))
+                await using (GZipStream gzipStream = new(file, CompressionMode.Compress))
+                {
+                    StreamWriter writer = new(gzipStream);
+                    foreach (ChatMessage message in messages)
+                        await writer.WriteLineAsync(JsonSerializer.Serialize(message, options));
+                    await writer.FlushAsync();
+                }
+            })).ContinueWith(task =>
+            {
+                if (task.IsFaulted) channel.Writer.Complete(task.Exception);
+            });
 
             return channel.Reader.ReadAllAsync();
         }
