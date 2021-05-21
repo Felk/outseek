@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
 using Outseek.AvaloniaClient.SharedViewModels;
+using Outseek.AvaloniaClient.Utils;
 using Outseek.Backend.Processors;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -36,6 +37,10 @@ namespace Outseek.AvaloniaClient.ViewModels
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetRandomChat()));
+
+                dynamic chatDownloaderModule = await py.GetModule("chat_downloader", "chat-downloader");
+                IChatDownloader chatDownloader = new ChatDownloader(chatDownloaderModule);
+                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetChat(chatDownloader)));
             }));
         }
     }
