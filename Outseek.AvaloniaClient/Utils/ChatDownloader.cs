@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Outseek.Backend.Processors;
 using Python.Runtime;
@@ -19,55 +20,64 @@ namespace Outseek.AvaloniaClient.Utils
             _chatDownloaderModule = chatDownloaderModule;
         }
 
-        public async IAsyncEnumerable<ChatMessage> GetChat(string url)
+        public IAsyncEnumerable<ChatMessage> GetChat(string url)
         {
-            var chat = await Task.Run(() =>
-            {
-                using (Py.GIL()) return _chatDownloaderModule.ChatDownloader().get_chat(url);
-            });
+            Channel<ChatMessage> channel = Channel.CreateUnbounded<ChatMessage>();
 
-            IntPtr state = PythonEngine.AcquireLock();
-            try
+            Task _ = Task.Run((Func<Task>) (async () =>
             {
-                foreach (var message in chat)
+                IntPtr state = PythonEngine.AcquireLock();
+
+                try
                 {
-                    await Task.CompletedTask;
-                    var author = message["author"];
-                    List<string> badges = new();
-                    try
+                    dynamic chat = _chatDownloaderModule.ChatDownloader().get_chat(url);
+                
+                    // this loop is not async, so it needs to be offloaded onto a thread to not block the caller.
+                    foreach (var message in chat)
                     {
-                        foreach (var badge in author["badges"])
-                            badges.Add(badge["title"].As<string>());
-                    }
-                    catch (PythonException ex) when (ex.PyType == Exceptions.KeyError)
-                    {
-                    }
+                        var author = message["author"];
+                        List<string> badges = new();
+                        try
+                        {
+                            foreach (var badge in author["badges"])
+                                badges.Add(badge["title"].As<string>());
+                        }
+                        catch (PythonException ex) when (ex.PyType == Exceptions.KeyError)
+                        {
+                        }
 
-                    ChatMessage msg = new(
-                        message["message_id"].As<string>(),
-                        message["message"].As<string>(),
-                        message["message_type"].As<string>(),
-                        message["timestamp"].As<long>(),
-                        message["time_in_seconds"].As<int>(),
-                        // author["id"].As<string>(), // see https://github.com/xenova/chat-downloader/pull/90
-                        author["name"].As<string>(),
-                        badges.ToImmutableList());
-                    // awaiting yields to god knows whose code, so release the GIL for its duration  
-                    PythonEngine.ReleaseLock(state);
-                    try
-                    {
-                        yield return msg;
-                    }
-                    finally
-                    {
-                        state = PythonEngine.AcquireLock();
+                        ChatMessage msg = new(
+                            message["message_id"].As<string>(),
+                            message["message"].As<string>(),
+                            message["message_type"].As<string>(),
+                            message["timestamp"].As<long>(),
+                            message["time_in_seconds"].As<int>(),
+                            // author["id"].As<string>(), // see https://github.com/xenova/chat-downloader/pull/90
+                            author["name"].As<string>(),
+                            badges.ToImmutableList());
+                        // awaiting yields to god knows whose code, so release the GIL for its duration  
+                        PythonEngine.ReleaseLock(state);
+                        try
+                        {
+                            await channel.Writer.WriteAsync(msg);
+                        }
+                        finally
+                        {
+                            state = PythonEngine.AcquireLock();
+                        }
                     }
                 }
-            }
-            finally
-            {
-                PythonEngine.ReleaseLock(state);
-            }
+                catch (Exception ex)
+                {
+                    channel.Writer.Complete(ex);
+                }
+                finally
+                {
+                    PythonEngine.ReleaseLock(state);
+                }
+            }));
+
+            return channel.Reader.ReadAllAsync();
         }
     }
 }
