@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Python.Included;
+using Python.Deployment;
 using Python.Runtime;
 
 namespace Outseek.AvaloniaClient
@@ -16,10 +17,22 @@ namespace Outseek.AvaloniaClient
         public static Task<IncludedPython> Create() =>
             Task.Run(async () =>
             {
-                await Installer.SetupPython();
-                Installer.TryInstallPip();
+                // TODO figure out how to properly manage this cross-platform
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    await Installer.SetupPython();
+                    Installer.TryInstallPip();
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Runtime.PythonDLL = "libpython3.8.so";
+                }
+
                 PythonEngine.Initialize();
                 PythonEngine.BeginAllowThreads();
+            }).ContinueWith(task =>
+            {
+                if (task.IsFaulted) Console.Error.WriteLine(task.Exception);
                 return new IncludedPython();
             });
 
@@ -28,9 +41,21 @@ namespace Outseek.AvaloniaClient
             {
                 using (Py.GIL())
                 {
-                    if (!Installer.IsModuleInstalled(moduleName))
-                        Installer.PipInstallModule(pipInstallName);
-                    return Py.Import(moduleName);
+                    try
+                    {
+                        // TODO figure out how to properly manage this cross-platform
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            if (!Installer.IsModuleInstalled(moduleName))
+                                Installer.PipInstallModule(pipInstallName);
+                        }
+                        return Py.Import(moduleName);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.Error.WriteLine(e);
+                        throw;
+                    }
                 }
             }));
     }
