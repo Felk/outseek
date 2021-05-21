@@ -81,7 +81,7 @@ namespace Outseek.AvaloniaClient.Utils
                             message["message"].As<string>(),
                             message["message_type"].As<string>(),
                             message["timestamp"].As<long>(),
-                            message["time_in_seconds"].As<int>(),
+                            message["time_in_seconds"].As<float>(),
                             // author["id"].As<string>(), // see https://github.com/xenova/chat-downloader/pull/90
                             author["name"].As<string>(),
                             badges.ToImmutableList());

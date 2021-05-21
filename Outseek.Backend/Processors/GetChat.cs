@@ -10,7 +10,7 @@ namespace Outseek.Backend.Processors
         string Message,
         string MessageType,
         long Timestamp,
-        int TimeInSeconds,
+        float TimeInSeconds,
         // string AuthorId,
         string AuthorName,
         IImmutableList<string> Badges);
