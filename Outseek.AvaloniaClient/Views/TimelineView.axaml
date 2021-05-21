@@ -4,12 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
              xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views"
+             xmlns:behaviors="clr-namespace:Outseek.AvaloniaClient.Behaviors"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
-             Initialized="OnInitialized"
              x:Class="Outseek.AvaloniaClient.Views.TimelineView">
     <Design.DataContext>
         <viewModels:TimelineViewModel />
     </Design.DataContext>
+    
+    <Interaction.Behaviors>
+        <behaviors:InitializedBehaviour Command="{Binding InitializeTimeline}"/>
+    </Interaction.Behaviors>
 
     <Grid RowDefinitions="30,*,40"
           PointerMoved="InputElement_OnPointerMoved">
