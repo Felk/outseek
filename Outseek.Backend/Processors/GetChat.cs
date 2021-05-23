@@ -20,12 +20,12 @@ namespace Outseek.Backend.Processors
         public IAsyncEnumerable<ChatMessage> GetChat(string url);
     }
 
-    public struct GetChatParams
+    public class GetChatProcessorParams : TimelineProcessorParams
     {
-        public string Url { get; set; }
+        public string Url { get; set; } = "https://www.twitch.tv/videos/1234567890";
     }
 
-    public class GetChat : ITimelineProcessor<TimelineObject.Nothing, TimelineObject.TimedText, GetChatParams>
+    public class GetChat : ITimelineProcessor<TimelineObject.Nothing, TimelineObject.TimedText, GetChatProcessorParams>
     {
         private readonly IChatDownloader _chatDownloader;
 
@@ -36,13 +36,8 @@ namespace Outseek.Backend.Processors
 
         public string Name => "Get chat from stream URL";
 
-        public GetChatParams GetDefaultParams() => new()
-        {
-            Url = "https://www.twitch.tv/videos/1234567890"
-        };
-
         public TimelineObject.TimedText Process(
-            TimelineProcessContext context, TimelineObject.Nothing input, GetChatParams parameters)
+            TimelineProcessContext context, TimelineObject.Nothing input, GetChatProcessorParams parameters)
         {
             IAsyncEnumerable<TimedTextEntry> textEntries = _chatDownloader
                 .GetChat(parameters.Url)
