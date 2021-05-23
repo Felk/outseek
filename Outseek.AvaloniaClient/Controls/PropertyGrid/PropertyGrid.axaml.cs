@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
@@ -51,6 +52,8 @@ namespace Outseek.AvaloniaClient.Controls.PropertyGrid
 
             if (propInfo.PropertyType == typeof(string))
                 (control, property) = (new TextBox(), TextBox.TextProperty);
+            else if (new[] {typeof(int), typeof(long), typeof(float), typeof(double)}.Contains(propInfo.PropertyType))
+                (control, property) = (new NumericUpDown(), NumericUpDown.ValueProperty);
             else
                 throw new ArgumentException($"unsupported property type {propInfo.PropertyType}");
 

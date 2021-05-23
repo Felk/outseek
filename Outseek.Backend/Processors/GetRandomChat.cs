@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Outseek.API;
@@ -8,6 +9,7 @@ namespace Outseek.Backend.Processors
 {
     public class GetRandomChatProcessorParams : TimelineProcessorParams
     {
+        [DisplayName("Messages per second")] public double MessagesPerSecond { get; set; } = 2;
     }
 
     public class GetRandomChat
@@ -19,8 +21,7 @@ namespace Outseek.Backend.Processors
             TimelineProcessContext context, TimelineObject.Nothing input, GetRandomChatProcessorParams parameters)
         {
             double duration = context.Maximum - context.Minimum;
-            const int messagesPerSecond = 2;
-            int numMessages = (int) duration * messagesPerSecond;
+            int numMessages = (int) (duration * parameters.MessagesPerSecond);
 
             Random random = new();
 
