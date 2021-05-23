@@ -18,7 +18,7 @@ namespace Outseek.Backend.Processors
         public string Name => "random chat (testing)";
 
         public TimelineObject.TimedText Process(
-            TimelineProcessContext context, TimelineObject.Nothing input, GetRandomChatProcessorParams parameters)
+            ITimelineProcessContext context, TimelineObject.Nothing input, GetRandomChatProcessorParams parameters)
         {
             double duration = context.Maximum - context.Minimum;
             int numMessages = (int) (duration * parameters.MessagesPerSecond);

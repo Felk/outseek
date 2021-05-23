@@ -29,7 +29,7 @@ namespace Outseek.API
         public Type OutputType { get; }
         public TimelineProcessorParams GetDefaultParams();
 
-        public TimelineObject Process(TimelineProcessContext context, TimelineObject input, object parameters);
+        public TimelineObject Process(ITimelineProcessContext context, TimelineObject input, object parameters);
     }
 
     public interface ITimelineProcessor<in TIn, out TOut, in TParam> : ITimelineProcessor
@@ -42,9 +42,9 @@ namespace Outseek.API
         TimelineProcessorParams ITimelineProcessor.GetDefaultParams() => new TParam();
 
         TimelineObject ITimelineProcessor.Process(
-            TimelineProcessContext context, TimelineObject input, object parameters) =>
+            ITimelineProcessContext context, TimelineObject input, object parameters) =>
             Process(context, (TIn) input, (TParam) parameters);
 
-        public TOut Process(TimelineProcessContext context, TIn input, TParam parameters);
+        public TOut Process(ITimelineProcessContext context, TIn input, TParam parameters);
     }
 }

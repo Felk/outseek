@@ -19,7 +19,7 @@ namespace Outseek.Backend.Processors
         public string Name => "random segments (testing)";
 
         public TimelineObject.Segments Process(
-            TimelineProcessContext context, TimelineObject.Nothing input, RandomSegmentsProcessorParams parameters)
+            ITimelineProcessContext context, TimelineObject.Nothing input, RandomSegmentsProcessorParams parameters)
         {
             Random random = new();
 

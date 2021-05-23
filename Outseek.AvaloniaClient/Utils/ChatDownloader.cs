@@ -23,21 +23,18 @@ namespace Outseek.AvaloniaClient.Utils
             _chatDownloaderModule = chatDownloaderModule;
         }
 
-        public IAsyncEnumerable<ChatMessage> GetChat(string url)
+        public IAsyncEnumerable<ChatMessage> GetChat(string url, string cacheStorageDir)
         {
             Channel<ChatMessage> channel = Channel.CreateUnbounded<ChatMessage>();
 
             Task _ = Task.Run((Func<Task>) (async () =>
             {
-                string chatIdentifier = url.Split("://", count: 2)[^1] ;
+                string chatIdentifier = url.Split("://", count: 2)[^1];
                 foreach (char invalid in Path.GetInvalidFileNameChars())
                     chatIdentifier = chatIdentifier.Replace(invalid, '_');
-                // TODO have some smarter, centralized management of file storage
-                string basePath = Path.GetTempPath() + "outseek/";
-                Directory.CreateDirectory(basePath);
 
                 // maybe we already downloaded it earlier, check the expected file on disk
-                string filepath = $"{basePath}chat_{chatIdentifier}.jsonl.gz";
+                string filepath = Path.Join(cacheStorageDir, chatIdentifier + ".jsonl.gz");
                 if (File.Exists(filepath))
                 {
                     await using FileStream file = File.Open(filepath, FileMode.Open, FileAccess.Read);
@@ -48,12 +45,12 @@ namespace Outseek.AvaloniaClient.Utils
                     {
                         ChatMessage? message = JsonSerializer.Deserialize<ChatMessage>(line);
                         if (message != null)
-                            await channel.Writer.WriteAsync(message);                            
+                            await channel.Writer.WriteAsync(message);
                     }
 
                     return;
                 }
-                
+
                 List<ChatMessage> messages = new();
 
                 IntPtr state = PythonEngine.AcquireLock();

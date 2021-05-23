@@ -17,7 +17,7 @@ namespace Outseek.Backend.Processors
 
     public interface IChatDownloader
     {
-        public IAsyncEnumerable<ChatMessage> GetChat(string url);
+        public IAsyncEnumerable<ChatMessage> GetChat(string url, string cacheStorageDir);
     }
 
     public class GetChatProcessorParams : TimelineProcessorParams
@@ -37,10 +37,10 @@ namespace Outseek.Backend.Processors
         public string Name => "Get chat from stream URL";
 
         public TimelineObject.TimedText Process(
-            TimelineProcessContext context, TimelineObject.Nothing input, GetChatProcessorParams parameters)
+            ITimelineProcessContext context, TimelineObject.Nothing input, GetChatProcessorParams parameters)
         {
             IAsyncEnumerable<TimedTextEntry> textEntries = _chatDownloader
-                .GetChat(parameters.Url)
+                .GetChat(parameters.Url, context.GetStorageDirectory("downloaded_chats"))
                 .Select(msg => new TimedTextEntry(msg.TimeInSeconds, msg.TimeInSeconds, msg.Message));
             return new TimelineObject.TimedText(textEntries);
         }
