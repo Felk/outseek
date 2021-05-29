@@ -21,6 +21,24 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         {
             TimelineState = timelineState;
             _segments = segments;
+            TimelineState.WhenAnyValue(t => t.DevicePixelsPerSecond)
+                .Subscribe(_ =>
+                {
+                    foreach (SegmentViewModel segmentViewModel in Segments)
+                    {
+                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.StepScaled));
+                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.FromScaled));
+                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.ToScaled));
+                    }
+                });
+            TimelineState.WhenAnyValue(t => t.Step)
+                .Subscribe(_ =>
+                {
+                    foreach (SegmentViewModel segmentViewModel in Segments)
+                    {
+                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.StepScaled));
+                    }
+                });
         }
 
         public SegmentsViewModel() : this(
@@ -51,17 +69,6 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
             TimelineState = timelineState;
             _from = from;
             _to = to;
-            TimelineState
-                .WhenAnyValue(vm => vm.DevicePixelsPerSecond)
-                .Subscribe(_ =>
-                {
-                    this.RaisePropertyChanged(nameof(StepScaled));
-                    this.RaisePropertyChanged(nameof(FromScaled));
-                    this.RaisePropertyChanged(nameof(ToScaled));
-                });
-            TimelineState
-                .WhenAnyValue(vm => vm.Step)
-                .Subscribe(_ => { this.RaisePropertyChanged(nameof(StepScaled)); });
         }
 
         public double From
