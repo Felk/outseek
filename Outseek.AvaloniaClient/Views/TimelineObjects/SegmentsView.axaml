@@ -22,8 +22,7 @@
             <DataTemplate>
                 <controls:ResizableThumbTrack
                     IsResizable="False" IsDraggable="False"
-                    From="{Binding FromScaled}"
-                    To="{Binding ToScaled}"
+                    Range="{Binding RangeScaled}"
                     Minimum="0"
                     Maximum="{Binding TimelineState.EndScaled}"
                     Increment="{Binding StepScaled}"
@@ -39,9 +38,9 @@
                             <ControlTemplate>
                                 <Border Name="PART_Border">
                                     <StackPanel Orientation="Horizontal">
-                                        <Label Content="{Binding From, StringFormat=\{0:00.00\}}" />
+                                        <Label Content="{Binding Range.From, StringFormat=\{0:00.00\}}" />
                                         <Label Content="-" />
-                                        <Label Content="{Binding To, StringFormat=\{0:00.00\}}" />
+                                        <Label Content="{Binding Range.To, StringFormat=\{0:00.00\}}" />
                                     </StackPanel>
                                 </Border>
                             </ControlTemplate>

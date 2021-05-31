@@ -2,6 +2,7 @@
 using Avalonia;
 using Outseek.AvaloniaClient.SharedViewModels;
 using ReactiveUI;
+using Range = Outseek.AvaloniaClient.Utils.Range;
 
 namespace Outseek.AvaloniaClient.ViewModels
 {
@@ -14,38 +15,31 @@ namespace Outseek.AvaloniaClient.ViewModels
             set => TimelineState.ViewportWidth = value.Width;
         }
 
-        private (double, double) OffsetScaleToFromTo()
+        private Range OffsetScaleToRange()
         {
             double range = TimelineState.End - TimelineState.Start;
             double scaledRange = range * TimelineState.ZoomScale;
             double from = (range - scaledRange) * TimelineState.ScrollOffset;
 
-            return (from, from + scaledRange);
+            return new Range(from, from + scaledRange);
         }
 
-        private void FromToToOffsetScale(double from, double to)
+        private void RangeToOffsetScale(Range range)
         {
-            double range = TimelineState.End - TimelineState.Start;
+            double timelineRange = TimelineState.End - TimelineState.Start;
 
-            double scaledRange = to - from;
-            double scale = scaledRange / range;
-            double rangeOffset = range - scaledRange;
-            double offset = rangeOffset == 0 ? 0 : from / rangeOffset;
+            double scale = range.Size / timelineRange;
+            double rangeOffset = timelineRange - range.Size;
+            double offset = rangeOffset == 0 ? 0 : range.From / rangeOffset;
 
             TimelineState.ScrollOffset = offset;
             TimelineState.ZoomScale = scale;
         }
 
-        public double From
+        public Range Range
         {
-            get => OffsetScaleToFromTo().Item1;
-            set => FromToToOffsetScale(value, To);
-        }
-
-        public double To
-        {
-            get => OffsetScaleToFromTo().Item2;
-            set => FromToToOffsetScale(From, value);
+            get => OffsetScaleToRange();
+            set => RangeToOffsetScale(value);
         }
 
         public double PlaybackIndicatorPosition =>
@@ -62,11 +56,7 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineState = timelineState;
             TimelineState
                 .WhenAnyValue(t => t.ScrollOffset, t => t.ZoomScale, t => t.Start, t => t.End)
-                .Subscribe(_ =>
-                {
-                    this.RaisePropertyChanged(nameof(From));
-                    this.RaisePropertyChanged(nameof(To));
-                });
+                .Subscribe(_ => this.RaisePropertyChanged(nameof(Range)));
             TimelineState
                 .WhenAnyValue(t => t.Step)
                 .Subscribe(_ => this.RaisePropertyChanged(nameof(MinimumDistance)));

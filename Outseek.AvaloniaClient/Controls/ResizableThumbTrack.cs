@@ -7,6 +7,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Metadata;
 using Outseek.AvaloniaClient.Utils;
+using Range = Outseek.AvaloniaClient.Utils.Range;
 
 namespace Outseek.AvaloniaClient.Controls
 {
@@ -40,12 +41,8 @@ namespace Outseek.AvaloniaClient.Controls
         public static readonly StyledProperty<double> MaximumProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Maximum));
 
-        public static readonly StyledProperty<double> FromProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(From),
-                defaultBindingMode: BindingMode.TwoWay);
-
-        public static readonly StyledProperty<double> ToProperty =
-            AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(To),
+        public static readonly StyledProperty<Range> RangeProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, Range>(nameof(Range),
                 defaultBindingMode: BindingMode.TwoWay);
 
         public static readonly StyledProperty<double> IncrementProperty =
@@ -95,16 +92,10 @@ namespace Outseek.AvaloniaClient.Controls
             set { SetValue(MaximumProperty, value); }
         }
 
-        public double From
+        public Range Range
         {
-            get { return GetValue(FromProperty); }
-            set { SetValue(FromProperty, value); }
-        }
-
-        public double To
-        {
-            get { return GetValue(ToProperty); }
-            set { SetValue(ToProperty, value); }
+            get { return GetValue(RangeProperty); }
+            set { SetValue(RangeProperty, value); }
         }
 
         public double Increment
@@ -145,7 +136,7 @@ namespace Outseek.AvaloniaClient.Controls
             DragThumbProperty.Changed.AddClassHandler<ResizableThumbTrack>((x, e) => x.DragThumbChanged(e));
 
             AffectsArrange<ResizableThumbTrack>(
-                FromProperty, ToProperty, MinimumProperty, MaximumProperty, ResizeThumbPlacementProperty);
+                RangeProperty, MinimumProperty, MaximumProperty, ResizeThumbPlacementProperty);
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -165,10 +156,10 @@ namespace Outseek.AvaloniaClient.Controls
         {
             double availableSize = Maximum - Minimum;
             if (availableSize <= 0) return new Size();
-            double targetSize = To - From;
+            double targetSize = Range.Size;
 
             double segmentWidth = arrangeSize.Width * (targetSize / availableSize);
-            double segmentOffset = arrangeSize.Width * (From / availableSize);
+            double segmentOffset = arrangeSize.Width * (Range.From / availableSize);
             if (segmentOffset is double.NaN) segmentOffset = 0;
 
             Point segmentStart = new Point(segmentOffset, 0);
@@ -259,29 +250,31 @@ namespace Outseek.AvaloniaClient.Controls
             double range = Maximum - Minimum;
             // double delta = Math.Clamp(deltaPercent * range, Minimum - From, Maximum - To);
             double delta = deltaPercent * range;
-            if (delta < Minimum - From) delta = Minimum - From;
-            if (delta > Maximum - To) delta = Maximum - To;
+            if (delta < Minimum - Range.From) delta = Minimum - Range.From;
+            if (delta > Maximum - Range.To) delta = Maximum - Range.To;
 
-            From = MathUtils.RoundToIncrement(From + delta, Increment);
-            To = MathUtils.RoundToIncrement(To + delta, Increment);
+            Range = new Range(
+                MathUtils.RoundToIncrement(Range.From + delta, Increment),
+                MathUtils.RoundToIncrement(Range.To + delta, Increment));
         }
 
         private void ResizeStartThumbDragged(object? sender, VectorEventArgs e)
         {
             double deltaPercent = e.Vector.X / Bounds.Width;
             double range = Maximum - Minimum;
-            double delta = Math.Clamp(deltaPercent * range, Minimum - From, To - From - MinimumDistance);
+            double delta = Math.Clamp(deltaPercent * range, Minimum - Range.From, Range.Size - MinimumDistance);
 
-            From = MathUtils.RoundToIncrement(From + delta, Increment);
+            Range = new Range(MathUtils.RoundToIncrement(Range.From + delta, Increment), Range.To);
         }
 
         private void ResizeEndThumbDragged(object? sender, VectorEventArgs e)
         {
             double deltaPercent = e.Vector.X / Bounds.Width;
             double range = Maximum - Minimum;
-            double delta = Math.Clamp(deltaPercent * range, From - To + MinimumDistance, Maximum - To);
+            double delta = Math.Clamp(deltaPercent * range, -Range.Size + MinimumDistance,
+                Maximum - Range.To);
 
-            To = MathUtils.RoundToIncrement(To + delta, Increment);
+            Range = new Range(Range.From, MathUtils.RoundToIncrement(Range.To + delta, Increment));
         }
     }
 }

@@ -17,8 +17,7 @@
             Maximum="{Binding TimelineState.End}"
             Increment="{Binding TimelineState.Step}"
             MinimumDistance="{Binding MinimumDistance}"
-            From="{Binding From}"
-            To="{Binding To}">
+            Range="{Binding Range}">
             <controls:ResizableThumbTrack.ResizeStartThumb>
                 <Thumb Name="PART_ResizeStartThumb" />
             </controls:ResizableThumbTrack.ResizeStartThumb>

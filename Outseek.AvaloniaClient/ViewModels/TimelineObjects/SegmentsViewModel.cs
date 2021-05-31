@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
 using ReactiveUI;
+using Range = Outseek.AvaloniaClient.Utils.Range;
 
 namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
 {
@@ -27,8 +28,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
                     foreach (SegmentViewModel segmentViewModel in Segments)
                     {
                         segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.StepScaled));
-                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.FromScaled));
-                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.ToScaled));
+                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.RangeScaled));
                     }
                 });
             TimelineState.WhenAnyValue(t => t.Step)
@@ -52,7 +52,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
             Segments.Clear();
             await foreach (Segment segment in _segments.SegmentList.WithCancellation(cancellationToken))
             {
-                SegmentViewModel svm = new(TimelineState, segment.FromSeconds, segment.ToSeconds);
+                SegmentViewModel svm = new(TimelineState, new Range(segment.FromSeconds, segment.ToSeconds));
                 Dispatcher.UIThread.Post(() => Segments.Add(svm));
             }
         }
@@ -60,55 +60,33 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
 
     public class SegmentViewModel : ViewModelBase
     {
-        private double _from;
-        private double _to;
+        private Range _range;
         private TimelineState TimelineState { get; }
 
-        public SegmentViewModel(TimelineState timelineState, double from, double to)
+        public SegmentViewModel(TimelineState timelineState, Range range)
         {
             TimelineState = timelineState;
-            _from = from;
-            _to = to;
+            _range = range;
         }
 
-        public double From
+        public Range Range
         {
-            get => _from;
+            get => _range;
             set
             {
-                if (Equals(value, _from)) return;
+                if (Equals(value, _range)) return;
                 this.RaisePropertyChanging();
-                this.RaisePropertyChanging(nameof(FromScaled));
-                _from = value;
-                this.RaisePropertyChanged(nameof(FromScaled));
+                this.RaisePropertyChanging(nameof(RangeScaled));
+                _range = value;
+                this.RaisePropertyChanged(nameof(RangeScaled));
                 this.RaisePropertyChanged();
             }
         }
 
-        public double To
+        public Range RangeScaled
         {
-            get => _to;
-            set
-            {
-                if (Equals(value, _to)) return;
-                this.RaisePropertyChanging();
-                this.RaisePropertyChanging(nameof(ToScaled));
-                _to = value;
-                this.RaisePropertyChanged(nameof(ToScaled));
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public double FromScaled
-        {
-            get => From * TimelineState.DevicePixelsPerSecond;
-            set => From = value / TimelineState.DevicePixelsPerSecond;
-        }
-
-        public double ToScaled
-        {
-            get => To * TimelineState.DevicePixelsPerSecond;
-            set => To = value / TimelineState.DevicePixelsPerSecond;
+            get => Range * TimelineState.DevicePixelsPerSecond;
+            set => Range = value / TimelineState.DevicePixelsPerSecond;
         }
 
         public double StepScaled
