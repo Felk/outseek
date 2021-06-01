@@ -10,15 +10,33 @@
         <timelineObjects:SegmentsViewModel />
     </Design.DataContext>
 
-    <ItemsControl Items="{Binding Segments}">
-        <ItemsControl.ItemsPanel>
+    <ListBox Name="SegmentsListBox"
+             Items="{Binding Segments}"
+             Background="{x:Null}"
+             SelectionMode="Multiple"
+             AutoScrollToSelectedItem="False">
+        <ListBox.Styles>
+            <Style Selector="#SegmentsListBox ListBoxItem">
+                <!-- required for the contents to scale properly -->
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <!-- required for layered elements (e.g. segments) to be individually selectable -->
+                <Setter Property="Background" Value="{x:Null}" />
+            </Style>
+            <Style
+                Selector="#SegmentsListBox ListBoxItem:selected ContentPresenter#PART_ContentPresenter, 
+                          #SegmentsListBox ListBoxItem:pointerover ContentPresenter#PART_ContentPresenter">
+                <!-- required for layered elements (e.g. segments) to be individually selectable -->
+                <Setter Property="Background" Value="{x:Null}" />
+            </Style>
+        </ListBox.Styles>
+        <ListBox.ItemsPanel>
             <ItemsPanelTemplate>
                 <!-- stack the segments on top of each other,
                      which is fine because they shouldn't overlap anyway -->
                 <Panel />
             </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
+        </ListBox.ItemsPanel>
+        <ListBox.ItemTemplate>
             <DataTemplate>
                 <controls:ResizableThumbTrack
                     IsResizable="False" IsDraggable="False"
@@ -33,7 +51,12 @@
                     <controls:ResizableThumbTrack.ResizeEndThumb>
                         <Thumb Name="PART_ResizeEndThumb" />
                     </controls:ResizableThumbTrack.ResizeEndThumb>
-                    <Thumb>
+                    <controls:ResizableThumbTrack.Backdrop>
+                        <Panel Classes="SegmentPanel" />
+                    </controls:ResizableThumbTrack.Backdrop>
+                    <!-- Push the thumb behind the backdrop so the thumb doesn't snatch all the pointer events.
+                         These resizable thumb tracks are unmodifiable anyway, so that's an easy fix. -->
+                    <Thumb ZIndex="-1">
                         <Thumb.Template>
                             <ControlTemplate>
                                 <Border Name="PART_Border">
@@ -48,7 +71,7 @@
                     </Thumb>
                 </controls:ResizableThumbTrack>
             </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+        </ListBox.ItemTemplate>
+    </ListBox>
 
 </UserControl>

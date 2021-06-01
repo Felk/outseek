@@ -1,6 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views">
+        xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views"
+        xmlns:controls="clr-namespace:Outseek.AvaloniaClient.Controls">
     <Design.PreviewWith>
         <Border Padding="20" Width="600" Height="300">
             <StackPanel>
@@ -27,9 +28,9 @@
     <Style Selector="views|TimelineView Thumb#PART_ResizeStartThumb">
         <Setter Property="Template">
             <ControlTemplate>
-                <Border BorderThickness="3 3 0 3" 
+                <Border BorderThickness="3 3 0 3"
                         Background="transparent"
-                        BorderBrush="#606060"
+                        Classes="ResizeThumbBorder"
                         Width="10" />
             </ControlTemplate>
         </Setter>
@@ -37,12 +38,15 @@
     <Style Selector="views|TimelineView Thumb#PART_ResizeEndThumb">
         <Setter Property="Template">
             <ControlTemplate>
-                <Border BorderThickness="0 3 3 3" 
+                <Border BorderThickness="0 3 3 3"
                         Background="transparent"
-                        BorderBrush="#606060"
+                        Classes="ResizeThumbBorder"
                         Width="10" />
             </ControlTemplate>
         </Setter>
+    </Style>
+    <Style Selector="views|TimelineView Border.ResizeThumbBorder">
+        <Setter Property="BorderBrush" Value="#606060" />
     </Style>
 
     <Style Selector="views|TimelineView ScrollViewer#TimelineSliderArea">
@@ -53,9 +57,9 @@
         <!-- replace round thumb with timeline-draggy-thing looking thumb,
              and also make the slider go from edge to edge by setting the thumb width to 0
              and have its template draw outside the bounds -->
-        <Setter Property="ClipToBounds" Value="False"/>
-        <Setter Property="Width" Value="0"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Width" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Polygon Points="-10,0 10,0 10,10 0,20 -10,10" Fill="#33aa33" />
@@ -63,7 +67,9 @@
         </Setter>
     </Style>
 
-    <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track RepeatButton#PART_DecreaseButton, views|TimelineView Slider#TimelineSlider Track#PART_Track RepeatButton#PART_IncreaseButton">
+    <Style
+        Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track RepeatButton#PART_DecreaseButton,
+                  views|TimelineView Slider#TimelineSlider Track#PART_Track RepeatButton#PART_IncreaseButton">
         <!-- make decrease and increase buttons invisible -->
         <Setter Property="Template">
             <ControlTemplate>
@@ -82,20 +88,30 @@
                         <RepeatButton Name="PART_DecreaseButton"
                                       Focusable="False"
                                       HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch"/>
+                                      VerticalAlignment="Stretch" />
                     </Track.DecreaseButton>
                     <Track.IncreaseButton>
                         <RepeatButton Name="PART_IncreaseButton"
                                       Focusable="False"
                                       HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch"/>
+                                      VerticalAlignment="Stretch" />
                     </Track.IncreaseButton>
-                    <Thumb Classes="SliderThumbStyle" 
+                    <Thumb Classes="SliderThumbStyle"
                            Name="thumb" Margin="0" Padding="0"
                            DataContext="{TemplateBinding Value}" />
                 </Track>
             </ControlTemplate>
         </Setter>
+    </Style>
+
+    <Style Selector="#SegmentsListBox ListBoxItem controls|ResizableThumbTrack Panel.SegmentPanel">
+        <Setter Property="Background" Value="transparent" />
+    </Style>
+    <Style Selector="#SegmentsListBox ListBoxItem:selected controls|ResizableThumbTrack Panel.SegmentPanel">
+        <Setter Property="Background" Value="#99aaaaff" />
+    </Style>
+    <Style Selector="#SegmentsListBox ListBoxItem:selected controls|ResizableThumbTrack Border.ResizeThumbBorder">
+        <Setter Property="BorderBrush" Value="#aaaaaa" />
     </Style>
 
 </Styles>

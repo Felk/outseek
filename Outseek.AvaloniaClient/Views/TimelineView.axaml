@@ -10,9 +10,9 @@
     <Design.DataContext>
         <viewModels:TimelineViewModel />
     </Design.DataContext>
-    
+
     <Interaction.Behaviors>
-        <behaviors:InitializedBehaviour Command="{Binding InitializeTimeline}"/>
+        <behaviors:InitializedBehaviour Command="{Binding InitializeTimeline}" />
     </Interaction.Behaviors>
 
     <Grid RowDefinitions="30,*,40"
@@ -52,8 +52,6 @@
                             <Grid ColumnDefinitions="200,*">
                                 <Label Grid.Column="0" Content="{Binding Text}" />
                                 <ScrollViewer Grid.Column="1"
-                                              IsHitTestVisible="False"
-                                              HorizontalAlignment="Left"
                                               Width="{Binding TimelineState.ViewportWidth}"
                                               Extent="{Binding TimelineState.ViewportWidthScaledAsSize}"
                                               HorizontalScrollBarVisibility="Hidden"
