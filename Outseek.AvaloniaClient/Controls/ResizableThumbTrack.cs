@@ -35,6 +35,9 @@ namespace Outseek.AvaloniaClient.Controls
         public static readonly StyledProperty<Thumb?> ResizeEndThumbProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, Thumb?>(nameof(ResizeEndThumb));
 
+        public static readonly StyledProperty<Control?> BackdropProperty =
+            AvaloniaProperty.Register<ResizableThumbTrack, Control?>(nameof(Backdrop));
+
         public static readonly StyledProperty<double> MinimumProperty =
             AvaloniaProperty.Register<ResizableThumbTrack, double>(nameof(Minimum));
 
@@ -78,6 +81,12 @@ namespace Outseek.AvaloniaClient.Controls
         {
             get { return GetValue(ResizeEndThumbProperty); }
             set { SetValue(ResizeEndThumbProperty, value); }
+        }
+
+        public Control? Backdrop
+        {
+            get { return GetValue(BackdropProperty); }
+            set { SetValue(BackdropProperty, value); }
         }
 
         public double Minimum
@@ -134,6 +143,7 @@ namespace Outseek.AvaloniaClient.Controls
                 (x, e) => x.ResizeStartThumbChanged(e));
             ResizeEndThumbProperty.Changed.AddClassHandler<ResizableThumbTrack>((x, e) => x.ResizeEndThumbChanged(e));
             DragThumbProperty.Changed.AddClassHandler<ResizableThumbTrack>((x, e) => x.DragThumbChanged(e));
+            BackdropProperty.Changed.AddClassHandler<ResizableThumbTrack>((x, e) => x.BackdropChanged(e));
 
             AffectsArrange<ResizableThumbTrack>(
                 RangeProperty, MinimumProperty, MaximumProperty, ResizeThumbPlacementProperty);
@@ -141,6 +151,7 @@ namespace Outseek.AvaloniaClient.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            Backdrop?.Measure(availableSize);
             ResizeStartThumb?.Measure(availableSize);
             ResizeEndThumb?.Measure(availableSize);
             if (DragThumb != null)
@@ -212,6 +223,8 @@ namespace Outseek.AvaloniaClient.Controls
                 segmentStart.WithX(segmentOffset + segmentWidth - ResizeEndThumb.DesiredSize.Width),
                 segmentSize.WithWidth(ResizeEndThumb.DesiredSize.Width)));
 
+            Backdrop?.Arrange(new Rect(segmentStart, segmentSize));
+
             return arrangeSize;
         }
 
@@ -241,6 +254,24 @@ namespace Outseek.AvaloniaClient.Controls
                 newThumb.DragDelta += eventHandler;
                 LogicalChildren.Add(newThumb);
                 VisualChildren.Add(newThumb);
+            }
+        }
+
+        private void BackdropChanged(AvaloniaPropertyChangedEventArgs e)
+        {
+            Control? oldControl = (Control?) e.OldValue;
+            Control? newControl = (Control?) e.NewValue;
+
+            if (oldControl != null)
+            {
+                LogicalChildren.Remove(oldControl);
+                VisualChildren.Remove(oldControl);
+            }
+
+            if (newControl != null)
+            {
+                LogicalChildren.Add(newControl);
+                VisualChildren.Add(newControl);
             }
         }
 
