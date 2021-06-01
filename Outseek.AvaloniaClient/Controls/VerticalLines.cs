@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -84,17 +85,17 @@ namespace Outseek.AvaloniaClient.Controls
         {
             if (Positions == null) return;
 
-            int min = (int) Math.Max(RenderFrom ?? 0, Positions[0].AtScaled);
-            int max = (int) Math.Ceiling(Math.Min(RenderTo ?? Bounds.Width, Positions[^1].AtScaled));
+            int min = (int) Math.Max(RenderFrom ?? 0, Positions.Select(p => p.AtScaled).FirstOrDefault());
+            int max = (int) Math.Ceiling(Math.Min(RenderTo ?? Bounds.Width, Positions.Select(p => p.AtScaled).LastOrDefault()));
             int idx = 0;
             while (idx < Positions.Count && Positions[idx].AtScaled < min)
                 idx++;
             int prevIdx = idx;
 
-            for (int pixel = min;
-                pixel < max && idx < Positions.Count;
-                pixel = (int) Positions[idx].AtScaled)
+            int pixel = min;
+            while (pixel < max && idx < Positions.Count)
             {
+                pixel = (int)Positions[idx].AtScaled;
                 while (idx < Positions.Count && (int) Positions[idx].AtScaled == pixel)
                     idx++;
                 int count = idx - prevIdx;
