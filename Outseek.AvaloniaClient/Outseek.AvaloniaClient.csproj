@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <PublishReadyToRun>true</PublishReadyToRun>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Models\" />
@@ -16,6 +15,9 @@
         <PackageReference Include="MessageBox.Avalonia" Version="1.2.0" />
         <PackageReference Include="pythonnet" Version="3.0.0-preview2021-05-03" />
         <PackageReference Include="ReactiveUI.Fody" Version="13.3.1" />
+        <!-- Required as a workaround for this error:
+             https://github.com/avaloniaUI/avalonia/issues/3679#issuecomment-601363234 -->
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
         <PackageReference Include="System.Linq.Async" Version="5.0.0" />
     </ItemGroup>
     <ItemGroup>

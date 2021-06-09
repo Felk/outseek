@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
@@ -46,16 +47,17 @@ namespace Outseek.AvaloniaClient.ViewModels
 
         public VideoplayerViewModel(TimelineState timelineState, MediaState mediaState)
         {
-            try
-            {
-                // Linux: Requires libvlc to be available, e.g. by installing the 'vlc' and 'libvlc-dev' packages
-                Core.Initialize();
-            }
-            catch (VLCException)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // Windows: Assume a 64-bit VLC player is installed in the default location
                 Core.Initialize("C:/Program Files/VideoLAN/VLC");
             }
+            else
+            {
+                // Linux: Requires libvlc to be available, e.g. by installing the 'vlc' and 'libvlc-dev' packages
+                Core.Initialize();
+            }
+
             _libVlc = new LibVLC();
             TimelineState = timelineState;
             MediaState = mediaState;
