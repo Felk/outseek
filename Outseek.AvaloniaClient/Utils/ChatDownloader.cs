@@ -58,6 +58,7 @@ namespace Outseek.AvaloniaClient.Utils
                 try
                 {
                     dynamic chat = _chatDownloaderModule.ChatDownloader().get_chat(url);
+                    dynamic builtins = Py.Import("builtins");
 
                     // this loop is not async, so it needs to be offloaded onto a thread to not block the caller.
                     foreach (var message in chat)
@@ -69,7 +70,7 @@ namespace Outseek.AvaloniaClient.Utils
                             foreach (var badge in author["badges"])
                                 badges.Add(badge["title"].As<string>());
                         }
-                        catch (PythonException ex) when (ex.PyType == Exceptions.KeyError)
+                        catch (PythonException ex) when (ex.Type.Equals(builtins.KeyError))
                         {
                         }
 
