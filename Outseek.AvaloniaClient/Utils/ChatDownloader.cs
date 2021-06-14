@@ -74,15 +74,26 @@ namespace Outseek.AvaloniaClient.Utils
                         {
                         }
 
-                        ChatMessage msg = new(
-                            message["message_id"].As<string>(),
-                            message["message"].As<string>(),
-                            message["message_type"].As<string>(),
-                            message["timestamp"].As<long>(),
-                            message["time_in_seconds"].As<float>(),
-                            // author["id"].As<string>(), // see https://github.com/xenova/chat-downloader/pull/90
-                            author["name"].As<string>(),
-                            badges.ToImmutableList());
+                        ChatMessage msg;
+                        try
+                        {
+                            msg = new(
+                                message["message_id"].As<string>(),
+                                message["message"].As<string>(),
+                                message["message_type"].As<string>(),
+                                message["timestamp"].As<long>(),
+                                message["time_in_seconds"].As<float>(),
+                                // author["id"].As<string>(), // see https://github.com/xenova/chat-downloader/pull/90
+                                author["name"].As<string>(),
+                                badges.ToImmutableList());
+                        }
+                        catch (PythonException)
+                        {
+                            // this sometimes fails for yet unknown reasons,
+                            // but it's better to skip a few messages than to abort the entire download 
+                            await Console.Error.WriteLineAsync("Failed to read message data from python message dictionary, skipping object: " + message);
+                            continue;
+                        }
 
                         messages.Add(msg);
                         // awaiting yields to god knows whose code, so release the GIL for its duration  
