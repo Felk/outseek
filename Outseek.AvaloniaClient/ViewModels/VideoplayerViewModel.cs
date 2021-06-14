@@ -49,8 +49,9 @@ namespace Outseek.AvaloniaClient.ViewModels
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                // Windows: Assume a 64-bit VLC player is installed in the default location
-                Core.Initialize("C:/Program Files/VideoLAN/VLC");
+                string? vlcDll = LibraryUtils.LocateDllOnWindows("libvlc.dll");
+                // Windows: Assume a 64-bit VLC player is installed in the default location if not found on PATH
+                Core.Initialize(vlcDll ?? "C:/Program Files/VideoLAN/VLC");
             }
             else
             {
