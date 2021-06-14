@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using MessageBox.Avalonia;
+using MessageBox.Avalonia.Enums;
 using Python.Runtime;
+using Dispatcher = Avalonia.Threading.Dispatcher;
 
 namespace Outseek.AvaloniaClient
 {
@@ -16,15 +20,32 @@ namespace Outseek.AvaloniaClient
         public static Task<IncludedPython> Create() =>
             Task.Run(() =>
             {
-                // TODO figure out how to properly manage this cross-platform
+                string? pyLibPath = null;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    Runtime.PythonDLL = "C:/Program Files/Python38/python38.dll";
+                    pyLibPath = LibraryUtils.LocateDllOnWindows("python3?.dll");
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    Runtime.PythonDLL = "libpython3.8.so";
+                    pyLibPath = LibraryUtils.LocateSharedLibraryOnLinux(new Regex(@"libpython3\.\d+\.so"));
                 }
+
+                if (pyLibPath == null)
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        var messagebox = MessageBoxManager.GetMessageBoxStandardWindow(
+                            "Could not locate python",
+                            "No python3 installation could be located.\n" +
+                            "A bunch of features that need python will not work.\n" +
+                            "Please make sure some recent version of Python 3 is installed and on the PATH",
+                            ButtonEnum.Ok, Icon.Error);
+                        messagebox.Show();
+                    });
+                    return;
+                }
+
+                Runtime.PythonDLL = pyLibPath;
 
                 PythonEngine.Initialize();
                 PythonEngine.BeginAllowThreads();
