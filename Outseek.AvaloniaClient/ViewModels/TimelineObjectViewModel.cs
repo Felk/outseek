@@ -45,8 +45,7 @@ namespace Outseek.AvaloniaClient.ViewModels
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex);
-                TimelineObject = new ErrorViewModel {Error = ex.Message};
+                TimelineObject = new ErrorViewModel {Exception = ex, Error = ex.Message};
             }
         }
 
