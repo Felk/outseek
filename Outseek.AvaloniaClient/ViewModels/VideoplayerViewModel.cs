@@ -49,7 +49,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                string? vlcDll = LibraryUtils.LocateDllOnWindows("libvlc.dll");
+                string? vlcDll = SubprocessUtils.LocateDllOnWindows("libvlc.dll");
                 // Windows: Assume a 64-bit VLC player is installed in the default location if not found on PATH
                 Core.Initialize(vlcDll ?? "C:/Program Files/VideoLAN/VLC");
             }
@@ -89,13 +89,13 @@ namespace Outseek.AvaloniaClient.ViewModels
                     AllowMultiple = false,
                     Title = "Choose video file",
                 };
-                fileDialog.ShowAsync(mainWindow).ContinueWith(task =>
+                fileDialog.ShowAsync(mainWindow).ContinueWith(async task =>
                 {
                     if (task.Exception != null)
                     {
                         var messagebox = MessageBoxManager.GetMessageBoxStandardWindow(
                             "Could not open file", task.Exception.ToString(), ButtonEnum.Ok, Icon.Error);
-                        messagebox.Show();
+                        await messagebox.Show();
                     }
                     else
                     {

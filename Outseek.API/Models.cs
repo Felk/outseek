@@ -27,10 +27,12 @@ namespace Outseek.API
 
         public string GetStorageDirectory(string? subdirectory)
         {
-            string userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string storageDir = Path.Join(userDir, ".outseek");
-            if (subdirectory != null) storageDir = Path.Join(storageDir, subdirectory);
-            Directory.CreateDirectory(storageDir);
+            string storageDir = Outseek.StorageDirectory;
+            if (subdirectory != null)
+            {
+                storageDir = Path.Join(storageDir, subdirectory);
+                Directory.CreateDirectory(storageDir);
+            }
             return storageDir;
         }
     }

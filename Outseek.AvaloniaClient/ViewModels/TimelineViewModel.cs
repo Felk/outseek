@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
+using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
 using Outseek.AvaloniaClient.Utils;
 using Outseek.Backend.Processors;
@@ -33,13 +34,18 @@ namespace Outseek.AvaloniaClient.ViewModels
 
             InitializeTimeline = ReactiveCommand.Create((Func<Task>) (async () =>
             {
-                IncludedPython py = await IncludedPython.Create();
-
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetRandomChat()));
 
-                dynamic chatDownloaderModule = await py.GetModule("chat_downloader", "chat-downloader");
+                IncludedPython? py = await IncludedPython.Create();
+                if (py == null) return;
+
+                // currently passing a git install path using a fork because of: https://github.com/xenova/chat-downloader/issues/85#issuecomment-832182138
+                dynamic? chatDownloaderModule = await py.GetModule(
+                    importName: "chat_downloader", pypiName: "chat-downloader",
+                    pipInstallName: "git+https://github.com/turbcool/chat-downloader.git#egg=chat-downloader");
+                if (chatDownloaderModule == null) return;
                 IChatDownloader chatDownloader = new ChatDownloader(chatDownloaderModule);
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetChat(chatDownloader)));
             }));
