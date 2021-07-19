@@ -43,10 +43,7 @@ namespace Outseek.AvaloniaClient.ViewModels
                 IncludedPython? py = await IncludedPython.Create();
                 if (py == null) return;
 
-                // currently passing a git install path using a fork because of: https://github.com/xenova/chat-downloader/issues/85#issuecomment-832182138
-                dynamic? chatDownloaderModule = await py.GetModule(
-                    importName: "chat_downloader", pypiName: "chat-downloader",
-                    pipInstallName: "git+https://github.com/turbcool/chat-downloader.git#egg=chat-downloader");
+                dynamic? chatDownloaderModule = await py.GetModule(importName: "chat_downloader", pypiName: "chat-downloader");
                 if (chatDownloaderModule == null) return;
                 IChatDownloader chatDownloader = new ChatDownloader(chatDownloaderModule);
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetChat(chatDownloader), workingAreaState));
