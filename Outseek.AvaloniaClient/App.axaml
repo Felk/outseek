@@ -11,6 +11,7 @@
         <StyleInclude Source="/Icons.axaml"/>
         <StyleInclude Source="/Styles/Global.axaml"/>
         <StyleInclude Source="/Styles/Timeline.axaml"/>
+        <StyleInclude Source="/Styles/WorkingArea.axaml"/>
         <StyleInclude Source="/Styles/ZoomAdjuster.axaml"/>
     </Application.Styles>
 </Application>

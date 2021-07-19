@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
-using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
 using Outseek.AvaloniaClient.Utils;
 using Outseek.Backend.Processors;
@@ -16,6 +15,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineState TimelineState { get; }
         public TimelineProcessorsState TimelineProcessorsState { get; }
         public ZoomAdjusterViewModel ZoomAdjusterViewModel { get; }
+        public WorkingAreaViewModel WorkingAreaViewModel { get; }
 
         [Reactive] public ObservableCollection<TimelineObjectViewModel> TimelineObjects { get; set; } = new();
 
@@ -31,12 +31,14 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineState = timelineState;
             TimelineProcessorsState = timelineProcessorsState;
             ZoomAdjusterViewModel = new ZoomAdjusterViewModel(timelineState);
+            WorkingAreaState workingAreaState = new();
+            WorkingAreaViewModel = new WorkingAreaViewModel(timelineState, workingAreaState);
 
             InitializeTimeline = ReactiveCommand.Create((Func<Task>) (async () =>
             {
-                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
-                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments()));
-                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetRandomChat()));
+                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments(), workingAreaState));
+                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new RandomSegments(), workingAreaState));
+                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetRandomChat(), workingAreaState));
 
                 IncludedPython? py = await IncludedPython.Create();
                 if (py == null) return;
@@ -47,7 +49,7 @@ namespace Outseek.AvaloniaClient.ViewModels
                     pipInstallName: "git+https://github.com/turbcool/chat-downloader.git#egg=chat-downloader");
                 if (chatDownloaderModule == null) return;
                 IChatDownloader chatDownloader = new ChatDownloader(chatDownloaderModule);
-                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetChat(chatDownloader)));
+                TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new GetChat(chatDownloader), workingAreaState));
             }));
         }
     }

@@ -14,6 +14,7 @@
              Items="{Binding Segments}"
              Background="{x:Null}"
              SelectionMode="Multiple"
+             SelectedItems="{Binding SelectedSegments, Mode=OneWay}"
              AutoScrollToSelectedItem="False">
         <ListBox.Styles>
             <Style Selector="#SegmentsListBox ListBoxItem">

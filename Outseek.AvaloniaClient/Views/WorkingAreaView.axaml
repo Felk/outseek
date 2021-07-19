@@ -1,0 +1,66 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Outseek.AvaloniaClient.Controls"
+             xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Outseek.AvaloniaClient.Views.WorkingAreaView">
+    <Design.DataContext>
+        <viewModels:WorkingAreaViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer Width="{Binding TimelineState.ViewportWidth}"
+                  Extent="{Binding TimelineState.ViewportWidthScaledAsSize}"
+                  HorizontalScrollBarVisibility="Hidden"
+                  VerticalScrollBarVisibility="Hidden"
+                  Offset="{Binding TimelineState.ScrollPositionScaled}">
+        <ItemsControl Items="{Binding WorkingAreaState.Segments}"
+                      Width="{Binding TimelineState.ViewportWidthScaled}"
+                      Name="WorkingAreaItemsControl">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <!-- stack the segments on top of each other,
+                     and just ignore that this allows them to overlap for now.
+                     TODO enforce segments to not overlap -->
+                    <Panel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <controls:ResizableThumbTrack
+                        IsResizable="True" IsDraggable="True"
+                        Range="{Binding RangeScaled}"
+                        Minimum="0"
+                        Maximum="{Binding TimelineState.EndScaled}"
+                        Increment="{Binding StepScaled}"
+                        MinimumDistance="{Binding StepScaled}">
+                        <controls:ResizableThumbTrack.ResizeStartThumb>
+                            <Thumb Name="PART_ResizeStartThumb" />
+                        </controls:ResizableThumbTrack.ResizeStartThumb>
+                        <controls:ResizableThumbTrack.ResizeEndThumb>
+                            <Thumb Name="PART_ResizeEndThumb" />
+                        </controls:ResizableThumbTrack.ResizeEndThumb>
+                        <controls:ResizableThumbTrack.Backdrop>
+                            <Panel Classes="SegmentPanel" />
+                        </controls:ResizableThumbTrack.Backdrop>
+                        <Thumb>
+                            <Thumb.Template>
+                                <ControlTemplate>
+                                    <Border Name="PART_Border">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding Range.From, StringFormat=\{0:00.00\}}" />
+                                            <Label Content="-" />
+                                            <Label Content="{Binding Range.To, StringFormat=\{0:00.00\}}" />
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Thumb.Template>
+                        </Thumb>
+                    </controls:ResizableThumbTrack>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+
+</UserControl>

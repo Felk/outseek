@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DynamicData;
 using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
 using Outseek.AvaloniaClient.ViewModels.TimelineObjects;
@@ -21,7 +25,9 @@ namespace Outseek.AvaloniaClient.ViewModels
         [Reactive] public TimelineProcessorParams ProcessorParamsObject { get; set; }
         [Reactive] public TimelineObjectViewModelBase? TimelineObject { get; set; }
 
-        public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegments())
+        public ReactiveCommand<Unit, Unit> CopySegments { get; }
+        
+        public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegments(), new WorkingAreaState())
         {
             // the default constructor is only used by the designer
         }
@@ -50,7 +56,9 @@ namespace Outseek.AvaloniaClient.ViewModels
         }
 
         public TimelineObjectViewModel(
-            TimelineState timelineState, ITimelineProcessor processor)
+            TimelineState timelineState,
+            ITimelineProcessor processor,
+            WorkingAreaState workingAreaState)
         {
             _cancellationTokenSource = new CancellationTokenSource();
             TimelineState = timelineState;
@@ -62,6 +70,11 @@ namespace Outseek.AvaloniaClient.ViewModels
                     if (paramsObj != null) await RerunProcessor(CancellationToken.None);
                 });
             ProcessorParamsObject = _timelineProcessor.GetDefaultParams();
+
+            ObservableRange Clone(ObservableRange r) => new(timelineState, r.Range);
+            CopySegments = ReactiveCommand.Create(
+                () => workingAreaState.Segments.AddRange(((SegmentsViewModel)TimelineObject!).SelectedSegments.Select(Clone)),
+                this.WhenAnyValue(vm => vm.TimelineObject).Select(to => to is SegmentsViewModel));
         }
 
         public void Dispose()

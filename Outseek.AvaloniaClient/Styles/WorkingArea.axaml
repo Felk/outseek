@@ -1,0 +1,22 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views">
+    <Design.PreviewWith>
+        <Border Padding="20" Width="600" Height="300">
+            <views:WorkingAreaView />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="views|WorkingAreaView ItemsControl#WorkingAreaItemsControl">
+        <Setter Property="Height" Value="60"/>
+    </Style>
+    
+    <Style Selector="views|WorkingAreaView Border#PART_Border">
+        <Setter Property="Background" Value="#114433" />
+    </Style>
+    
+    <Style Selector="Panel#WorkingAreaToolPanel Border">
+        <Setter Property="Background" Value="#66000000"/>
+    </Style>
+
+</Styles>

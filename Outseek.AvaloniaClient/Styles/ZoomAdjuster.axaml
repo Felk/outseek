@@ -33,5 +33,9 @@
             </ControlTemplate>
         </Setter>
     </Style>
+    
+    <Style Selector="Panel#ZoomAdjusterPanel">
+        <Setter Property="Background" Value="#66000000"/>
+    </Style>
 
 </Styles>

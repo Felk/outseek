@@ -37,35 +37,60 @@
         <Panel Grid.Row="1">
             <Border Name="SegmentsBackdrop" Margin="200 0 0 0" Height="8001"
                     Width="{Binding TimelineState.ViewportWidth}" VerticalAlignment="Top" />
-            <ScrollViewer VerticalScrollBarVisibility="Visible"
-                          HorizontalScrollBarVisibility="Hidden">
-                <ListBox Items="{Binding TimelineObjects}"
-                         Background="{x:Null}"
-                         SelectionMode="Single"
-                         SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
-                    <ListBox.Styles>
-                        <Style Selector="ListBoxItem">
-                            <Setter Property="Padding" Value="0"/>
-                        </Style>
-                    </ListBox.Styles>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ColumnDefinitions="200,*">
-                                <Label Grid.Column="0" Content="{Binding Text}" />
-                                <ScrollViewer Grid.Column="1"
-                                              Width="{Binding TimelineState.ViewportWidth}"
-                                              Extent="{Binding TimelineState.ViewportWidthScaledAsSize}"
-                                              HorizontalScrollBarVisibility="Hidden"
-                                              VerticalScrollBarVisibility="Hidden"
-                                              Offset="{Binding TimelineState.ScrollPositionScaled}">
-                                    <views:TimelineObjectView
-                                        Width="{Binding TimelineState.ViewportWidthScaled}" />
-                                </ScrollViewer>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </ScrollViewer>
+            <Grid RowDefinitions="*,Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Visible"
+                              HorizontalScrollBarVisibility="Hidden"
+                              Grid.Row="0">
+                    <ListBox Items="{Binding TimelineObjects}"
+                             Background="{x:Null}"
+                             SelectionMode="Single"
+                             SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="0" />
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="200,*">
+                                    <Panel Grid.Column="0">
+                                        <DockPanel>
+                                            <Button Command="{Binding CopySegments}" 
+                                                    DockPanel.Dock="Left"
+                                                    Padding="2"
+                                                    ToolTip.Tip="Add selected segments to working area" HorizontalContentAlignment="Stretch">
+                                                <PathIcon Data="{StaticResource extended_dock_regular}">
+                                                    <PathIcon.RenderTransform>
+                                                        <RotateTransform Angle="180" />
+                                                    </PathIcon.RenderTransform>
+                                                </PathIcon>
+                                            </Button>
+                                            <Label Content="{Binding Text}" />
+                                        </DockPanel>
+                                    </Panel>
+                                    <ScrollViewer Grid.Column="1"
+                                                  Width="{Binding TimelineState.ViewportWidth}"
+                                                  Extent="{Binding TimelineState.ViewportWidthScaledAsSize}"
+                                                  HorizontalScrollBarVisibility="Hidden"
+                                                  VerticalScrollBarVisibility="Hidden"
+                                                  Offset="{Binding TimelineState.ScrollPositionScaled}">
+                                        <views:TimelineObjectView
+                                            Width="{Binding TimelineState.ViewportWidthScaled}" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Panel Name="WorkingAreaToolPanel" Width="200">
+                        <Border>
+                            <Label>Some tools here?</Label>
+                        </Border>
+                    </Panel>
+                    <ContentControl Content="{Binding WorkingAreaViewModel}"/>
+                </StackPanel>
+            </Grid>
             <StackPanel Orientation="Horizontal">
                 <Panel Width="200" />
                 <Panel Width="{Binding TimelineState.PlaybackPositionScaled, Mode=OneWay}" />
@@ -79,7 +104,7 @@
         </Panel>
 
         <Grid Grid.Row="2" ColumnDefinitions="200,*">
-            <Panel Grid.Column="0" />
+            <Panel Name="ZoomAdjusterPanel" Grid.Column="0"/>
             <ContentControl
                 Grid.Column="1"
                 Name="ZoomAdjuster"

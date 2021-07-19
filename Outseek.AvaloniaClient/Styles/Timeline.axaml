@@ -108,7 +108,8 @@
         <Setter Property="Background" Value="transparent" />
     </Style>
     <Style Selector="#SegmentsListBox ListBoxItem:selected controls|ResizableThumbTrack Panel.SegmentPanel">
-        <Setter Property="Background" Value="#99aaaaff" />
+        <!-- blends into green-ish, because the working area segment color is green -->
+        <Setter Property="Background" Value="#7777ff99" />
     </Style>
     <Style Selector="#SegmentsListBox ListBoxItem:selected controls|ResizableThumbTrack Border.ResizeThumbBorder">
         <Setter Property="BorderBrush" Value="#aaaaaa" />

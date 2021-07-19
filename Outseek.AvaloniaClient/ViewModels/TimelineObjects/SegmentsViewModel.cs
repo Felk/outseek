@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
-using ReactiveUI;
-using Range = Outseek.AvaloniaClient.Utils.Range;
+using Outseek.AvaloniaClient.Utils;
 
 namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
 {
@@ -16,29 +14,13 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         private readonly TimelineObject.Segments _segments;
         public TimelineState TimelineState { get; }
 
-        public ObservableCollection<SegmentViewModel> Segments { get; } = new();
+        public ObservableCollection<ObservableRange> Segments { get; } = new();
+        public ObservableCollection<ObservableRange> SelectedSegments { get; } = new();
 
         public SegmentsViewModel(TimelineState timelineState, TimelineObject.Segments segments)
         {
             TimelineState = timelineState;
             _segments = segments;
-            TimelineState.WhenAnyValue(t => t.DevicePixelsPerSecond)
-                .Subscribe(_ =>
-                {
-                    foreach (SegmentViewModel segmentViewModel in Segments)
-                    {
-                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.StepScaled));
-                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.RangeScaled));
-                    }
-                });
-            TimelineState.WhenAnyValue(t => t.Step)
-                .Subscribe(_ =>
-                {
-                    foreach (SegmentViewModel segmentViewModel in Segments)
-                    {
-                        segmentViewModel.RaisePropertyChanged(nameof(SegmentViewModel.StepScaled));
-                    }
-                });
         }
 
         public SegmentsViewModel() : this(
@@ -52,47 +34,9 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
             Segments.Clear();
             await foreach (Segment segment in _segments.SegmentList.WithCancellation(cancellationToken))
             {
-                SegmentViewModel svm = new(TimelineState, new Range(segment.FromSeconds, segment.ToSeconds));
-                Dispatcher.UIThread.Post(() => Segments.Add(svm));
+                Dispatcher.UIThread.Post(() => Segments.Add(
+                    new ObservableRange(TimelineState, new Range(segment.FromSeconds, segment.ToSeconds))));
             }
-        }
-    }
-
-    public class SegmentViewModel : ViewModelBase
-    {
-        private Range _range;
-        private TimelineState TimelineState { get; }
-
-        public SegmentViewModel(TimelineState timelineState, Range range)
-        {
-            TimelineState = timelineState;
-            _range = range;
-        }
-
-        public Range Range
-        {
-            get => _range;
-            set
-            {
-                if (Equals(value, _range)) return;
-                this.RaisePropertyChanging();
-                this.RaisePropertyChanging(nameof(RangeScaled));
-                _range = value;
-                this.RaisePropertyChanged(nameof(RangeScaled));
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public Range RangeScaled
-        {
-            get => Range * TimelineState.DevicePixelsPerSecond;
-            set => Range = value / TimelineState.DevicePixelsPerSecond;
-        }
-
-        public double StepScaled
-        {
-            get => TimelineState.Step * TimelineState.DevicePixelsPerSecond;
-            set => TimelineState.Step = value / TimelineState.DevicePixelsPerSecond;
         }
     }
 }
