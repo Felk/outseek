@@ -293,7 +293,7 @@ namespace Outseek.AvaloniaClient.Controls
         {
             double deltaPercent = e.Vector.X / Bounds.Width;
             double range = Maximum - Minimum;
-            double delta = Math.Clamp(deltaPercent * range, Minimum - Range.From, Range.Size - MinimumDistance);
+            double delta = Math.Clamp(deltaPercent * range, Minimum - Range.From, Math.Max(0, Range.Size - MinimumDistance));
 
             Range = new Range(MathUtils.RoundToIncrement(Range.From + delta, Increment), Range.To);
         }
