@@ -28,5 +28,14 @@
     <Style Selector="Rectangle#HoverIndicator">
         <Setter Property="Stroke" Value="#aa33aa" />
     </Style>
+    
+    <Style Selector="Button:disabled PathIcon">
+        <!-- The disabled-style does not affect PathIcon by default, so manually styling those is required. -->
+        <Setter Property="Foreground" Value="#66ffffff" />
+    </Style>
+    <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+        <!-- The default style only dampens the foreground. That was not discernible enough for my taste. -->
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
 
 </Styles>
