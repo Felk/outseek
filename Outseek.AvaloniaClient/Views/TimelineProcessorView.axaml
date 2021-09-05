@@ -11,7 +11,11 @@
         <viewModels:TimelineObjectViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="200,*" HorizontalAlignment="Left">
+    <Grid HorizontalAlignment="Left">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Panel Grid.Column="0">
             <DockPanel>
                 <Button Command="{Binding CopySegments}"
@@ -24,7 +28,7 @@
                         </PathIcon.RenderTransform>
                     </PathIcon>
                 </Button>
-                <Label Content="{Binding Text}" />
+                <Label Content="{Binding Text}" ToolTip.Tip="{Binding Text}" />
             </DockPanel>
         </Panel>
         <ScrollViewer Grid.Column="1"

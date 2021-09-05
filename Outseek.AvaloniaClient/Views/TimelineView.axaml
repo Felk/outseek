@@ -16,10 +16,17 @@
     </Interaction.Behaviors>
 
     <Grid RowDefinitions="30,*,40"
+          Grid.IsSharedSizeScope="True"
           PointerMoved="InputElement_OnPointerMoved">
-        <Grid Grid.Row="0" ColumnDefinitions="200,*">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="50" Width="200" SharedSizeGroup="InfoAreaWidth" />
+                <ColumnDefinition Width="0" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <Panel Grid.Column="0" Name="DeadCorner" />
-            <ScrollViewer Grid.Column="1"
+            <GridSplitter Grid.Column="1"/>
+            <ScrollViewer Grid.Column="2"
                           Name="TimelineSliderArea"
                           HorizontalAlignment="Left"
                           Width="{Binding TimelineState.ViewportWidth}"
@@ -35,8 +42,16 @@
         </Grid>
 
         <Panel Grid.Row="1">
-            <Border Name="SegmentsBackdrop" Margin="200 0 0 0" Height="8001"
-                    Width="{Binding TimelineState.ViewportWidth}" VerticalAlignment="Top" />
+            <Grid HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Panel Grid.Column="0" />
+                <Border Grid.Column="1"
+                        Name="SegmentsBackdrop" Height="8001"
+                        Width="{Binding TimelineState.ViewportWidth}" VerticalAlignment="Top" />
+            </Grid>
             <Grid RowDefinitions="*,Auto">
                 <ScrollViewer VerticalScrollBarVisibility="Visible"
                               HorizontalScrollBarVisibility="Hidden"
@@ -57,28 +72,46 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </ScrollViewer>
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Panel Name="WorkingAreaToolPanel" Width="200">
+                <Grid Grid.Row="1" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Panel Grid.Column="0" Name="WorkingAreaToolPanel">
                         <Border>
                             <Label>Some tools here?</Label>
                         </Border>
                     </Panel>
-                    <ContentControl Content="{Binding WorkingAreaViewModel}" />
-                </StackPanel>
+                    <ContentControl Grid.Column="1" Content="{Binding WorkingAreaViewModel}" />
+                </Grid>
             </Grid>
-            <StackPanel Orientation="Horizontal">
-                <Panel Width="200" />
-                <Panel Width="{Binding TimelineState.PlaybackPositionScaled, Mode=OneWay}" />
-                <Rectangle Name="PlaybackIndicator" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Panel Width="200" />
-                <Panel Width="{Binding TimelineState.ViewportHoverPosition, Mode=OneWay}" />
-                <Rectangle Name="HoverIndicator" />
-            </StackPanel>
+            <Grid HorizontalAlignment="Left" Name="PlaybackIndicatorContainer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="0" />
+                </Grid.ColumnDefinitions>
+                <Panel Grid.Column="0" />
+                <Panel Grid.Column="1" Width="{Binding TimelineState.PlaybackPositionScaled, Mode=OneWay}" />
+                <Rectangle Grid.Column="2" Name="PlaybackIndicator" />
+            </Grid>
+            <Grid HorizontalAlignment="Left" Name="HoverIndicatorContainer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="0" />
+                </Grid.ColumnDefinitions>
+                <Panel Grid.Column="0" />
+                <Panel Grid.Column="1" Width="{Binding TimelineState.ViewportHoverPosition, Mode=OneWay}" />
+                <Rectangle Grid.Column="2" Name="HoverIndicator" />
+            </Grid>
         </Panel>
 
-        <Grid Grid.Row="2" ColumnDefinitions="200,*">
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <Panel Name="ZoomAdjusterPanel" Grid.Column="0" />
             <ContentControl
                 Grid.Column="1"
