@@ -10,6 +10,6 @@
     </Design.DataContext>
 
     <Border Background="#aa0000">
-        <Label Content="{Binding Error}" />
+        <Label Content="{Binding ErrorText}" />
     </Border>
 </UserControl>

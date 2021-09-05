@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Outseek.API
 {
@@ -12,6 +13,7 @@ namespace Outseek.API
 
         // public sealed record Multiple(IImmutableDictionary<string, TimelineObject> Objects) : TimelineObject;
         public sealed record Nothing : TimelineObject;
+        public sealed record Error(Exception? Exception, string? ErrorText) : TimelineObject;
         public sealed record Segments(IAsyncEnumerable<Segment> SegmentList) : TimelineObject;
         public sealed record TimedText(IAsyncEnumerable<TimedTextEntry> Entries) : TimelineObject;
     }

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using DynamicData;
 using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
@@ -16,60 +15,53 @@ namespace Outseek.AvaloniaClient.ViewModels
 {
     public sealed class TimelineObjectViewModel : ViewModelBase, IDisposable
     {
-        private readonly ITimelineProcessor _timelineProcessor;
+        public readonly TimelineProcessorNode Node;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public TimelineState TimelineState { get; }
 
         [Reactive] public string? Text { get; set; }
-        [Reactive] public TimelineProcessorParams ProcessorParamsObject { get; set; }
         [Reactive] public TimelineObjectViewModelBase? TimelineObject { get; set; }
 
         public ReactiveCommand<Unit, Unit> CopySegments { get; }
-        
-        public TimelineObjectViewModel() : this(new TimelineState(), new RandomSegments(), new WorkingAreaState())
+
+        public TimelineObjectViewModel() : this(
+            new TimelineState(), new TimelineProcessorNode(new RandomSegments(), Observable.Empty<ITimelineProcessContext>()), new WorkingAreaState())
         {
             // the default constructor is only used by the designer
         }
 
-        public async Task RerunProcessor(CancellationToken cancellationToken)
-        {
-            var context = new TimelineProcessContext(TimelineState.Start, TimelineState.End);
-            try
-            {
-                TimelineObject timelineObject = _timelineProcessor.Process(
-                    context, new TimelineObject.Nothing(), ProcessorParamsObject);
-                TimelineObjectViewModelBase timelineObjectViewModelBase = timelineObject switch
-                {
-                    TimelineObject.Nothing nothing => new NothingViewModel(),
-                    TimelineObject.Segments segments => new SegmentsViewModel(TimelineState, segments),
-                    TimelineObject.TimedText timedText => new TimedTextViewModel(TimelineState, timedText),
-                    _ => throw new Exception($"unknown timeline object '{timelineObject}'")
-                };
-                TimelineObject = timelineObjectViewModelBase;
-                await timelineObjectViewModelBase.Refresh(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                TimelineObject = new ErrorViewModel {Exception = ex, Error = ex.Message};
-            }
-        }
-
         public TimelineObjectViewModel(
             TimelineState timelineState,
-            ITimelineProcessor processor,
+            TimelineProcessorNode node,
             WorkingAreaState workingAreaState)
         {
             _cancellationTokenSource = new CancellationTokenSource();
             TimelineState = timelineState;
-            _timelineProcessor = processor;
-            Text = _timelineProcessor.Name;
-            this.WhenAnyValue(t => t.ProcessorParamsObject)
-                .Subscribe(async paramsObj =>
+            Node = node;
+            Text = Node.Processor.Name;
+
+            Node.WhenAnyValue(n => n.Output)
+                .Subscribe(async timelineObject =>
                 {
-                    if (paramsObj != null) await RerunProcessor(CancellationToken.None);
+                    TimelineObjectViewModelBase timelineObjectViewModelBase = timelineObject switch
+                    {
+                        TimelineObject.Nothing nothing => new NothingViewModel(),
+                        TimelineObject.Error error => new ErrorViewModel { ErrorText = error.ErrorText },
+                        TimelineObject.Segments segments => new SegmentsViewModel(TimelineState, segments),
+                        TimelineObject.TimedText timedText => new TimedTextViewModel(TimelineState, timedText),
+                        _ => throw new Exception($"unknown timeline object '{timelineObject}'")
+                    };
+                    TimelineObject = timelineObjectViewModelBase;
+                    try
+                    {
+                        await timelineObjectViewModelBase.Refresh(_cancellationTokenSource.Token);
+                    }
+                    catch (Exception ex)
+                    {
+                        TimelineObject = new ErrorViewModel { ErrorText = ex.Message };
+                    }
                 });
-            ProcessorParamsObject = _timelineProcessor.GetDefaultParams();
 
             ObservableRange Clone(ObservableRange r) => new(timelineState, r.Range);
             CopySegments = ReactiveCommand.Create(
