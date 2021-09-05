@@ -1,0 +1,41 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views"
+             xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Outseek.AvaloniaClient.Views.TimelineProcessorView">
+
+    <Design.DataContext>
+        <viewModels:TimelineObjectViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="200,*" HorizontalAlignment="Left">
+        <Panel Grid.Column="0">
+            <DockPanel>
+                <Button Command="{Binding CopySegments}"
+                        DockPanel.Dock="Left"
+                        Padding="2"
+                        ToolTip.Tip="Add selected segments to working area" HorizontalContentAlignment="Stretch">
+                    <PathIcon Data="{StaticResource extended_dock_regular}">
+                        <PathIcon.RenderTransform>
+                            <RotateTransform Angle="180" />
+                        </PathIcon.RenderTransform>
+                    </PathIcon>
+                </Button>
+                <Label Content="{Binding Text}" />
+            </DockPanel>
+        </Panel>
+        <ScrollViewer Grid.Column="1"
+                      Width="{Binding TimelineState.ViewportWidth}"
+                      Extent="{Binding TimelineState.ViewportWidthScaledAsSize}"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Hidden"
+                      Offset="{Binding TimelineState.ScrollPositionScaled}">
+            <views:TimelineObjectView
+                Width="{Binding TimelineState.ViewportWidthScaled}" />
+        </ScrollViewer>
+    </Grid>
+
+</UserControl>

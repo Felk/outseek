@@ -52,32 +52,7 @@
                         </ListBox.Styles>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid ColumnDefinitions="200,*">
-                                    <Panel Grid.Column="0">
-                                        <DockPanel>
-                                            <Button Command="{Binding CopySegments}" 
-                                                    DockPanel.Dock="Left"
-                                                    Padding="2"
-                                                    ToolTip.Tip="Add selected segments to working area" HorizontalContentAlignment="Stretch">
-                                                <PathIcon Data="{StaticResource extended_dock_regular}">
-                                                    <PathIcon.RenderTransform>
-                                                        <RotateTransform Angle="180" />
-                                                    </PathIcon.RenderTransform>
-                                                </PathIcon>
-                                            </Button>
-                                            <Label Content="{Binding Text}" />
-                                        </DockPanel>
-                                    </Panel>
-                                    <ScrollViewer Grid.Column="1"
-                                                  Width="{Binding TimelineState.ViewportWidth}"
-                                                  Extent="{Binding TimelineState.ViewportWidthScaledAsSize}"
-                                                  HorizontalScrollBarVisibility="Hidden"
-                                                  VerticalScrollBarVisibility="Hidden"
-                                                  Offset="{Binding TimelineState.ScrollPositionScaled}">
-                                        <views:TimelineObjectView
-                                            Width="{Binding TimelineState.ViewportWidthScaled}" />
-                                    </ScrollViewer>
-                                </Grid>
+                                <views:TimelineProcessorView />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -88,7 +63,7 @@
                             <Label>Some tools here?</Label>
                         </Border>
                     </Panel>
-                    <ContentControl Content="{Binding WorkingAreaViewModel}"/>
+                    <ContentControl Content="{Binding WorkingAreaViewModel}" />
                 </StackPanel>
             </Grid>
             <StackPanel Orientation="Horizontal">
@@ -104,7 +79,7 @@
         </Panel>
 
         <Grid Grid.Row="2" ColumnDefinitions="200,*">
-            <Panel Name="ZoomAdjusterPanel" Grid.Column="0"/>
+            <Panel Name="ZoomAdjusterPanel" Grid.Column="0" />
             <ContentControl
                 Grid.Column="1"
                 Name="ZoomAdjuster"
