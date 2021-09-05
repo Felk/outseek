@@ -18,7 +18,7 @@
     <Grid RowDefinitions="30,*,40"
           PointerMoved="InputElement_OnPointerMoved">
         <Grid Grid.Row="0" ColumnDefinitions="200,*">
-            <Label Grid.Column="0" />
+            <Panel Grid.Column="0" Name="DeadCorner" />
             <ScrollViewer Grid.Column="1"
                           Name="TimelineSliderArea"
                           HorizontalAlignment="Left"

@@ -53,6 +53,10 @@
         <Setter Property="Background" Value="#101010" />
     </Style>
 
+    <Style Selector="views|TimelineView Panel#DeadCorner">
+        <Setter Property="Background" Value="#66000000" />
+    </Style>
+
     <Style Selector="views|TimelineView Slider#TimelineSlider Track#PART_Track Thumb.SliderThumbStyle">
         <!-- replace round thumb with timeline-draggy-thing looking thumb,
              and also make the slider go from edge to edge by setting the thumb width to 0
