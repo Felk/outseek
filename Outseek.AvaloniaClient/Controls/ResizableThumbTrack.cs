@@ -21,7 +21,7 @@ namespace Outseek.AvaloniaClient.Controls
     /// A <see cref="Track"/> with a resizable thumb.
     /// In a normal track the size of the thumb gets calculated from minimum, maximum and viewport size.
     /// This control allows the thumb size to be directly manipulated,
-    /// reflecting the changes back into the viewport size property. 
+    /// reflecting the changes back into the viewport size property.
     /// </summary>
     [PseudoClasses(":vertical", ":horizontal")] // TODO currently only horizontal works
     public class ResizableThumbTrack : Control
@@ -302,8 +302,10 @@ namespace Outseek.AvaloniaClient.Controls
         {
             double deltaPercent = e.Vector.X / Bounds.Width;
             double range = Maximum - Minimum;
-            double delta = Math.Clamp(deltaPercent * range, -Range.Size + MinimumDistance,
-                Maximum - Range.To);
+            // Not using Math.Clamp on purpose, because the maximum delta may be smaller than the minimum delta when
+            // a segment is all the way to the right, and the maximum delta should just take precedence in those cases
+            // instead of causing a max<min exception.
+            double delta = Math.Min(Maximum - Range.To, Math.Max(-Range.Size + MinimumDistance, deltaPercent * range));
 
             Range = new Range(Range.From, MathUtils.RoundToIncrement(Range.To + delta, Increment));
         }
