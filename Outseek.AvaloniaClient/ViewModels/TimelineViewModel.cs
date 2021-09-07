@@ -8,7 +8,6 @@ using Outseek.AvaloniaClient.SharedViewModels;
 using Outseek.AvaloniaClient.Utils;
 using Outseek.Backend.Processors;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Outseek.AvaloniaClient.ViewModels
 {
@@ -19,7 +18,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         public ZoomAdjusterViewModel ZoomAdjusterViewModel { get; }
         public WorkingAreaViewModel WorkingAreaViewModel { get; }
 
-        [Reactive] public ObservableCollection<TimelineObjectViewModel> TimelineObjects { get; set; } = new();
+        public readonly ObservableCollection<TimelineObjectViewModel> TimelineObjects = new();
 
         public ReactiveCommand<Unit, Task> InitializeTimeline { get; }
 

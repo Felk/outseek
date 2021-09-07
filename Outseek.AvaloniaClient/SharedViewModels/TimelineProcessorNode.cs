@@ -24,23 +24,30 @@ namespace Outseek.AvaloniaClient.SharedViewModels
             Params = Processor.GetDefaultParams();
             context.Subscribe(c => Context = c);
             this.WhenAnyValue(node => node.Input, node => node.Params, node => node.Context)
-                .Subscribe(_ =>
-                {
-                    try
-                    {
-                        Output = RerunProcessor();
-                    }
-                    catch (Exception ex)
-                    {
-                        Output = new TimelineObject.Error(ex, ex.Message);
-                    }
-                });
+                .Subscribe(_ => Refresh());
             this.WhenAnyValue(node => node.Output)
                 .Subscribe(o =>
                 {
                     foreach (TimelineProcessorNode child in Children)
                         child.Input = o;
                 });
+            Children.CollectionChanged += (_, _) =>
+            {
+                foreach (TimelineProcessorNode child in Children)
+                    child.Input = Output;
+            };
+        }
+
+        private void Refresh()
+        {
+            try
+            {
+                Output = RerunProcessor();
+            }
+            catch (Exception ex)
+            {
+                Output = new TimelineObject.Error(ex, ex.Message);
+            }
         }
 
         private TimelineObject RerunProcessor()
