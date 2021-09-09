@@ -28,7 +28,7 @@
     <Style Selector="Rectangle#HoverIndicator">
         <Setter Property="Stroke" Value="#aa33aa" />
     </Style>
-    
+
     <Style Selector="Button:disabled PathIcon">
         <!-- The disabled-style does not affect PathIcon by default, so manually styling those is required. -->
         <Setter Property="Foreground" Value="#66ffffff" />

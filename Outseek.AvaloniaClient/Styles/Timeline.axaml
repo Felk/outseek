@@ -108,6 +108,12 @@
         </Setter>
     </Style>
 
+    <Style Selector="views|TimelineView ScrollViewer.ProcessorsScrollView ListBoxItem">
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    </Style>
+
     <Style Selector="#SegmentsListBox ListBoxItem controls|ResizableThumbTrack Panel.SegmentPanel">
         <Setter Property="Background" Value="transparent" />
     </Style>

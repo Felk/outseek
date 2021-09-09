@@ -7,14 +7,10 @@
         </Border>
     </Design.PreviewWith>
 
-    <Style Selector="views|WorkingAreaView ItemsControl#WorkingAreaItemsControl">
-        <Setter Property="Height" Value="60"/>
-    </Style>
-    
     <Style Selector="views|WorkingAreaView Border#PART_Border">
         <Setter Property="Background" Value="#114433" />
     </Style>
-    
+
     <Style Selector="Panel#WorkingAreaToolPanel Border">
         <Setter Property="Background" Value="#66000000"/>
     </Style>

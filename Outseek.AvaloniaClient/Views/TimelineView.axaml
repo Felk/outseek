@@ -16,109 +16,87 @@
         <behaviors:InitializedBehaviour Command="{Binding InitializeTimeline}" />
     </i:Interaction.Behaviors>
 
-    <Grid RowDefinitions="30,*,40"
-          Grid.IsSharedSizeScope="True"
+    <Grid RowDefinitions="0,30,*,Auto,40,40" ColumnDefinitions="200,Auto,*"
           PointerMoved="InputElement_OnPointerMoved">
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="50" Width="200" SharedSizeGroup="InfoAreaWidth" />
-                <ColumnDefinition Width="0" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Panel Grid.Column="0" Name="DeadCorner" />
-            <GridSplitter Grid.Column="1"/>
-            <ScrollViewer Grid.Column="2"
-                          Name="TimelineSliderArea"
-                          HorizontalAlignment="Left"
-                          Width="{Binding TimelineState.ViewportWidth}"
-                          HorizontalScrollBarVisibility="Hidden"
-                          VerticalScrollBarVisibility="Hidden"
-                          Offset="{Binding TimelineState.ScrollPositionScaled}">
-                <Slider Name="TimelineSlider"
-                        HorizontalAlignment="Left"
-                        Maximum="{Binding TimelineState.End}"
-                        Width="{Binding TimelineState.EndScaled}"
-                        Value="{Binding TimelineState.PlaybackPosition}" />
-            </ScrollViewer>
-        </Grid>
 
-        <Panel Grid.Row="1">
-            <Grid HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Panel Grid.Column="0" />
-                <Border Grid.Column="1"
-                        Name="SegmentsBackdrop" Height="8001"
-                        Width="{Binding TimelineState.ViewportWidth}" VerticalAlignment="Top" />
-            </Grid>
-            <Grid RowDefinitions="*,Auto">
-                <ScrollViewer VerticalScrollBarVisibility="Visible"
-                              HorizontalScrollBarVisibility="Hidden"
-                              Grid.Row="0">
-                    <ListBox Items="{Binding TimelineObjects}"
-                             Background="{x:Null}"
-                             SelectionMode="Single"
-                             SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
-                        <ListBox.Styles>
-                            <Style Selector="ListBoxItem">
-                                <Setter Property="Padding" Value="0" />
-                            </Style>
-                        </ListBox.Styles>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <views:TimelineProcessorView />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </ScrollViewer>
-                <Grid Grid.Row="1" HorizontalAlignment="Left">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Panel Grid.Column="0" Name="WorkingAreaToolPanel">
-                        <Border>
-                            <Label>Some tools here?</Label>
-                        </Border>
-                    </Panel>
-                    <ContentControl Grid.Column="1" Content="{Binding WorkingAreaViewModel}" />
-                </Grid>
-            </Grid>
-            <Grid HorizontalAlignment="Left" Name="PlaybackIndicatorContainer">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="0" />
-                </Grid.ColumnDefinitions>
-                <Panel Grid.Column="0" />
-                <Panel Grid.Column="1" Width="{Binding TimelineState.PlaybackPositionScaled, Mode=OneWay}" />
-                <Rectangle Grid.Column="2" Name="PlaybackIndicator" />
-            </Grid>
-            <Grid HorizontalAlignment="Left" Name="HoverIndicatorContainer">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="0" />
-                </Grid.ColumnDefinitions>
-                <Panel Grid.Column="0" />
-                <Panel Grid.Column="1" Width="{Binding TimelineState.ViewportHoverPosition, Mode=OneWay}" />
-                <Rectangle Grid.Column="2" Name="HoverIndicator" />
-            </Grid>
+        <Panel Grid.Row="0" Grid.Column="0" />
+        <GridSplitter Grid.Row="0" Grid.RowSpan="6" Grid.Column="1" />
+        <Panel Grid.Row="0" Grid.Column="2" ZIndex="1" IsHitTestVisible="False">
+            <StackPanel Orientation="Horizontal">
+                <Panel Width="{Binding TimelineState.PlaybackPositionScaled, Mode=OneWay}" />
+                <Rectangle Name="PlaybackIndicator" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Panel Width="{Binding TimelineState.ViewportHoverPosition, Mode=OneWay}" />
+                <Rectangle Name="HoverIndicator" />
+            </StackPanel>
         </Panel>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition SharedSizeGroup="InfoAreaWidth" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Panel Name="ZoomAdjusterPanel" Grid.Column="0" />
-            <ContentControl
-                Grid.Column="1"
-                Name="ZoomAdjuster"
-                Content="{Binding ZoomAdjusterViewModel}" />
-        </Grid>
+        <Panel Grid.Row="1" Grid.Column="0" Name="DeadCorner" />
+        <ScrollViewer Grid.Row="1" Grid.Column="2"
+                      Name="TimelineSliderArea"
+                      HorizontalAlignment="Left"
+                      Width="{Binding TimelineState.ViewportWidth}"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Hidden"
+                      Offset="{Binding TimelineState.ScrollPositionScaled}">
+            <Slider Name="TimelineSlider"
+                    HorizontalAlignment="Left"
+                    Maximum="{Binding TimelineState.End}"
+                    Width="{Binding TimelineState.EndScaled}"
+                    Value="{Binding TimelineState.PlaybackPosition}" />
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="2" Grid.Column="0"
+                      Name="ProcessorsInfoScrollView" Classes="ProcessorsScrollView"
+                      VerticalScrollBarVisibility="Visible"
+                      HorizontalScrollBarVisibility="Hidden">
+            <i:Interaction.Behaviors>
+                <behaviors:SynchronizeOffsetBehavior Source="{Binding ElementName=ProcessorsObjectScrollView}" />
+            </i:Interaction.Behaviors>
+            <ListBox Items="{Binding TimelineObjects}"
+                     Background="{x:Null}"
+                     SelectionMode="Single"
+                     SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <views:TimelineProcessorInfoView />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+        <ScrollViewer Grid.Row="2" Grid.Column="2"
+                      Name="ProcessorsObjectScrollView" Classes="ProcessorsScrollView"
+                      VerticalScrollBarVisibility="Visible"
+                      HorizontalScrollBarVisibility="Hidden">
+            <i:Interaction.Behaviors>
+                <behaviors:SynchronizeOffsetBehavior Source="{Binding ElementName=ProcessorsInfoScrollView}" />
+            </i:Interaction.Behaviors>
+            <ListBox Items="{Binding TimelineObjects}"
+                     Background="{x:Null}"
+                     SelectionMode="Single"
+                     SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <views:TimelineProcessorObjectView />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+
+        <GridSplitter Grid.Row="3" Grid.Column="0" />
+        <GridSplitter Grid.Row="3" Grid.Column="2" />
+
+        <Panel Grid.Row="4" Grid.Column="0" Name="WorkingAreaToolPanel">
+            <!-- Some tools here? -->
+        </Panel>
+        <ContentControl Grid.Row="4" Grid.Column="2"
+                        Content="{Binding WorkingAreaViewModel}" />
+
+        <Panel Grid.Row="5" Grid.Column="0" Name="ZoomAdjusterPanel" />
+        <ContentControl Grid.Row="5" Grid.Column="2" Name="ZoomAdjuster"
+                        Content="{Binding ZoomAdjusterViewModel}" />
+
     </Grid>
 
 </UserControl>
