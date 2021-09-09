@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
 using Outseek.AvaloniaClient.Utils;
@@ -33,7 +34,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
             Segments.Clear();
             await foreach (Segment segment in _segments.SegmentList.WithCancellation(cancellationToken))
             {
-                Segments.Add(new ObservableRange(TimelineState, new Range(segment.FromSeconds, segment.ToSeconds)));
+                Dispatcher.UIThread.Post(() => Segments.Add(new ObservableRange(TimelineState, new Range(segment.FromSeconds, segment.ToSeconds))));
             }
         }
     }
