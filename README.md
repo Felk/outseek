@@ -1,6 +1,6 @@
 outseek - assist editing long videos by correlating its timeline with various sources of metadata
 
-![screenshot](resources/screenshot-2021-05-13.png)
+![screenshot](resources/screenshot-2021-09-09.png)
 
 WIP - under active development, and not really useful for anything yet.
 
