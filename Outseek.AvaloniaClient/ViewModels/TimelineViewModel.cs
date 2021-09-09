@@ -44,9 +44,9 @@ namespace Outseek.AvaloniaClient.ViewModels
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new TimelineProcessorNode(new RandomSegments(), context), workingAreaState));
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new TimelineProcessorNode(new RandomSegments(), context), workingAreaState));
                 TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new TimelineProcessorNode(new GetRandomChat(), context), workingAreaState));
+                TimelineObjects[0].Node.Children.Add(new TimelineProcessorNode(new InvertSegments(), context));
                 TimelineObjects[0].Node.Children.Add(new TimelineProcessorNode(new RandomSegments(), context));
-                TimelineObjects[0].Node.Children.Add(new TimelineProcessorNode(new RandomSegments(), context));
-                TimelineObjects[0].Node.Children[0].Children.Add(new TimelineProcessorNode(new RandomSegments(), context));
+                TimelineObjects[0].Node.Children[0].Children.Add(new TimelineProcessorNode(new InvertSegments(), context));
 
                 IncludedPython? py = await IncludedPython.Create();
                 if (py == null) return;
