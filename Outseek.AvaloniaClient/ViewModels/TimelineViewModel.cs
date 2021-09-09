@@ -18,7 +18,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         public ZoomAdjusterViewModel ZoomAdjusterViewModel { get; }
         public WorkingAreaViewModel WorkingAreaViewModel { get; }
 
-        public readonly ObservableCollection<TimelineObjectViewModel> TimelineObjects = new();
+        public ObservableCollection<TimelineObjectViewModel> TimelineObjects { get; } = new();
 
         public ReactiveCommand<Unit, Task> InitializeTimeline { get; }
 
