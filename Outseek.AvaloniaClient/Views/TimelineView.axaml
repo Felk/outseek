@@ -5,15 +5,16 @@
              xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
              xmlns:views="clr-namespace:Outseek.AvaloniaClient.Views"
              xmlns:behaviors="clr-namespace:Outseek.AvaloniaClient.Behaviors"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
              x:Class="Outseek.AvaloniaClient.Views.TimelineView">
     <Design.DataContext>
         <viewModels:TimelineViewModel />
     </Design.DataContext>
 
-    <Interaction.Behaviors>
+    <i:Interaction.Behaviors>
         <behaviors:InitializedBehaviour Command="{Binding InitializeTimeline}" />
-    </Interaction.Behaviors>
+    </i:Interaction.Behaviors>
 
     <Grid RowDefinitions="30,*,40"
           Grid.IsSharedSizeScope="True"

@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
         xmlns:behaviors="clr-namespace:Outseek.AvaloniaClient.Behaviors"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
         x:Class="Outseek.AvaloniaClient.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -13,14 +14,14 @@
         <viewModels:MainWindowViewModel />
     </Design.DataContext>
 
-    <Interaction.Behaviors>
+    <i:Interaction.Behaviors>
         <behaviors:MouseWheelBehavior
             Modifier="None"
             Command="{Binding TimelineState.Scroll}" />
         <behaviors:MouseWheelBehavior
             Modifier="Control"
             Command="{Binding TimelineState.Zoom}" />
-    </Interaction.Behaviors>
+    </i:Interaction.Behaviors>
 
     <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="1*,Auto,2*"
           DragDrop.AllowDrop="True">
