@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -6,6 +7,7 @@ using System.Threading;
 using DynamicData;
 using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
+using Outseek.AvaloniaClient.Utils;
 using Outseek.AvaloniaClient.ViewModels.TimelineObjects;
 using Outseek.Backend.Processors;
 using ReactiveUI;
@@ -22,6 +24,16 @@ namespace Outseek.AvaloniaClient.ViewModels
 
         [Reactive] public string? Text { get; set; }
         [Reactive] public TimelineObjectViewModelBase? TimelineObject { get; set; }
+
+        public bool IsExpanded {
+            set
+            {
+                foreach (TimelineObjectViewModel child in Children) child.IsVisible = value;
+            }
+        }
+        [Reactive] public bool IsVisible { get; set; } = true;
+
+        public ObservableCollection<TimelineObjectViewModel> Children { get; }
 
         public ReactiveCommand<Unit, Unit> CopySegments { get; }
 
@@ -62,6 +74,10 @@ namespace Outseek.AvaloniaClient.ViewModels
                         TimelineObject = new ErrorViewModel { ErrorText = ex.Message };
                     }
                 });
+
+            TimelineObjectViewModel Wrap(TimelineProcessorNode n) => new(timelineState, n, workingAreaState);
+            TimelineProcessorNode Unwrap(TimelineObjectViewModel vm) => vm.Node;
+            Children = new WrappedObservableCollection<TimelineObjectViewModel, TimelineProcessorNode>(node.Children, Wrap, Unwrap);
 
             ObservableRange Clone(ObservableRange r) => new(timelineState, r.Range);
             CopySegments = ReactiveCommand.Create(

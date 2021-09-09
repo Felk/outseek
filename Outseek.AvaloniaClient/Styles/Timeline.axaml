@@ -108,14 +108,25 @@
         </Setter>
     </Style>
 
-    <Style Selector="views|TimelineView ScrollViewer.ProcessorsScrollView ListBoxItem">
+    <Style Selector="views|TimelineProcessorObjectView, views|TimelineProcessorInfoView">
         <Setter Property="Height" Value="25" />
+    </Style>
+
+    <!-- reset some default ListBox and TreeView styles that break the layout -->
+    <Style Selector="views|TimelineView ScrollViewer.ProcessorsScrollView ListBoxItem">
         <Setter Property="Padding" Value="0" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    </Style>
+    <Style Selector="views|TimelineView ScrollViewer.ProcessorsScrollView TreeViewItem">
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
     </Style>
 
     <Style Selector="#SegmentsListBox ListBoxItem controls|ResizableThumbTrack Panel.SegmentPanel">
         <Setter Property="Background" Value="transparent" />
+    </Style>
+    <Style Selector="#SegmentsListBox ListBoxItem controls|ResizableThumbTrack Label">
+        <Setter Property="FontSize" Value="12" />
     </Style>
     <Style Selector="#SegmentsListBox ListBoxItem:selected controls|ResizableThumbTrack Panel.SegmentPanel">
         <!-- blends into green-ish, because the working area segment color is green -->

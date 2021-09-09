@@ -54,16 +54,25 @@
             <i:Interaction.Behaviors>
                 <behaviors:SynchronizeOffsetBehavior Source="{Binding ElementName=ProcessorsObjectScrollView}" />
             </i:Interaction.Behaviors>
-            <ListBox Items="{Binding TimelineObjects}"
-                     Background="{x:Null}"
-                     SelectionMode="Single"
-                     SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
+            <TreeView Items="{Binding TimelineObjects}"
+                      SelectionMode="Single"
+                      SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
+                <TreeView.Styles>
+                    <Style Selector="TreeViewItem">
+                        <!-- this looks unnecessary because the value is being bound to a property,
+                        but the property is write-only and this is an easy way to have the tree be fully expanded by default. -->
+                        <Setter Property="IsExpanded" Value="True" />
+                    </Style>
+                    <Style Selector="TreeViewItem">
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    </Style>
+                </TreeView.Styles>
+                <TreeView.DataTemplates>
+                    <TreeDataTemplate DataType="{x:Type viewModels:TimelineObjectViewModel}" ItemsSource="{Binding Children}">
                         <views:TimelineProcessorInfoView />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    </TreeDataTemplate>
+                </TreeView.DataTemplates>
+            </TreeView>
         </ScrollViewer>
         <ScrollViewer Grid.Row="2" Grid.Column="2"
                       Name="ProcessorsObjectScrollView" Classes="ProcessorsScrollView"
@@ -72,16 +81,43 @@
             <i:Interaction.Behaviors>
                 <behaviors:SynchronizeOffsetBehavior Source="{Binding ElementName=ProcessorsInfoScrollView}" />
             </i:Interaction.Behaviors>
-            <ListBox Items="{Binding TimelineObjects}"
-                     Background="{x:Null}"
-                     SelectionMode="Single"
-                     SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
+            <TreeView Items="{Binding TimelineObjects}"
+                      SelectionMode="Single"
+                      SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
+                <TreeView.Template>
+                    <ControlTemplate>
+                        <ItemsPresenter Items="{Binding TimelineObjects}">
+                            <ItemsPresenter.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentPresenter Content="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsPresenter.ItemTemplate>
+                        </ItemsPresenter>
+                    </ControlTemplate>
+                </TreeView.Template>
+                <TreeView.Styles>
+                    <Style Selector="TreeViewItem">
+                        <Setter Property="IsVisible" Value="{Binding IsVisible, Mode=TwoWay}" />
+                        <!-- don't need any margins or the expand-collapse-chevron -->
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentPresenter Content="{Binding}" />
+                                        <ItemsPresenter Items="{Binding Children}"/>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TreeView.Styles>
+                <TreeView.DataTemplates>
+                    <TreeDataTemplate DataType="{x:Type viewModels:TimelineObjectViewModel}" ItemsSource="{Binding Children}">
                         <views:TimelineProcessorObjectView />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    </TreeDataTemplate>
+                </TreeView.DataTemplates>
+            </TreeView>
+
         </ScrollViewer>
 
         <GridSplitter Grid.Row="3" Grid.Column="0" />
