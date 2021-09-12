@@ -29,15 +29,13 @@ namespace Outseek.AvaloniaClient.Behaviors
         protected override void OnAttached()
         {
             base.OnAttached();
-            if (AssociatedObject != null)
-                AssociatedObject.PointerWheelChanged += AssociatedObjectOnPointerWheelChanged;
+            AssociatedObject?.AddHandler(InputElement.PointerWheelChangedEvent, AssociatedObjectOnPointerWheelChanged, handledEventsToo: true);
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            if (AssociatedObject != null)
-                AssociatedObject.PointerWheelChanged -= AssociatedObjectOnPointerWheelChanged;
+            AssociatedObject?.RemoveHandler(InputElement.PointerWheelChangedEvent, AssociatedObjectOnPointerWheelChanged);
         }
 
         private void AssociatedObjectOnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
