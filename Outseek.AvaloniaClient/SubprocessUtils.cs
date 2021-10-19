@@ -11,7 +11,7 @@ namespace Outseek.AvaloniaClient
         {
         }
     }
-    
+
     public static class SubprocessUtils
     {
         public static string? LocateDllOnWindows(string dllPattern)
@@ -47,9 +47,13 @@ namespace Outseek.AvaloniaClient
                     Arguments = arguments,
                 }
             };
+            string stdout = "";
+            string stderr = "";
+            p.OutputDataReceived += (_, e) => stdout += e.Data + '\n';
+            p.ErrorDataReceived += (_, e) => stderr += e.Data + '\n';
             p.Start();
-            string stdout = p.StandardOutput.ReadToEnd();
-            string stderr = p.StandardError.ReadToEnd();
+            p.BeginErrorReadLine();
+            p.BeginOutputReadLine();
             p.WaitForExit();
             if (p.ExitCode != 0)
             {
