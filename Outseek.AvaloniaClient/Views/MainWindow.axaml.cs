@@ -11,6 +11,7 @@ namespace Outseek.AvaloniaClient.Views
     {
         public MainWindow()
         {
+            DataContext = new MainWindowViewModel();
             InitializeComponent();
 #if DEBUG
             this.AttachDevTools();

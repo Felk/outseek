@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Outseek.AvaloniaClient.ViewModels;
 using Outseek.AvaloniaClient.Views;
 
 namespace Outseek.AvaloniaClient
@@ -17,10 +16,7 @@ namespace Outseek.AvaloniaClient
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = new MainWindowViewModel(),
-                };
+                desktop.MainWindow = new MainWindow();
             }
 
             base.OnFrameworkInitializationCompleted();
