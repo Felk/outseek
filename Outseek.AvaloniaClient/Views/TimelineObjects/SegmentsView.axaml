@@ -24,7 +24,7 @@
                 <Setter Property="Background" Value="{x:Null}" />
             </Style>
             <Style
-                Selector="#SegmentsListBox ListBoxItem:selected ContentPresenter#PART_ContentPresenter, 
+                Selector="#SegmentsListBox ListBoxItem:selected ContentPresenter#PART_ContentPresenter,
                           #SegmentsListBox ListBoxItem:pointerover ContentPresenter#PART_ContentPresenter">
                 <!-- required for layered elements (e.g. segments) to be individually selectable -->
                 <Setter Property="Background" Value="{x:Null}" />

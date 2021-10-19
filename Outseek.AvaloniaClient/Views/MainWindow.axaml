@@ -15,6 +15,7 @@
     </Design.DataContext>
 
     <i:Interaction.Behaviors>
+        <behaviors:InitializedBehaviour Command="{Binding Initialize}" />
         <behaviors:MouseWheelBehavior
             Modifier="None"
             Command="{Binding TimelineState.Scroll}" />

@@ -11,8 +11,4 @@
         <Setter Property="Background" Value="#114433" />
     </Style>
 
-    <Style Selector="Panel#WorkingAreaToolPanel Border">
-        <Setter Property="Background" Value="#66000000"/>
-    </Style>
-
 </Styles>

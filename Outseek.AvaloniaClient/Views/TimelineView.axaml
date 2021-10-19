@@ -12,10 +12,6 @@
         <viewModels:TimelineViewModel />
     </Design.DataContext>
 
-    <i:Interaction.Behaviors>
-        <behaviors:InitializedBehaviour Command="{Binding InitializeTimeline}" />
-    </i:Interaction.Behaviors>
-
     <Grid RowDefinitions="0,30,*,Auto,40,40" ColumnDefinitions="200,Auto,*"
           PointerMoved="InputElement_OnPointerMoved">
 
@@ -123,9 +119,8 @@
         <GridSplitter Grid.Row="3" Grid.Column="0" />
         <GridSplitter Grid.Row="3" Grid.Column="2" />
 
-        <Panel Grid.Row="4" Grid.Column="0" Name="WorkingAreaToolPanel">
-            <!-- Some tools here? -->
-        </Panel>
+        <ContentControl Grid.Row="4" Grid.Column="0"
+                        Content="{Binding WorkingAreaToolsViewModel}" />
         <ContentControl Grid.Row="4" Grid.Column="2"
                         Content="{Binding WorkingAreaViewModel}" />
 
