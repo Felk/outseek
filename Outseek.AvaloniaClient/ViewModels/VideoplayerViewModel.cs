@@ -99,8 +99,9 @@ namespace Outseek.AvaloniaClient.ViewModels
                     }
                     else
                     {
-                        var filename = task.Result[0];
-                        MediaState.Filename = filename;
+                        string[]? selectedFiles = task.Result;
+                        if (selectedFiles?.Length > 0)
+                            MediaState.Filename = selectedFiles[0];
                     }
                 });
             });
@@ -116,7 +117,7 @@ namespace Outseek.AvaloniaClient.ViewModels
                 TimelineState.End = durationSeconds;
             };
             // There doesn't seem to be easy control over the sender object for reactive properties,
-            // so this bool is used to avoid time change events originating from libvlc to cause a feedback loop. 
+            // so this bool is used to avoid time change events originating from libvlc to cause a feedback loop.
             bool isNextTimeChangeFromVlc = false;
             _mediaPlayer.TimeChanged += (_, args) =>
             {
