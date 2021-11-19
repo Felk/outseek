@@ -8,10 +8,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Setup .NET 5
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - uses: actions/checkout@v2
       - name: Publish win-x64
         run: |
@@ -28,10 +28,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup .NET 5
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - uses: actions/checkout@v2
       - name: Publish linux-x64
         run: |
