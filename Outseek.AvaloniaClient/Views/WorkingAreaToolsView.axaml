@@ -11,7 +11,7 @@
     </Design.DataContext>
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-        <!-- Some tools here? -->
+        <Button Content="Export" Command="{Binding Export}"/>
     </StackPanel>
 
 </UserControl>

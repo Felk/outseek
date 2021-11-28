@@ -29,7 +29,7 @@ namespace Outseek.AvaloniaClient.ViewModels
 
             WorkingAreaState workingAreaState = new();
             var workingAreaViewModel = new WorkingAreaViewModel(TimelineState, workingAreaState);
-            var workingAreaToolsViewModel = new WorkingAreaToolsViewModel(workingAreaViewModel);
+            var workingAreaToolsViewModel = new WorkingAreaToolsViewModel(workingAreaViewModel, MediaState);
 
             TimelineViewModel = new TimelineViewModel(TimelineState, TimelineProcessorsState, workingAreaViewModel, workingAreaToolsViewModel);
             VideoplayerViewModel = new VideoplayerViewModel(TimelineState, MediaState);
@@ -56,6 +56,9 @@ namespace Outseek.AvaloniaClient.ViewModels
                 IChatDownloader chatDownloader = new ChatDownloader(chatDownloaderModule);
                 TimelineViewModel.TimelineObjects.Add(new TimelineObjectViewModel(
                     TimelineState, new TimelineProcessorNode(new GetChat(chatDownloader), context), workingAreaState));
+
+                dynamic? otio = await py.GetModule("opentimelineio", "opentimelineio");
+                workingAreaToolsViewModel.Otio = new OpenTimelineIO(otio);
             }));
         }
     }
