@@ -30,7 +30,7 @@ namespace Outseek.AvaloniaClient.ViewModels
             IObservable<bool> otioAvailable = this.WhenAnyValue(vm => vm.Otio).Select(otio => otio != null);
             Export = ReactiveCommand.Create(() =>
             {
-                Window mainWindow = ((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
+                Window mainWindow = ((IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!).MainWindow;
                 var fileDialog = new SaveFileDialog
                 {
                     DefaultExtension = ".otio",

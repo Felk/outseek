@@ -81,7 +81,7 @@ namespace Outseek.AvaloniaClient.ViewModels
             });
             OpenFileDialog = ReactiveCommand.Create(() =>
             {
-                Debug.Assert(Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime);
+                Debug.Assert(Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime);
                 Window mainWindow = ((IClassicDesktopStyleApplicationLifetime) Application.Current.ApplicationLifetime)
                     .MainWindow;
                 var fileDialog = new OpenFileDialog

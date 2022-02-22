@@ -3,6 +3,6 @@
     <ProjectReference Include="..\Outseek.API\Outseek.API.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
 </Project>
