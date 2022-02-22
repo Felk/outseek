@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
+using Avalonia.Input;
 using DynamicData;
 using Outseek.API;
 using Outseek.AvaloniaClient.SharedViewModels;
@@ -36,6 +37,8 @@ namespace Outseek.AvaloniaClient.ViewModels
         public ObservableCollection<TimelineObjectViewModel> Children { get; }
 
         public ReactiveCommand<Unit, Unit> CopySegments { get; }
+        public ReactiveCommand<DragEventArgs, Unit> Drop { get; }
+        public static Func<DragEventArgs, bool> CheckDropAllowed => e => e.Data.Contains("processor");
 
         public TimelineObjectViewModel() : this(
             new TimelineState(), new TimelineProcessorNode(new RandomSegments(), Observable.Empty<ITimelineProcessContext>()), new WorkingAreaState())
@@ -83,6 +86,24 @@ namespace Outseek.AvaloniaClient.ViewModels
             CopySegments = ReactiveCommand.Create(
                 () => workingAreaState.Segments.AddRange(((SegmentsViewModel)TimelineObject!).SelectedSegments.Select(Clone)),
                 this.WhenAnyValue(vm => vm.TimelineObject).Select(to => to is SegmentsViewModel));
+
+            Drop = ReactiveCommand.Create((DragEventArgs dragEventArgs) =>
+            {
+                var processor = (ITimelineProcessor) dragEventArgs.Data.Get("processor")!;
+
+                IObservable<TimelineProcessContext> context = TimelineState
+                    .WhenAnyValue(s => s.Start, s => s.End)
+                    .Select(tpl => new TimelineProcessContext(tpl.Item1, tpl.Item2));
+                Node.Children.Add(new TimelineProcessorNode(processor, context));
+
+                // Workaround: The tree view items' IsExpanded property's binding is one-way to source,
+                // and that set-only property sets the children's IsVisible property which is used to have
+                // the timeline items' visibility be in sync with the tree view's expanded state.
+                // This workaround ensures that if this node is collapsed the new child gets IsVisible set to false as well.
+                // Checking if any existing children are hidden is sufficient, because the trees are expanded by default,
+                // so if we just added the first child it should just stay visible anyway.
+                if (Children.Any(c => !c.IsVisible)) IsExpanded = false;
+            });
         }
 
         public void Dispose()

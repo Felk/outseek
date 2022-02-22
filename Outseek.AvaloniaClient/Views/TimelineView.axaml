@@ -49,6 +49,11 @@
                       HorizontalScrollBarVisibility="Hidden">
             <i:Interaction.Behaviors>
                 <behaviors:SynchronizeOffsetBehavior Source="{Binding ElementName=ProcessorsObjectScrollView}" />
+                <!-- TODO avoid duplicate code with TimelineObjectViewModel -->
+                <behaviors:DropBehavior
+                    Command="{Binding Drop}"
+                    DragDropEffect="Copy"
+                    DropAllowed="{Binding CheckDropAllowed}" />
             </i:Interaction.Behaviors>
             <TreeView Items="{Binding TimelineObjects}"
                       SelectionMode="Single"

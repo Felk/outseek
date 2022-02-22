@@ -122,6 +122,11 @@
         <Setter Property="BorderThickness" Value="0" />
     </Style>
 
+    <Style Selector="views|TimelineView ScrollViewer.ProcessorsScrollView TreeView">
+        <!-- always have a bit of free space at the bottom as a drag&drop target -->
+        <Setter Property="Margin" Value="0,0,0,30" />
+    </Style>
+
     <Style Selector="#SegmentsListBox ListBoxItem controls|ResizableThumbTrack Panel.SegmentPanel">
         <Setter Property="Background" Value="transparent" />
     </Style>
@@ -134,6 +139,15 @@
     </Style>
     <Style Selector="#SegmentsListBox ListBoxItem:selected controls|ResizableThumbTrack Border.ResizeThumbBorder">
         <Setter Property="BorderBrush" Value="#aaaaaa" />
+    </Style>
+
+    <Style Selector="views|TimelineProcessorInfoView.processorhover">
+        <Setter Property="BorderBrush" Value="Red" />
+        <Setter Property="Padding" Value="0 0 0 -2" />
+        <Setter Property="BorderThickness" Value="0 0 0 2" />
+    </Style>
+    <Style Selector="views|TimelineProcessorExplorerView ListBoxItem">
+        <Setter Property="Padding" Value="0" />
     </Style>
 
 </Styles>

@@ -2,13 +2,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
              xmlns:viewModels="clr-namespace:Outseek.AvaloniaClient.ViewModels"
+             xmlns:behaviors="clr-namespace:Outseek.AvaloniaClient.Behaviors"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Outseek.AvaloniaClient.Views.TimelineProcessorInfoView">
 
     <Design.DataContext>
         <viewModels:TimelineObjectViewModel />
     </Design.DataContext>
+
+    <i:Interaction.Behaviors>
+        <behaviors:DropBehavior
+            Command="{Binding Drop}"
+            DragDropEffect="Copy"
+            DropHoverClass="processorhover"
+            DropAllowed="{Binding CheckDropAllowed}" />
+    </i:Interaction.Behaviors>
 
     <DockPanel VerticalAlignment="Center">
         <Button Command="{Binding CopySegments}"

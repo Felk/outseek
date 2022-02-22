@@ -12,9 +12,10 @@
     <ListBox Items="{Binding Processors}">
         <ListBox.ItemTemplate>
             <DataTemplate>
-                <StackPanel>
+                <Panel PointerPressed="OnTimelineProcessorItemPointerPressed" Background="Transparent">
+                    <!-- Inside wrapper with explicit background, so the entire bounds can be dragged instead only the occupied space -->
                     <Label Content="{Binding Name}"/>
-                </StackPanel>
+                </Panel>
             </DataTemplate>
         </ListBox.ItemTemplate>
     </ListBox>
