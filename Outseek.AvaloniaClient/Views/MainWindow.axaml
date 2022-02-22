@@ -26,9 +26,16 @@
 
     <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="1*,Auto,2*"
           DragDrop.AllowDrop="True">
-        <Border Grid.Row="0" Grid.Column="0" Padding="10">
-            <ContentControl Content="{Binding TimelineProcessorParamsViewModel}"/>
-        </Border>
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>Processor Properties</TabItem.Header>
+                <ContentControl Content="{Binding TimelineProcessorParamsViewModel}"/>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>Processor Explorer</TabItem.Header>
+                <ContentControl Content="{Binding TimelineProcessorExplorerViewModel}"/>
+            </TabItem>
+        </TabControl>
         <GridSplitter Grid.Row="0" Grid.Column="1" />
         <ContentControl
             Grid.Row="0" Grid.Column="2"

@@ -38,4 +38,9 @@
         <Setter Property="Opacity" Value="0.5" />
     </Style>
 
+    <Style Selector="TabControl TabItem">
+        <!-- The default font size is unnecessarily large. -->
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
 </Styles>

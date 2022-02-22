@@ -15,6 +15,7 @@ namespace Outseek.AvaloniaClient.ViewModels
         public TimelineViewModel TimelineViewModel { get; }
         public VideoplayerViewModel VideoplayerViewModel { get; }
         public TimelineProcessorParamsViewModel TimelineProcessorParamsViewModel { get; }
+        public TimelineProcessorExplorerViewModel TimelineProcessorExplorerViewModel { get; }
         public TimelineState TimelineState { get; }
         public MediaState MediaState { get; }
         public TimelineProcessorsState TimelineProcessorsState { get; }
@@ -34,6 +35,10 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineViewModel = new TimelineViewModel(TimelineState, TimelineProcessorsState, workingAreaViewModel, workingAreaToolsViewModel);
             VideoplayerViewModel = new VideoplayerViewModel(TimelineState, MediaState);
             TimelineProcessorParamsViewModel = new TimelineProcessorParamsViewModel(TimelineProcessorsState);
+            TimelineProcessorExplorerViewModel = new TimelineProcessorExplorerViewModel();
+            TimelineProcessorExplorerViewModel.Processors.Add(new InvertSegments());
+            TimelineProcessorExplorerViewModel.Processors.Add(new RandomSegments());
+            TimelineProcessorExplorerViewModel.Processors.Add(new GetRandomChat());
 
             IObservable<TimelineProcessContext> context = TimelineState
                 .WhenAnyValue(s => s.Start, s => s.End)
@@ -54,8 +59,10 @@ namespace Outseek.AvaloniaClient.ViewModels
                 dynamic? chatDownloaderModule = await py.GetModule(importName: "chat_downloader", pypiName: "chat-downloader");
                 if (chatDownloaderModule == null) return;
                 IChatDownloader chatDownloader = new ChatDownloader(chatDownloaderModule);
+                ITimelineProcessor getChat = new GetChat(chatDownloader);
                 TimelineViewModel.TimelineObjects.Add(new TimelineObjectViewModel(
-                    TimelineState, new TimelineProcessorNode(new GetChat(chatDownloader), context), workingAreaState));
+                    TimelineState, new TimelineProcessorNode(getChat, context), workingAreaState));
+                TimelineProcessorExplorerViewModel.Processors.Add(getChat);
 
                 dynamic? otio = await py.GetModule("opentimelineio", "opentimelineio");
                 workingAreaToolsViewModel.Otio = new OpenTimelineIO(otio);
