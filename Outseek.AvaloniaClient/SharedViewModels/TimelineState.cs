@@ -69,12 +69,11 @@ namespace Outseek.AvaloniaClient.SharedViewModels
             Scroll = ReactiveCommand.Create((Vector delta) =>
             {
                 const double scrollPercentage = 0.1;
-                ScrollOffset = Math.Clamp(ScrollOffset - delta.Y * ZoomScale * scrollPercentage, 0, 1);
+                ScrollOffset = Math.Clamp(ScrollOffset - Math.Sign(delta.Y) * ZoomScale * scrollPercentage, 0, 1);
             });
             Zoom = ReactiveCommand.Create((Vector delta) =>
             {
-                const double zoomPercentage = 0.05;
-                double zoomFactor = Math.Abs(delta.Y) + zoomPercentage;
+                const double zoomFactor = 1.05;
 
                 double prevZoomScale = ZoomScale;
                 ZoomScale = Math.Clamp(delta.Y < 0 ? ZoomScale * zoomFactor : ZoomScale / zoomFactor, 0, 1);
