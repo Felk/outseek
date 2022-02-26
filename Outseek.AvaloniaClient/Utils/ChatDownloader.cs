@@ -83,7 +83,7 @@ namespace Outseek.AvaloniaClient.Utils
                                 message["message"].As<string>(),
                                 message["message_type"].As<string>(),
                                 message["timestamp"].As<long>(),
-                                message["time_in_seconds"].As<float>(), // TODO this field is missing for ongoing YT streams (and maybe in other scenarios too) 
+                                message["time_in_seconds"].As<float>(), // TODO this field is missing for ongoing YT streams (and maybe in other scenarios too)
                                 // author["id"].As<string>(), // see https://github.com/xenova/chat-downloader/pull/90
                                 author["name"].As<string>(),
                                 badges.ToImmutableList());
@@ -91,13 +91,13 @@ namespace Outseek.AvaloniaClient.Utils
                         catch (PythonException ex)
                         {
                             // this sometimes fails for yet unknown reasons,
-                            // but it's better to skip a few messages than to abort the entire download 
+                            // but it's better to skip a few messages than to abort the entire download
                             await Console.Error.WriteLineAsync("Failed to read message data from python message dictionary, skipping object: " + message + "\n" + ex);
                             continue;
                         }
 
                         messages.Add(msg);
-                        // awaiting yields to god knows whose code, so release the GIL for its duration  
+                        // awaiting yields to god knows whose code, so release the GIL for its duration
                         PythonEngine.ReleaseLock(state);
                         try
                         {
@@ -127,6 +127,7 @@ namespace Outseek.AvaloniaClient.Utils
             })).ContinueWith(task =>
             {
                 if (task.IsFaulted) channel.Writer.Complete(task.Exception);
+                else channel.Writer.Complete();
             });
 
             return channel.Reader.ReadAllAsync();
