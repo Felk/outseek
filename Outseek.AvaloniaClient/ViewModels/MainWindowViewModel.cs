@@ -47,11 +47,7 @@ namespace Outseek.AvaloniaClient.ViewModels
             Initialize = ReactiveCommand.Create((Func<Task>)(async () =>
             {
                 TimelineViewModel.TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new TimelineProcessorNode(new RandomSegments(), context), workingAreaState));
-                TimelineViewModel.TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new TimelineProcessorNode(new RandomSegments(), context), workingAreaState));
                 TimelineViewModel.TimelineObjects.Add(new TimelineObjectViewModel(TimelineState, new TimelineProcessorNode(new GetRandomChat(), context), workingAreaState));
-                TimelineViewModel.TimelineObjects[0].Node.Children.Add(new TimelineProcessorNode(new InvertSegments(), context));
-                TimelineViewModel.TimelineObjects[0].Node.Children.Add(new TimelineProcessorNode(new RandomSegments(), context));
-                TimelineViewModel.TimelineObjects[0].Node.Children[0].Children.Add(new TimelineProcessorNode(new InvertSegments(), context));
 
                 IncludedPython? py = await IncludedPython.Create();
                 if (py == null) return;
