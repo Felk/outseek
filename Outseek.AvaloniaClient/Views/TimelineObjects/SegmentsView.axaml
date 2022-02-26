@@ -39,38 +39,11 @@
         </ListBox.ItemsPanel>
         <ListBox.ItemTemplate>
             <DataTemplate>
-                <controls:ResizableThumbTrack
-                    IsResizable="False" IsDraggable="False"
-                    Range="{Binding RangeScaled}"
-                    Minimum="0"
-                    Maximum="{Binding TimelineState.EndScaled}"
-                    Increment="{Binding StepScaled}"
-                    MinimumDistance="{Binding StepScaled}">
-                    <controls:ResizableThumbTrack.ResizeStartThumb>
-                        <Thumb Name="PART_ResizeStartThumb" />
-                    </controls:ResizableThumbTrack.ResizeStartThumb>
-                    <controls:ResizableThumbTrack.ResizeEndThumb>
-                        <Thumb Name="PART_ResizeEndThumb" />
-                    </controls:ResizableThumbTrack.ResizeEndThumb>
-                    <controls:ResizableThumbTrack.Backdrop>
-                        <Panel Classes="SegmentPanel" />
-                    </controls:ResizableThumbTrack.Backdrop>
-                    <!-- Push the thumb behind the backdrop so the thumb doesn't snatch all the pointer events.
-                         These resizable thumb tracks are unmodifiable anyway, so that's an easy fix. -->
-                    <Thumb ZIndex="-1">
-                        <Thumb.Template>
-                            <ControlTemplate>
-                                <Border Name="PART_Border">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Content="{Binding Range.From, StringFormat=\{0:00.00\}}" />
-                                        <Label Content="-" />
-                                        <Label Content="{Binding Range.To, StringFormat=\{0:00.00\}}" />
-                                    </StackPanel>
-                                </Border>
-                            </ControlTemplate>
-                        </Thumb.Template>
-                    </Thumb>
-                </controls:ResizableThumbTrack>
+                <Canvas Width="{Binding TimelineState.EndScaled}" Height="0">
+                    <Rectangle Canvas.Left="{Binding RangeScaled.From}" Width="{Binding RangeScaled.Size}" MinWidth="1"
+                               Canvas.Top="-10" Height="20"
+                               Classes="SegmentRectangle" />
+                </Canvas>
             </DataTemplate>
         </ListBox.ItemTemplate>
     </ListBox>
