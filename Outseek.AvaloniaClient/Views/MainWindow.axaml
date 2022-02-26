@@ -17,7 +17,7 @@
     <i:Interaction.Behaviors>
         <behaviors:InitializedBehaviour Command="{Binding Initialize}" />
         <behaviors:MouseWheelBehavior
-            Modifier="None"
+            Modifier="Shift"
             Command="{Binding TimelineState.Scroll}" />
         <behaviors:MouseWheelBehavior
             Modifier="Control"
