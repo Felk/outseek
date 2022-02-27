@@ -39,6 +39,8 @@ namespace Outseek.AvaloniaClient.ViewModels
             TimelineProcessorExplorerViewModel.Processors.Add(new InvertSegments());
             TimelineProcessorExplorerViewModel.Processors.Add(new RandomSegments());
             TimelineProcessorExplorerViewModel.Processors.Add(new GetRandomChat());
+            TimelineProcessorExplorerViewModel.Processors.Add(new AnalyzeTimedText());
+            TimelineProcessorExplorerViewModel.Processors.Add(new FilterReactions());
 
             IObservable<TimelineProcessContext> context = TimelineState
                 .WhenAnyValue(s => s.Start, s => s.End)
