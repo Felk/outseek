@@ -1,8 +1,7 @@
 ﻿using ReactiveUI;
 
-namespace Outseek.AvaloniaClient.ViewModels
+namespace Outseek.AvaloniaClient.ViewModels;
+
+public class ViewModelBase : ReactiveObject
 {
-    public class ViewModelBase : ReactiveObject
-    {
-    }
 }

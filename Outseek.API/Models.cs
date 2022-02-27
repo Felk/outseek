@@ -1,39 +1,37 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-namespace Outseek.API
+namespace Outseek.API;
+
+public sealed record Segment(double FromSeconds, double ToSeconds);
+public sealed record TimedTextEntry(double FromSeconds, double ToSeconds, string Text);
+
+public interface ITimelineProcessContext
 {
-    public sealed record Segment(double FromSeconds, double ToSeconds);
-    public sealed record TimedTextEntry(double FromSeconds, double ToSeconds, string Text);
+    public double Minimum { get; }
+    public double Maximum { get; }
 
-    public interface ITimelineProcessContext
+    public string GetStorageDirectory(string subdirectory);
+}
+
+public sealed class TimelineProcessContext : ITimelineProcessContext
+{
+    public double Minimum { get; }
+    public double Maximum { get; }
+
+    public TimelineProcessContext(double minimum, double maximum)
     {
-        public double Minimum { get; }
-        public double Maximum { get; }
-
-        public string GetStorageDirectory(string subdirectory);
+        Minimum = minimum;
+        Maximum = maximum;
     }
 
-    public sealed class TimelineProcessContext : ITimelineProcessContext
+    public string GetStorageDirectory(string? subdirectory)
     {
-        public double Minimum { get; }
-        public double Maximum { get; }
-
-        public TimelineProcessContext(double minimum, double maximum)
+        string storageDir = Outseek.StorageDirectory;
+        if (subdirectory != null)
         {
-            Minimum = minimum;
-            Maximum = maximum;
+            storageDir = Path.Join(storageDir, subdirectory);
+            Directory.CreateDirectory(storageDir);
         }
-
-        public string GetStorageDirectory(string? subdirectory)
-        {
-            string storageDir = Outseek.StorageDirectory;
-            if (subdirectory != null)
-            {
-                storageDir = Path.Join(storageDir, subdirectory);
-                Directory.CreateDirectory(storageDir);
-            }
-            return storageDir;
-        }
+        return storageDir;
     }
 }

@@ -1,19 +1,18 @@
 ﻿using Outseek.AvaloniaClient.SharedViewModels;
 
-namespace Outseek.AvaloniaClient.ViewModels
+namespace Outseek.AvaloniaClient.ViewModels;
+
+public class TimelineProcessorParamsViewModel : ViewModelBase
 {
-    public class TimelineProcessorParamsViewModel : ViewModelBase
+    public TimelineProcessorsState TimelineProcessorsState { get; }
+
+    public TimelineProcessorParamsViewModel(TimelineProcessorsState timelineProcessorsState)
     {
-        public TimelineProcessorsState TimelineProcessorsState { get; }
+        TimelineProcessorsState = timelineProcessorsState;
+    }
 
-        public TimelineProcessorParamsViewModel(TimelineProcessorsState timelineProcessorsState)
-        {
-            TimelineProcessorsState = timelineProcessorsState;
-        }
-
-        public TimelineProcessorParamsViewModel() : this(new TimelineProcessorsState())
-        {
-            // the default constructor is only used by the designer
-        }
+    public TimelineProcessorParamsViewModel() : this(new TimelineProcessorsState())
+    {
+        // the default constructor is only used by the designer
     }
 }
