@@ -42,7 +42,8 @@ namespace Outseek.Backend.Processors
             IAsyncEnumerable<TimedTextEntry> textEntries = _chatDownloader
                 .GetChat(parameters.Url, context.GetStorageDirectory("downloaded_chats"))
                 .Select(msg => new TimedTextEntry(msg.TimeInSeconds, msg.TimeInSeconds, msg.Message));
-            return new TimelineObject.TimedText(textEntries);
+            var repeatableEnumerable = new RetainingAsyncEnumerable<TimedTextEntry>(textEntries);
+            return new TimelineObject.TimedText(() => repeatableEnumerable);
         }
     }
 }

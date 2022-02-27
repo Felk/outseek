@@ -38,7 +38,7 @@ namespace Outseek.Backend.Processors
                 }
             }
 
-            return new TimelineObject.TimedText(GetEntries());
+            return new TimelineObject.TimedText(GetEntries);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         }
 
         public SegmentsViewModel() : this(
-            new TimelineState(), new TimelineObject.Segments(AsyncEnumerable.Empty<Segment>()))
+            new TimelineState(), new TimelineObject.Segments(AsyncEnumerable.Empty<Segment>))
         {
             // the default constructor is only used by the designer
         }
@@ -32,7 +32,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         public override async Task Refresh(CancellationToken cancellationToken)
         {
             Segments.Clear();
-            await foreach (Segment segment in _segments.SegmentList.WithCancellation(cancellationToken))
+            await foreach (Segment segment in _segments.SegmentList().WithCancellation(cancellationToken))
             {
                 Dispatcher.UIThread.Post(() => Segments.Add(new ObservableRange(TimelineState, new Range(segment.FromSeconds, segment.ToSeconds))));
             }

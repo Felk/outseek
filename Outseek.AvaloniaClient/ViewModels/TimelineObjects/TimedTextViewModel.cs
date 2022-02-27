@@ -36,7 +36,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         public double ScrollMax => ScrollMin + TimelineState.ViewportWidth;
 
         public TimedTextViewModel() : this(
-            new TimelineState(), new TimelineObject.TimedText(AsyncEnumerable.Empty<TimedTextEntry>()))
+            new TimelineState(), new TimelineObject.TimedText(AsyncEnumerable.Empty<TimedTextEntry>))
         {
             // the default constructor is only used by the designer
         }
@@ -44,7 +44,7 @@ namespace Outseek.AvaloniaClient.ViewModels.TimelineObjects
         public override async Task Refresh(CancellationToken cancellationToken)
         {
             Indicators.Clear();
-            await foreach (TimedTextEntry entry in _timedText.Entries.WithCancellation(cancellationToken))
+            await foreach (TimedTextEntry entry in _timedText.Entries().WithCancellation(cancellationToken))
             {
                 var vm = new TimedTextIndicator(TimelineState, entry.FromSeconds);
                 Dispatcher.UIThread.Post(() => Indicators.Add(vm));

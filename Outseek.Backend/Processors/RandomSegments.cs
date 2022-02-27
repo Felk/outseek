@@ -41,7 +41,7 @@ namespace Outseek.Backend.Processors
                 }
             }
 
-            return new TimelineObject.Segments(GetSegments());
+            return new TimelineObject.Segments(GetSegments);
         }
     }
 }
