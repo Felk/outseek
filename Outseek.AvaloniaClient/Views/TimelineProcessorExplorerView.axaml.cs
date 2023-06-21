@@ -2,21 +2,15 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using Outseek.API;
 
 namespace Outseek.AvaloniaClient.Views;
 
-public class TimelineProcessorExplorerView : UserControl
+public partial class TimelineProcessorExplorerView : UserControl
 {
     public TimelineProcessorExplorerView()
     {
         InitializeComponent();
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnTimelineProcessorItemPointerPressed(object? sender, PointerPressedEventArgs e)

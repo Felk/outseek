@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
 using LibVLCSharp.Avalonia;
 using LibVLCSharp.Shared;
 using MessageBox.Avalonia;
@@ -83,13 +86,12 @@ public class VideoplayerViewModel : ViewModelBase
         {
             Debug.Assert(Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime);
             Window mainWindow = ((IClassicDesktopStyleApplicationLifetime) Application.Current.ApplicationLifetime)
-                .MainWindow;
-            var fileDialog = new OpenFileDialog
+                .MainWindow!;
+            mainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 AllowMultiple = false,
                 Title = "Choose video file",
-            };
-            fileDialog.ShowAsync(mainWindow).ContinueWith(async task =>
+            }).ContinueWith(async task =>
             {
                 if (task.Exception != null)
                 {
@@ -99,9 +101,9 @@ public class VideoplayerViewModel : ViewModelBase
                 }
                 else
                 {
-                    string[]? selectedFiles = task.Result;
-                    if (selectedFiles?.Length > 0)
-                        MediaState.Filename = selectedFiles[0];
+                    IReadOnlyList<IStorageFile> selectedFiles = task.Result;
+                    if (selectedFiles.Count > 0)
+                        MediaState.Filename = selectedFiles.First().Path.AbsolutePath;
                 }
             });
         });

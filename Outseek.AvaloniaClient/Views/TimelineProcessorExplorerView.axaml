@@ -9,7 +9,7 @@
         <viewModels:TimelineProcessorExplorerViewModel/>
     </Design.DataContext>
 
-    <ListBox Items="{Binding Processors}">
+    <ListBox ItemsSource="{Binding Processors}">
         <ListBox.ItemTemplate>
             <DataTemplate>
                 <Panel PointerPressed="OnTimelineProcessorItemPointerPressed" Background="Transparent">

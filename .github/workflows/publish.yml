@@ -11,12 +11,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
       - uses: actions/checkout@v2
       - name: Publish win-x64
         run: |
           dotnet publish -c Release -r win-x64 Outseek.AvaloniaClient -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --no-self-contained
-          Move-Item -Path Outseek.AvaloniaClient/bin/Release/net6.0/win-x64/publish/Outseek.AvaloniaClient.exe -Destination Outseek.exe
+          Move-Item -Path Outseek.AvaloniaClient/bin/Release/net7.0/win-x64/publish/Outseek.AvaloniaClient.exe -Destination Outseek.exe
       - name: Upload win-x64
         uses: actions/upload-artifact@v2
         with:
@@ -31,12 +31,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
       - uses: actions/checkout@v2
       - name: Publish linux-x64
         run: |
           dotnet publish -c Release -r linux-x64 Outseek.AvaloniaClient -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --no-self-contained
-          mv Outseek.AvaloniaClient/bin/Release/net6.0/linux-x64/publish/Outseek.AvaloniaClient Outseek
+          mv Outseek.AvaloniaClient/bin/Release/net7.0/linux-x64/publish/Outseek.AvaloniaClient Outseek
       - name: Upload linux-x64
         uses: actions/upload-artifact@v2
         with:

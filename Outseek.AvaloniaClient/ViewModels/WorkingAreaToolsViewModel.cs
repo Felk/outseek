@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
 using MessageBox.Avalonia;
 using MessageBox.Avalonia.Enums;
 using Outseek.AvaloniaClient.SharedViewModels;
@@ -30,14 +31,13 @@ public class WorkingAreaToolsViewModel : ViewModelBase
         IObservable<bool> otioAvailable = this.WhenAnyValue(vm => vm.Otio).Select(otio => otio != null);
         Export = ReactiveCommand.Create(() =>
         {
-            Window mainWindow = ((IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!).MainWindow;
-            var fileDialog = new SaveFileDialog
+            Window mainWindow = ((IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!).MainWindow!;
+            mainWindow.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
             {
                 DefaultExtension = ".otio",
-                InitialFileName = "my_highlights.otio",
+                SuggestedFileName = "my_highlights.otio",
                 Title = "Choose file to save to",
-            };
-            fileDialog.ShowAsync(mainWindow).ContinueWith(async task =>
+            }).ContinueWith(async task =>
             {
                 if (task.Exception != null)
                 {
@@ -47,11 +47,11 @@ public class WorkingAreaToolsViewModel : ViewModelBase
                 }
                 else
                 {
-                    string? selectedFile = task.Result;
+                    IStorageFile? selectedFile = task.Result;
                     if (selectedFile != null && mediaState.Filename != null)
                         Otio?.SaveSegments(
                             mediaState.Filename,
-                            selectedFile,
+                            selectedFile.Path.AbsolutePath,
                             workingAreaViewModel.WorkingAreaState.Segments.Select(r => r.Range));
                 }
             });

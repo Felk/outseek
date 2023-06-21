@@ -12,7 +12,6 @@
     </Design.DataContext>
 
     <ScrollViewer Width="{Binding TimelineState.ViewportWidth}"
-                  Extent="{Binding TimelineState.ViewportWidthScaledAsSize}"
                   HorizontalScrollBarVisibility="Hidden"
                   VerticalScrollBarVisibility="Hidden"
                   Offset="{Binding TimelineState.ScrollPositionScaled}">

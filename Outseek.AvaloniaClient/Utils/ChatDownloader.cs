@@ -53,13 +53,12 @@ public class ChatDownloader : IChatDownloader
 
             List<ChatMessage> messages = new();
 
-            IntPtr state = PythonEngine.AcquireLock();
+            Py.GILState gil = Py.GIL();
 
             try
             {
                 dynamic chat = _chatDownloaderModule.ChatDownloader().get_chat(url);
                 dynamic builtins = Py.Import("builtins");
-                PyObject keyError = builtins.KeyError;
 
                 // this loop is not async, so it needs to be offloaded onto a thread to not block the caller.
                 foreach (var message in chat)
@@ -71,7 +70,7 @@ public class ChatDownloader : IChatDownloader
                         foreach (var badge in author["badges"])
                             badges.Add(badge["title"].As<string>());
                     }
-                    catch (PythonException ex) when (ex.Type.Handle == keyError.Handle)
+                    catch (PythonException ex) when (ex.Type == builtins.KeyError)
                     {
                     }
 
@@ -98,20 +97,20 @@ public class ChatDownloader : IChatDownloader
 
                     messages.Add(msg);
                     // awaiting yields to god knows whose code, so release the GIL for its duration
-                    PythonEngine.ReleaseLock(state);
+                    gil.Dispose();
                     try
                     {
                         await channel.Writer.WriteAsync(msg);
                     }
                     finally
                     {
-                        state = PythonEngine.AcquireLock();
+                        gil = Py.GIL();
                     }
                 }
             }
             finally
             {
-                PythonEngine.ReleaseLock(state);
+                gil.Dispose();
             }
 
             // Successfully downloaded the entire chat. Cache it on disk so we don't have to do that again.
