@@ -39,7 +39,6 @@ public class TimelineState : ViewModelBase
     public double PlaybackPositionScaled => PlaybackPosition * DevicePixelsPerSecond - ScrollOffset * ScrollableWidth;
     public double EndScaled => End * DevicePixelsPerSecond;
     public Vector ScrollPositionScaled => new(ScrollOffset * ScrollableWidth, 0);
-    public Size ViewportWidthScaledAsSize => new(ViewportWidthScaled, 0);
 
     //
     // commands
@@ -63,8 +62,6 @@ public class TimelineState : ViewModelBase
             .Subscribe(_ => this.RaisePropertyChanged(nameof(EndScaled)));
         this.WhenAnyValue(t => t.ScrollOffset, t => t.ScrollableWidth)
             .Subscribe(_ => this.RaisePropertyChanged(nameof(ScrollPositionScaled)));
-        this.WhenAnyValue(t => t.ViewportWidthScaled)
-            .Subscribe(_ => this.RaisePropertyChanged(nameof(ViewportWidthScaledAsSize)));
 
         Scroll = ReactiveCommand.Create((Vector delta) =>
         {

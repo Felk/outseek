@@ -5,19 +5,14 @@ using Outseek.AvaloniaClient.ViewModels;
 
 namespace Outseek.AvaloniaClient.Views;
 
-public class TimelineView : UserControl
+public partial class TimelineView : UserControl
 {
     private readonly ContentControl _zoomAdjuster;
 
     public TimelineView()
     {
         InitializeComponent();
-        _zoomAdjuster = this.FindControl<ContentControl>("ZoomAdjuster");
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
+        _zoomAdjuster = this.FindControl<ContentControl>("ZoomAdjuster")!;
     }
 
     private void InputElement_OnPointerMoved(object? sender, PointerEventArgs e)

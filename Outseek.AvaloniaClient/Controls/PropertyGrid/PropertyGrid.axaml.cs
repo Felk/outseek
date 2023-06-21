@@ -5,15 +5,14 @@ using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Markup.Xaml;
 
 namespace Outseek.AvaloniaClient.Controls.PropertyGrid;
 
-public class PropertyGrid : UserControl
+public partial class PropertyGrid : UserControl
 {
     public static readonly StyledProperty<object?> PropertyObjectProperty =
         AvaloniaProperty.Register<PropertyGrid, object?>(
-            nameof(PropertyObject), typeof(object), notifying: OnSelectedObjectChanged);
+            nameof(PropertyObject), typeof(object));
 
     public object? PropertyObject
     {
@@ -29,18 +28,14 @@ public class PropertyGrid : UserControl
     {
         InitializeComponent();
 
-        _gridMain = this.FindControl<Grid>("GridMain");
+        PropertyObjectProperty.Changed.Subscribe(OnSelectedObjectChanged);
+
+        _gridMain = this.FindControl<Grid>("GridMain")!;
     }
 
-    private void InitializeComponent()
+    private void OnSelectedObjectChanged(AvaloniaPropertyChangedEventArgs<object?> propertyObjectChanged)
     {
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    private static void OnSelectedObjectChanged(IAvaloniaObject sender, bool beforeChanging)
-    {
-        if (beforeChanging) return;
-        if (sender is not PropertyGrid propGrid) return;
+        if (propertyObjectChanged.Sender is not PropertyGrid propGrid) return;
 
         propGrid.UpdatePropertyControls();
     }

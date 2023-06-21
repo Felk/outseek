@@ -2,38 +2,39 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using LibVLCSharp.Avalonia;
 using Outseek.AvaloniaClient.ViewModels;
 
 namespace Outseek.AvaloniaClient.Views;
 
-public class VideoplayerView : UserControl
+public partial class VideoplayerView : UserControl
 {
     public VideoplayerView()
     {
         InitializeComponent();
+        InitializeComponentCustom();
 
         AddHandler(DragDrop.DropEvent, Drop);
         AddHandler(DragDrop.DragOverEvent, DragOver);
     }
 
-    private void InitializeComponent()
+    private void InitializeComponentCustom()
     {
-        AvaloniaXamlLoader.Load(this);
-
         // TODO properly figure out the video view lifetime requirements.
         // Initializing the media too early causes the video to be played in a separate window
-        VideoView videoView = this.FindControl<VideoView>("VideoView");
+        VideoView videoView = this.FindControl<VideoView>("VideoView")!;
         videoView.Initialized += (sender, args) =>
         {
-            ((VideoplayerViewModel) DataContext!).InitPlayer(videoView);
+            // TODO re-enable after there's a fix for LibVLCSharp.Avalonia: https://code.videolan.org/videolan/LibVLCSharp/-/issues/598
+            // ((VideoplayerViewModel) DataContext!).InitPlayer(videoView);
         };
     }
 
     private static void DragOver(object? sender, DragEventArgs e)
     {
-        if (e.Data.GetFileNames() == null ||
-            e.Data.GetFileNames()!.Count() > 1)
+        if (e.Data.GetFiles() == null ||
+            e.Data.GetFiles()!.Count() > 1)
         {
             e.DragEffects = DragDropEffects.None;
         }
@@ -41,8 +42,8 @@ public class VideoplayerView : UserControl
 
     private void Drop(object? sender, DragEventArgs e)
     {
-        string? filename = e.Data.GetFileNames()?.FirstOrDefault();
-        if (filename == null) return;
-        ((VideoplayerViewModel) DataContext!).MediaState.Filename = filename;
+        IStorageItem? file = e.Data.GetFiles()?.FirstOrDefault();
+        if (file == null) return;
+        ((VideoplayerViewModel) DataContext!).MediaState.Filename = file.Path.AbsolutePath;
     }
 }

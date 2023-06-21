@@ -55,7 +55,7 @@
                     DragDropEffect="Copy"
                     DropAllowed="{Binding CheckDropAllowed}" />
             </i:Interaction.Behaviors>
-            <TreeView Items="{Binding TimelineObjects}"
+            <TreeView ItemsSource="{Binding TimelineObjects}"
                       SelectionMode="Single"
                       SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
                 <TreeView.Styles>
@@ -82,20 +82,9 @@
             <i:Interaction.Behaviors>
                 <behaviors:SynchronizeOffsetBehavior Source="{Binding ElementName=ProcessorsInfoScrollView}" />
             </i:Interaction.Behaviors>
-            <TreeView Items="{Binding TimelineObjects}"
+            <TreeView ItemsSource="{Binding TimelineObjects}"
                       SelectionMode="Single"
                       SelectedItem="{Binding TimelineProcessorsState.SelectedTimelineObject}">
-                <TreeView.Template>
-                    <ControlTemplate>
-                        <ItemsPresenter Items="{Binding TimelineObjects}">
-                            <ItemsPresenter.ItemTemplate>
-                                <DataTemplate>
-                                    <ContentPresenter Content="{Binding}"/>
-                                </DataTemplate>
-                            </ItemsPresenter.ItemTemplate>
-                        </ItemsPresenter>
-                    </ControlTemplate>
-                </TreeView.Template>
                 <TreeView.Styles>
                     <Style Selector="TreeViewItem">
                         <Setter Property="IsVisible" Value="{Binding IsVisible, Mode=TwoWay}" />
@@ -105,7 +94,7 @@
                                 <ControlTemplate>
                                     <StackPanel Orientation="Vertical">
                                         <ContentPresenter Content="{Binding}" />
-                                        <ItemsPresenter Items="{Binding Children}"/>
+                                        <ItemsPresenter />
                                     </StackPanel>
                                 </ControlTemplate>
                             </Setter.Value>

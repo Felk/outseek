@@ -5,16 +5,11 @@ using Outseek.AvaloniaClient.ViewModels;
 
 namespace Outseek.AvaloniaClient.Views;
 
-public class TimelineProcessorParamsView : UserControl
+public partial class TimelineProcessorParamsView : UserControl
 {
     public TimelineProcessorParamsView()
     {
         InitializeComponent();
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 
     private void PropertyGrid_OnPropertyObjectChanged(object? sender, EventArgs e)

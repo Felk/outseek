@@ -11,7 +11,7 @@
     </Design.DataContext>
 
     <ListBox Name="SegmentsListBox"
-             Items="{Binding Segments}"
+             ItemsSource="{Binding Segments}"
              Background="{x:Null}"
              SelectionMode="Multiple"
              SelectedItems="{Binding SelectedSegments, Mode=OneWay}"

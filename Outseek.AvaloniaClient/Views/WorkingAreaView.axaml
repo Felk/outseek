@@ -11,11 +11,10 @@
     </Design.DataContext>
 
     <ScrollViewer Width="{Binding TimelineState.ViewportWidth}"
-                  Extent="{Binding TimelineState.ViewportWidthScaledAsSize}"
                   HorizontalScrollBarVisibility="Hidden"
                   VerticalScrollBarVisibility="Hidden"
                   Offset="{Binding TimelineState.ScrollPositionScaled}">
-        <ItemsControl Items="{Binding WorkingAreaState.Segments}"
+        <ItemsControl ItemsSource="{Binding WorkingAreaState.Segments}"
                       Width="{Binding TimelineState.ViewportWidthScaled}"
                       Name="WorkingAreaItemsControl">
             <ItemsControl.ItemsPanel>
